@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu;
+package project1.cmpe275.sjsu.model;
 
 import java.io.File;
 

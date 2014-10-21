@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu;
+package project1.cmpe275.sjsu.master;
 
 /**
  * This class is for receiving the msg from Client and finish task accordingly

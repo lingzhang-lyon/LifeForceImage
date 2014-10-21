@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu;
+package project1.cmpe275.sjsu.slave;
 
 /**
  * This class is to receive msg from MasterServer 
