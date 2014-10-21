@@ -41,7 +41,7 @@ public class OperateImage {
             DBCollection collection = db.getCollection("ImagesCollection");  // Connect collection
             
             // File properties
-            String fileName = "image_2.jpg";  // Original name in local file system
+            String fileName = "image_1.jpg";  // Original name in local file system
             String client = "sjsu";  // Upload client
             String uploadTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());  // Time stamp
             String storedName = client + uploadTime + fileName;  // Stored name
@@ -78,6 +78,7 @@ public class OperateImage {
             o.append("name", storedName)
              .append("user", client)
              .append("time", uploadTime)
+             .append("category", "default")
              .append("photo",data);
             
             collection.insert(o);
