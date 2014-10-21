@@ -1,0 +1,20 @@
+Install MongoDB on Ubuntu:
+  http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
+  
+MongoDB Version:
+  2.6.5
+  
+MongoDB Startup Command:
+  mongod --dbpath /opt/mongodb/data/db --logpath /opt/mongodb/data/log/mongodb.log --logappend &
+
+MonjaDB (MongoDB GUI client tool in Eclipse): 
+  http://www.jumperz.net/index.php?i=2&a=0&b=9
+
+Netty Example:
+  https://github.com/netty/netty/tree/master/example/src/main/java/io/netty/example/http
+
+Netty Version: 
+  4.0.23
+  
+GitHub Tutorial:
+  http://docs.joomla.org/Working_with_Git_and_Eclipse
