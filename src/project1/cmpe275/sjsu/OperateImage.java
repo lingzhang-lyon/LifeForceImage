@@ -45,9 +45,10 @@ public class OperateImage {
             String client = "sjsu";  // Upload client
             String uploadTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());  // Time stamp
             String storedName = client + uploadTime + fileName;  // Stored name
+            String category = "default";  //Category of image
              
             // Insert an image
-            insert(fileName, client, uploadTime, storedName, collection);
+            insert(fileName, client, uploadTime, storedName, category, collection);
              
             // Retrieve an image where name = storedName, save to local as destFileName
             String destFileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()) + ".jpg";
@@ -60,7 +61,7 @@ public class OperateImage {
         } 
     }
      
-    void insert(String originalName, String client, String uploadTime, String storedName, DBCollection collection)
+    void insert(String originalName, String client, String uploadTime, String storedName, String category, DBCollection collection)
     {
         try
         {
@@ -78,7 +79,7 @@ public class OperateImage {
             o.append("name", storedName)
              .append("user", client)
              .append("time", uploadTime)
-             .append("category", "default")
+             .append("category", category)
              .append("photo",data);
             
             collection.insert(o);
