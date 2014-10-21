@@ -10,11 +10,16 @@ MongoDB Startup Command:
 MonjaDB (MongoDB GUI client tool in Eclipse): 
   http://www.jumperz.net/index.php?i=2&a=0&b=9
 
+MongoDB JDBC
+https://github.com/mongodb/mongo-java-driver/downloads
+download and add mongo-2.10.1.jar to buildpath
+
 Netty Example:
   https://github.com/netty/netty/tree/master/example/src/main/java/io/netty/example/http
 
 Netty Version: 
   4.0.23
+add netty-all-4.0.23.Final-source.jar and netty-all-4.0.23.Final.jar to buildPath
   
 GitHub Tutorial:
   http://docs.joomla.org/Working_with_Git_and_Eclipse
