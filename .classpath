@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/yuan/workspace/ExternalJar/mongo-2.10.1.jar"/>
+	<classpathentry kind="lib" path="/home/yuan/workspace/ExternalJar/netty-all-4.0.23.Final.jar"/>
+	<classpathentry kind="lib" path="/home/yuan/workspace/ExternalJar/netty-all-4.0.23.Final-sources.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
