@@ -223,10 +223,9 @@ public final class HttpUploadClient {
 
         // add Form attribute
         bodyRequestEncoder.addBodyAttribute("getform", "POST");
-        bodyRequestEncoder.addBodyAttribute("info", "first value");
-        bodyRequestEncoder.addBodyAttribute("secondinfo", "secondvalue ?????????&");
-        bodyRequestEncoder.addBodyAttribute("thirdinfo", textArea);
-        bodyRequestEncoder.addBodyAttribute("fourthinfo", textAreaLong);
+        bodyRequestEncoder.addBodyAttribute("pictureName", "httpClientPic.jpeg");
+        bodyRequestEncoder.addBodyAttribute("userName", "httplingzhang");
+        bodyRequestEncoder.addBodyAttribute("category", "httpFood");
         bodyRequestEncoder.addBodyFileUpload("myfile", file, "application/x-zip-compressed", false);
 
         // finalize request

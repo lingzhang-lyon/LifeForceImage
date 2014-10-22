@@ -70,9 +70,9 @@ import java.util.logging.Logger;
 
 import project1.cmpe275.sjsu.model.Image;
 
-public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObject> {
+public class HttpUploadServerHandlerCopy extends SimpleChannelInboundHandler<HttpObject> {
 
-    private static final Logger logger = Logger.getLogger(HttpUploadServerHandler.class.getName());
+    private static final Logger logger = Logger.getLogger(HttpUploadServerHandlerCopy.class.getName());
 
     private HttpRequest request;
 
@@ -196,6 +196,8 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
         	//check if message is HttpContent
         	//then will use readHttpDataChunkByChunk(), which will use writeHttpData();
         	
+        	//Create a image object
+        	Image image=new Image();
         	
             if (msg instanceof HttpContent) {
                 // New chunk is received
@@ -211,7 +213,7 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
                 }
                 responseContent.append('o');
                 // example of reading chunk by chunk (minimize memory usage due to Factory)
-                readHttpDataChunkByChunk();
+                readHttpDataChunkByChunk(image);
                 // example of reading only if at the end
                 if (chunk instanceof LastHttpContent) {
                     writeResponse(ctx.channel());
@@ -236,14 +238,14 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
     /**
      * Example of reading request by chunk and getting values from chunk to chunk
      */
-    private void readHttpDataChunkByChunk() {
+    private void readHttpDataChunkByChunk(Image image) {
         try {
             while (decoder.hasNext()) {
                 InterfaceHttpData data = decoder.next();
                 if (data != null) {
                     try {
                         // new value
-                        writeHttpData(data);
+                        writeHttpData(data,image);
                     } finally {
                         data.release();
                     }
@@ -255,8 +257,7 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
         }
     }
 
-    // the function that is most important for get the attributes and store the file!!!!!!!!! 
-    private void writeHttpData(InterfaceHttpData data) {
+    private void writeHttpData(InterfaceHttpData data, Image image) {
         if (data.getHttpDataType() == HttpDataType.Attribute) {
             Attribute attribute = (Attribute) data;
             String value;
@@ -277,16 +278,18 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
                         + attribute + "\r\n");
             }
             
-            //get the attribute of pictureName
-            if (attribute.getName().equals("pictureName")) {           	 
+            //get the attribute for image object
+            if (attribute.getName().equals("pictureName")) {
+            	image.setImageName(value); 
             	 System.out.println(value);
-            	 testFileName=value;
+            	 System.out.println(image.getImageName());
+            	 testFileName=image.getImageName();
             }
-            //print out the attribute
             System.out.println("Attribute:" + attribute.getName() +": " + value);
            
             
         } else {
+        	 System.out.println(image.getImageName());
             responseContent.append("\r\nBODY FileUpload: " + data.getHttpDataType().name() + ": " + data
                     + "\r\n");
             if (data.getHttpDataType() == HttpDataType.FileUpload) {
@@ -413,7 +416,6 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
         responseContent.append("<tr><td>User name: <br> <input type=text name=\"userName\" size=20></td></tr>");
         responseContent.append("<tr><td>Category: <br> <input type=text name=\"category\" size=20></td></tr>");
         responseContent.append("<tr><td>Select file to upload: <br> <input type=file name=\"myfile\">");
-//        responseContent.append("<tr><td>Select file to upload: <br> <input type=file name=\"myfile2\">");
         responseContent.append("</td></tr>");
         responseContent.append("<tr><td><INPUT TYPE=\"submit\" NAME=\"Send\" VALUE=\"Send\"></INPUT></td>");
         responseContent.append("<td><INPUT TYPE=\"reset\" NAME=\"Clear\" VALUE=\"Clear\" ></INPUT></td></tr>");

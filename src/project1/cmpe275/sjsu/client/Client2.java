@@ -1,5 +1,12 @@
 package project1.cmpe275.sjsu.client;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.util.List;
+import java.util.Map.Entry;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -18,11 +25,7 @@ import io.netty.handler.codec.http.multipart.DiskAttribute;
 import io.netty.handler.codec.http.multipart.DiskFileUpload;
 import io.netty.handler.codec.http.multipart.HttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpPostRequestEncoder;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.InetSocketAddress;
-import java.net.URI;
+import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 
 /**
  * 
@@ -34,7 +37,7 @@ import java.net.URI;
  * 
  *
  */
-public class Client {
+public class Client2 {
 	
 
 	private static String HOST = "127.0.0.1";
@@ -69,7 +72,7 @@ public class Client {
 			    throw new FileNotFoundException(FILE);
 			}
 			
-			createAndSendPostMessage(b, HOST,PORT,uriSimple, file, fact);
+			createAndSendPostMessage(b, HOST,PORT,uriSimple, file, fact, null);
 			
 			//createAndSendPostMessage(bootstrap, HOST,PORT,uriSimple, file, factory, null);
 		} catch (Exception e) {
@@ -90,8 +93,8 @@ public class Client {
 	
 
 	
-	private static void createAndSendPostMessage( Bootstrap bootstrap, String host, int port, 
-			URI uriSimple, File file, HttpDataFactory factory) throws Exception{
+	private static void createAndSendPostMessage( Bootstrap bootstrap, String host, int port, URI uriSimple, File file, HttpDataFactory factory,
+            List<Entry<String, String>> headers) throws Exception{
 		 
 		// Start the connection attempt.
         ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
@@ -104,37 +107,30 @@ public class Client {
 
         //set headers
         // it is legal to add directly header or cookie into the request until finalize
-        HttpHeaders headers = request.headers();
-        headers.set(HttpHeaders.Names.HOST, host);
-        headers.set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
-        headers.set(HttpHeaders.Names.ACCEPT_ENCODING, HttpHeaders.Values.GZIP + ',' + HttpHeaders.Values.DEFLATE);
-
-        headers.set(HttpHeaders.Names.ACCEPT_CHARSET, "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-        headers.set(HttpHeaders.Names.ACCEPT_LANGUAGE, "fr");
-        headers.set(HttpHeaders.Names.REFERER, uriSimple.toString());
-        headers.set(HttpHeaders.Names.USER_AGENT, "Netty Simple Http Client side");
-        headers.set(HttpHeaders.Names.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");       
- 
-        headers.set(
+        if(headers==null){ //default header
+        	request.headers().set(
         			HttpHeaders.Names.COOKIE, 
         			ClientCookieEncoder.encode(new DefaultCookie("my-cookie", "foo"))
                     );
-        
+        }else{
+	        for (Entry<String, String> entry : headers) {
+	            request.headers().set(entry.getKey(), entry.getValue());
+	        }
+        }
         
         
         // Use the PostBody encoder
         HttpPostRequestEncoder bodyRequestEncoder =
-                new HttpPostRequestEncoder(factory, request, true);  // false => not multipart
-        		//new HttpPostRequestEncoder(factory, request, false);  // false => not multipart
+                new HttpPostRequestEncoder(factory, request, false);  // false => not multipart
 
         // add Form attribute
         bodyRequestEncoder.addBodyAttribute("getform", "POST");
-        bodyRequestEncoder.addBodyAttribute("userName", "lingzhang");
-        bodyRequestEncoder.addBodyAttribute("pictureName", "clientpic.jpeg");
+        bodyRequestEncoder.addBodyAttribute("user", "lingzhang");
+        bodyRequestEncoder.addBodyAttribute("picname", "mypic");
         bodyRequestEncoder.addBodyAttribute("catgory", "food");
-        bodyRequestEncoder.addBodyFileUpload("myfile", file, "application/x-zip-compressed", false); // isText=false
+        bodyRequestEncoder.addBodyFileUpload("myfile", file, "application/x-zip-compressed", false); //what each parameter mean??????
 
-        bodyRequestEncoder.finalizeRequest();
+       request= bodyRequestEncoder.finalizeRequest();
         
         // send request
         channel.write(request);
@@ -145,9 +141,8 @@ public class Client {
         }
         channel.flush();
 
-        // On standard program, it is clearly recommended to clean all files after each request
-        //but here if we cleanfiles, it will delete the attribute values, so we don't do it here!!!!!!!!!!!!!
-        //bodyRequestEncoder.cleanFiles();
+        // Now no more use of file representation (and list of HttpData)
+        bodyRequestEncoder.cleanFiles();
 
         // Wait for the server to close the connection.
         channel.closeFuture().sync();
