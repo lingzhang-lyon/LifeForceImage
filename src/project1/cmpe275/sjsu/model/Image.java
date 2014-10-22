@@ -11,12 +11,32 @@ public class Image {
 	public String imageName="";
 	public String category="";
 	public long userID=0;
+	public String userName="";
 	public File file=null;
 	
 	//TODO determine more attributes that needed
 	public String NodeAdress="";
 	
+	public Image(String username, String picname, String category, File file) {
+		
+		// TODO Auto-generated constructor stub
+		this.imageName=picname;
+		this.category=category;
+		this.userName=username;
+		this.file=file;
+	}
 	
+	public Image(){
+	
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 	
 	public long getUserID() {
 		return userID;

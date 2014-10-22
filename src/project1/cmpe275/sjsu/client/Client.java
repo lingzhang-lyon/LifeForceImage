@@ -18,11 +18,14 @@ import io.netty.handler.codec.http.multipart.DiskAttribute;
 import io.netty.handler.codec.http.multipart.DiskFileUpload;
 import io.netty.handler.codec.http.multipart.HttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpPostRequestEncoder;
+import io.netty.handler.codec.http.multipart.HttpPostRequestEncoder.ErrorDataEncoderException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.InetSocketAddress;
 import java.net.URI;
+
+import project1.cmpe275.sjsu.model.Image;
 
 /**
  * 
@@ -41,10 +44,18 @@ public class Client {
 	private static int PORT = 8080;
 	static final String BASE_URL = System.getProperty("baseUrl", "http://127.0.0.1:8080/");
     static final String FILE = System.getProperty("file", "/Users/lingzhang/Desktop/test1.jpeg");
+	static final String USERNAME ="lingzhang";
+	static final String PICNAME ="myclientpic.jpeg";
+	static final String CAT ="clientfood";
 	
 	
 	public static void main(String[] agrs) throws Exception{
-			
+		clientPost(HOST, PORT, BASE_URL, FILE, USERNAME,PICNAME,CAT);	
+		
+	}
+	
+	
+	public static void clientPost(String host, int port, String baseURL, String filePath, String username, String picname, String category ){
 		 // setup the factory: here using a mixed memory/disk based on size threshold
         HttpDataFactory fact = new DefaultHttpDataFactory(DefaultHttpDataFactory.MINSIZE); // Disk if MINSIZE exceed
         
@@ -55,6 +66,7 @@ public class Client {
 		
         EventLoopGroup g = new NioEventLoopGroup();
  
+        //Image image=new Image();
         
         try {
 			Bootstrap b = new Bootstrap();
@@ -63,13 +75,15 @@ public class Client {
 			 .handler(new ClientInitializer());
       
 						
-			URI uriSimple=new URI(BASE_URL + "formpost");
-			File file = new File(FILE);
+			URI uriSimple=new URI(baseURL + "formpost");
+			File file = new File(filePath);
 			if (!file.canRead()) {
-			    throw new FileNotFoundException(FILE);
+			    throw new FileNotFoundException(filePath);
 			}
 			
-			createAndSendPostMessage(b, HOST,PORT,uriSimple, file, fact);
+			Image image=new Image(username, picname, category, file );
+			
+			createAndSendPostMessage(b, host, port,uriSimple, file, fact, image);
 			
 			//createAndSendPostMessage(bootstrap, HOST,PORT,uriSimple, file, factory, null);
 		} catch (Exception e) {
@@ -81,17 +95,12 @@ public class Client {
             // Really clean all temporary files if they still exist
             fact.cleanAllHttpDatas();
 		}
-		
-		
-		
 	}
-	
-	
 	
 
 	
 	private static void createAndSendPostMessage( Bootstrap bootstrap, String host, int port, 
-			URI uriSimple, File file, HttpDataFactory factory) throws Exception{
+			URI uriSimple, File file, HttpDataFactory factory, Image image) throws Exception{
 		 
 		// Start the connection attempt.
         ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
@@ -105,34 +114,18 @@ public class Client {
         //set headers
         // it is legal to add directly header or cookie into the request until finalize
         HttpHeaders headers = request.headers();
-        headers.set(HttpHeaders.Names.HOST, host);
-        headers.set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
-        headers.set(HttpHeaders.Names.ACCEPT_ENCODING, HttpHeaders.Values.GZIP + ',' + HttpHeaders.Values.DEFLATE);
-
-        headers.set(HttpHeaders.Names.ACCEPT_CHARSET, "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-        headers.set(HttpHeaders.Names.ACCEPT_LANGUAGE, "fr");
-        headers.set(HttpHeaders.Names.REFERER, uriSimple.toString());
-        headers.set(HttpHeaders.Names.USER_AGENT, "Netty Simple Http Client side");
-        headers.set(HttpHeaders.Names.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");       
- 
-        headers.set(
-        			HttpHeaders.Names.COOKIE, 
-        			ClientCookieEncoder.encode(new DefaultCookie("my-cookie", "foo"))
-                    );
+        setHeaders(headers, host, uriSimple);
         
-        
+              
         
         // Use the PostBody encoder
         HttpPostRequestEncoder bodyRequestEncoder =
                 new HttpPostRequestEncoder(factory, request, true);  // false => not multipart
         		//new HttpPostRequestEncoder(factory, request, false);  // false => not multipart
-
+       
         // add Form attribute
-        bodyRequestEncoder.addBodyAttribute("getform", "POST");
-        bodyRequestEncoder.addBodyAttribute("userName", "lingzhang");
-        bodyRequestEncoder.addBodyAttribute("pictureName", "clientpic.jpeg");
-        bodyRequestEncoder.addBodyAttribute("catgory", "food");
-        bodyRequestEncoder.addBodyFileUpload("myfile", file, "application/x-zip-compressed", false); // isText=false
+        setFormAttributes(bodyRequestEncoder, image);
+        
 
         bodyRequestEncoder.finalizeRequest();
         
@@ -152,6 +145,32 @@ public class Client {
         // Wait for the server to close the connection.
         channel.closeFuture().sync();
         		
+	}
+	
+	private static void setHeaders(HttpHeaders headers, String host, URI uriSimple){
+		headers.set(HttpHeaders.Names.HOST, host);
+        headers.set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
+        headers.set(HttpHeaders.Names.ACCEPT_ENCODING, HttpHeaders.Values.GZIP + ',' + HttpHeaders.Values.DEFLATE);
+
+        headers.set(HttpHeaders.Names.ACCEPT_CHARSET, "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+        headers.set(HttpHeaders.Names.ACCEPT_LANGUAGE, "fr");
+        headers.set(HttpHeaders.Names.REFERER, uriSimple.toString());
+        headers.set(HttpHeaders.Names.USER_AGENT, "Netty Simple Http Client side");
+        headers.set(HttpHeaders.Names.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");       
+ 
+        headers.set(
+        			HttpHeaders.Names.COOKIE, 
+        			ClientCookieEncoder.encode(new DefaultCookie("my-cookie", "foo"))
+                    );
+        
+	}
+	
+	private static void setFormAttributes(HttpPostRequestEncoder bodyRequestEncoder, Image image ) throws ErrorDataEncoderException{
+		//get information from image object and add to requestEncoder
+        bodyRequestEncoder.addBodyAttribute("userName", image.getUserName());
+        bodyRequestEncoder.addBodyAttribute("pictureName", image.getImageName());
+        bodyRequestEncoder.addBodyAttribute("catgory", image.getCategory());
+        bodyRequestEncoder.addBodyFileUpload("myfile", image.getFile(), "application/x-zip-compressed", false); // isText=false
 	}
 	
 	private void createGetMessage(){
