@@ -14,7 +14,7 @@ import io.netty.handler.codec.http.HttpObject;
 public class ClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 	
 	@Override
-    public void channelRead0(ChannelHandlerContext ctx, HttpObject msg) {
+    public void channelRead0(ChannelHandlerContext ctx, HttpObject msg) {		
 	
 	}
 

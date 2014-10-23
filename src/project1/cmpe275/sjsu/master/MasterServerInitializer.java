@@ -7,7 +7,6 @@ import io.netty.handler.codec.http.HttpContentCompressor;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.ssl.SslContext;
-import project1.cmpe275.sjsu.HttpUploadServerHandler;
 
 public class MasterServerInitializer extends ChannelInitializer<SocketChannel> {
 	private final SslContext sslCtx;
@@ -30,7 +29,7 @@ public class MasterServerInitializer extends ChannelInitializer<SocketChannel> {
         // Remove the following line if you don't want automatic content compression.
         pipeline.addLast(new HttpContentCompressor());
 
-        pipeline.addLast(new HttpUploadServerHandler());
+        pipeline.addLast(new MasterServerHandler1());
         
         //could add more Handler ....
        

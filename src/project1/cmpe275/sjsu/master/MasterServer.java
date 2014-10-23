@@ -40,7 +40,7 @@ public class MasterServer {
             b.group(bossGroup, workerGroup);
             b.channel(NioServerSocketChannel.class);
             b.handler(new LoggingHandler(LogLevel.INFO));
-            b.childHandler(new HttpUploadServerInitializer(sslCtx));
+            b.childHandler(new MasterServerInitializer(sslCtx));
 
             Channel ch = b.bind(PORT).sync().channel();
 
