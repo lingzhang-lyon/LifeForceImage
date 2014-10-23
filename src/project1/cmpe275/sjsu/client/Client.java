@@ -83,7 +83,7 @@ public class Client {
 			
 			Image image=new Image(username, picname, category, file );
 			
-			createAndSendPostMessage(b, host, port,uriSimple, file, fact, image);
+			createAndSendPostMessage(b, host, port,uriSimple, fact, image);
 			
 			//createAndSendPostMessage(bootstrap, HOST,PORT,uriSimple, file, factory, null);
 		} catch (Exception e) {
@@ -100,7 +100,7 @@ public class Client {
 
 	
 	private static void createAndSendPostMessage( Bootstrap bootstrap, String host, int port, 
-			URI uriSimple, File file, HttpDataFactory factory, Image image) throws Exception{
+			URI uriSimple, HttpDataFactory factory, Image image) throws Exception{
 		 
 		// Start the connection attempt.
         ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
