@@ -72,7 +72,9 @@ import project1.cmpe275.sjsu.model.Image;
 
 public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObject> {
 
-    private static final Logger logger = Logger.getLogger(HttpUploadServerHandler.class.getName());
+    private static final String desPath="/Users/lingzhang/Desktop/";
+	
+	private static final Logger logger = Logger.getLogger(HttpUploadServerHandler.class.getName());
 
     private HttpRequest request;
 
@@ -318,7 +320,8 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
 					 String client = "sjsu";  // Upload client
 					 String uploadTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());  // Time stamp
 					 String storedName = client + uploadTime + fileName;  // Stored name
-					 String destPath ="/home/yuan/Desktop/";
+
+					 String destPath =desPath;
 					 
 					 File dest = new File(destPath + storedName);  
 					 
