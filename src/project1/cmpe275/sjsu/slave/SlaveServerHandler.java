@@ -19,7 +19,7 @@ import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import project1.cmpe275.sjsu.master.MasterServerHandler1;
+import project1.cmpe275.sjsu.master.MasterServerHandler;
 
 public class SlaveServerHandler extends SimpleChannelInboundHandler<HttpObject> {
 	

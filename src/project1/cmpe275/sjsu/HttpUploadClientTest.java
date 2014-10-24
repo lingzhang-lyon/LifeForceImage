@@ -23,7 +23,7 @@ public class HttpUploadClientTest {
 	
     static final String BASE_URL = System.getProperty("baseUrl", "http://127.0.0.1:8080/");
     //static final String FILE = System.getProperty("file", "/Users/lingzhang/Desktop/datadir/testDataParsed.json");
-    static final String FILE = System.getProperty("file", "/Users/lingzhang/Desktop/test1.jpeg");
+    static final String FILE = System.getProperty("file", "~/upload/test1.jpeg");
     
     public static void main(String[] args) throws Exception{
     	String postSimple, postFile, get;
