@@ -318,7 +318,7 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
 					 String client = "sjsu";  // Upload client
 					 String uploadTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());  // Time stamp
 					 String storedName = client + uploadTime + fileName;  // Stored name
-					 String destPath ="/Users/lingzhang/Desktop/";
+					 String destPath ="/home/yuan/Desktop/";
 					 
 					 File dest = new File(destPath + storedName);  
 					 

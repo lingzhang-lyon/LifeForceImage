@@ -43,8 +43,8 @@ public class Client {
 	private static String HOST = "127.0.0.1";
 	private static int PORT = 8080;
 	static final String BASE_URL = System.getProperty("baseUrl", "http://127.0.0.1:8080/");
-    static final String FILE = System.getProperty("file", "/Users/lingzhang/Desktop/test1.jpeg");
-	static final String USERNAME ="lingzhang";
+    static final String FILE = System.getProperty("file", "image_1.jpg");
+	static final String USERNAME ="yuan";
 	static final String PICNAME ="myclientpic.jpeg";
 	static final String CAT ="clientfood";
 	
