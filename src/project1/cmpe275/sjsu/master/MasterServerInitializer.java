@@ -28,8 +28,9 @@ public class MasterServerInitializer extends ChannelInitializer<SocketChannel> {
 
         // Remove the following line if you don't want automatic content compression.
         pipeline.addLast(new HttpContentCompressor());
+        
 
-        pipeline.addLast(new MasterServerHandler1());
+        pipeline.addLast(new MasterServerHandler());
         
         //could add more Handler ....
        
