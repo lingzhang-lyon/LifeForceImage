@@ -38,6 +38,10 @@ import project1.cmpe275.sjsu.model.Socket;
  * 
  *
  */
+/**
+ * @author lingzhang
+ *
+ */
 public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>{
 	
 	private static final String desPath="/Users/lingzhang/Desktop/";
@@ -171,14 +175,30 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 		//TODO add more code to store metadata to local database
 	}
 
+	/**
+	 * send proper format of pacakage to slave
+	 * @param socket
+	 * @param img
+	 * 
+	 */
 	private void sendMessageToSlave(Socket socket, Image img) {
 		System.out.println("image file " + img.getImageName() +" was send to slave");
 		// TODO Auto-generated method stub
+		// will call MessageSender
+		
 		
 	}
 
+	
+	/**
+	 * find proper slave socket according to our replication and partition algorithm
+	 * @param img
+	 * @return Socket
+	 * 
+	 */
 	private Socket findProperSlave(Image img) {
 		// TODO Auto-generated method stub
+		//will call SlaveFinder
 		return null;
 	}
 
@@ -231,20 +251,11 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 	private void writeAttributeToImage(InterfaceHttpData data, Image img) throws IOException {
 		Attribute attribute = (Attribute) data;
 		String value=attribute.getString();
-		String name=attribute.getName();
-		switch (name){
-			case "pictureName": img.setImageName(value);
-								break;
-			case "userName": img.setUserName(value);
-			break;
-			case "category": img.setCategory(value);
-			break;
-			default: break;
+		String name=attribute.getName();	
+		if (name=="pictureName") img.setImageName(value);							
+		if (name=="userName") img.setUserName(value);
+		if (name=="category") img.setCategory(value);
 		
-		}
-		
-        
-        
 	}
 
 	private void writeAttribute(InterfaceHttpData data) throws IOException{
