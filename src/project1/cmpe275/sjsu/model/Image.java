@@ -78,6 +78,14 @@ public class Image {
 		NodeAdress = nodeAdress;
 	}
 	
+	public String getBackupNodeAdress() {
+		return NodeAdress;
+	}
+
+	public void setBackupNodeAdress(String nodeAdress) {
+		NodeAdress = nodeAdress;
+	}
+	
 	
 
 }
