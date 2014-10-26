@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 
+import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.master.MessageSender;
 import project1.cmpe275.sjsu.model.Image;
 
@@ -41,13 +42,13 @@ import project1.cmpe275.sjsu.model.Image;
 public class Client {
 	
 
-	private static String HOST = "127.0.0.1";
-	private static int PORT = 8080;
-	static final String BASE_URL = System.getProperty("baseUrl", "http://127.0.0.1:8080/");
-    static final String FILE = System.getProperty("file", "/Users/lingzhang/Desktop/test1.jpeg");
-	static final String USERNAME ="yuan";
-	static final String PICNAME ="myclientpic.jpeg";
-	static final String CAT ="clientfood";
+	static final String HOST = Configure.HOST;
+	static final int PORT = Configure.PORT;
+	static final String BASE_URL = System.getProperty("baseUrl", Configure.BASE_URL);
+    static final String FILE = System.getProperty("file", Configure.clientFilePath);
+	static final String USERNAME =Configure.USERNAME;
+	static final String PICNAME =Configure.PICNAME;
+	static final String CAT =Configure.CAT;
 	
 	
 	public static void main(String[] agrs) throws Exception{

@@ -45,15 +45,20 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map.Entry;
 
+import project1.cmpe275.sjsu.conf.Configure;
+
 /**
  * This class is meant to be run against {@link HttpUploadServer}.
  */
 public final class HttpUploadClient {
 
-    //static final String BASE_URL = System.getProperty("baseUrl", "http://10.189.28.146:8080/");
-    static final String BASE_URL = System.getProperty("baseUrl", "http://127.0.0.1:8080/");
-    //static final String FILE = System.getProperty("file", "/Users/lingzhang/Desktop/datadir/testDataParsed.json");
-    static final String FILE = System.getProperty("file", "/Users/lingzhang/Desktop/test1.jpeg");
+	static final String HOST = Configure.HOST;
+	static final int PORT = Configure.PORT;
+	static final String BASE_URL = System.getProperty("baseUrl", Configure.BASE_URL);
+    static final String FILE = System.getProperty("file", Configure.clientFilePath);
+	static final String USERNAME =Configure.USERNAME;
+	static final String PICNAME =Configure.PICNAME;
+	static final String CAT =Configure.CAT;
     
     public static void main(String[] args) throws Exception {
         String postSimple, postFile, get;
