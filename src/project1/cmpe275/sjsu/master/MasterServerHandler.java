@@ -45,7 +45,7 @@ import project1.cmpe275.sjsu.model.Socket;
  */
 public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>{
 	
-	private static final String desPath="/Users/lingzhang/Desktop/";
+	private static final String desPath="~/Desktop/";
 	private static final Logger logger = Logger.getLogger(MasterServerHandler.class.getName());
 	private HttpRequest request;
 	private final StringBuilder responseContent = new StringBuilder();
