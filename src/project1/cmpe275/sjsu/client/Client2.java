@@ -57,7 +57,8 @@ public class Client2 {
 	
 	public static void clientPost(String host, int port, String baseURL, String filePath, String username, String picname, String category ){        
         try {
-			URI uriSimple=new URI(baseURL + "formpost");
+			//URI uriSimple=new URI(baseURL + "formpost");
+			URI uriSimple=new URI(baseURL + "formpostmultipart");
 			File file = new File(filePath);
 			if (!file.canRead()) {
 			    throw new FileNotFoundException(filePath);
@@ -167,7 +168,7 @@ public class Client2 {
 		//get information from image object and add to requestEncoder
         bodyRequestEncoder.addBodyAttribute("userName", image.getUserName());
         bodyRequestEncoder.addBodyAttribute("pictureName", image.getImageName());
-        bodyRequestEncoder.addBodyAttribute("catgory", image.getCategory());
+        bodyRequestEncoder.addBodyAttribute("category", image.getCategory());
         bodyRequestEncoder.addBodyFileUpload("myfile", image.getFile(), "application/x-zip-compressed", false); // isText=false
 	}
 	

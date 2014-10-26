@@ -20,6 +20,9 @@ import io.netty.handler.codec.http.multipart.FileUpload;
 import io.netty.handler.codec.http.multipart.HttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
+import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder.EndOfDataDecoderException;
+import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder.ErrorDataDecoderException;
+import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder.IncompatibleDataDecoderException;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData.HttpDataType;
 import io.netty.util.CharsetUtil;
 
@@ -45,7 +48,8 @@ import project1.cmpe275.sjsu.model.Socket;
  */
 public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>{
 	
-	private static final String desPath="~/Desktop/";
+	//private static final String desPath="~/Desktop/";
+	private static final String desPath="/Users/lingzhang/Desktop/";
 	private static final Logger logger = Logger.getLogger(MasterServerHandler.class.getName());
 	private HttpRequest request;
 	private final StringBuilder responseContent = new StringBuilder();
@@ -53,6 +57,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 	private static final HttpDataFactory factory =
             new DefaultHttpDataFactory(DefaultHttpDataFactory.MINSIZE); // Disk if size exceed
 	
+	//private static Image image=new Image("fooUser","fooPic.jpeg","fooCat",null);
 	private static Image image=new Image();
 	
  	@Override
@@ -108,8 +113,20 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 			if (decoder!=null){		
 				responseContent.append("get more http content chunk\n");								
 				HttpContent chunk = (HttpContent) msg;
+				
 				//put data chunk into decoder
-				decoder.offer(chunk);						 
+				//once there is decode error, will close the channel				
+				try{
+					decoder.offer(chunk);
+				}catch (ErrorDataDecoderException e1) {
+                    e1.printStackTrace();
+                    responseContent.append(e1.getMessage());
+                    writeResponseBackToChannel(ctx);
+                    ctx.channel().close();
+                    return;
+                }
+				
+		
 				responseContent.append(" o ");	
 				
 				//read all the data from decoder and do what ever you want to treat the data!!!!!!!!!!!
@@ -158,12 +175,27 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 	
 	}
 
-	//TODO
+	
 	private void handleFormPostMultipartRequest(ChannelHandlerContext ctx){
 		responseContent.append("It's a Form Multipart request. \r\n");
 		
 		//construct a decoder
-		decoder = new HttpPostRequestDecoder(factory, request);
+		try {
+            decoder = new HttpPostRequestDecoder(factory, request);
+        } catch (ErrorDataDecoderException e1) {
+            e1.printStackTrace();
+            responseContent.append(e1.getMessage());
+            writeResponseBackToChannel(ctx);
+            ctx.channel().close();
+            return;
+        } catch (IncompatibleDataDecoderException e1) {
+            // GET Method: should not try to create a HttpPostRequestDecoder
+            // So OK but stop here
+            responseContent.append(e1.getMessage());
+            responseContent.append("\r\n\r\nEND OF GET CONTENT\r\n");
+            writeResponseBackToChannel(ctx);
+            return;
+        }
 		
 		//writeResponse(ctx);
 				
@@ -203,18 +235,26 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 		return null;
 	}
 
-	private void readHttpDataChunkByChunk() throws Exception {
-	        
-	            while (decoder.hasNext()) {
-	                InterfaceHttpData data = decoder.next();
-	                if(data!=null)
-	                	writeHttpData(data);
-	                else {
-	                	System.out.println("this data is empty");
-	                }
-	                    
-	             }
+	private void readHttpDataChunkByChunk() throws Exception {    
+        try {
+			while (decoder.hasNext()) {
+			    InterfaceHttpData data = decoder.next();
+			    if(data!=null)
+					try {
+						writeHttpData(data);
+					} finally{
+						data.release();
+					}
+				else {
+			    	System.out.println("this data is empty");
+			    }
+			        
+			 }
+		} catch (EndOfDataDecoderException e1) {
+			responseContent.append("\r\n\r\nEND OF CONTENT CHUNK BY CHUNK\r\n\r\n");
+		}
 	}
+	
 	        
 	
 	private void writeHttpData(InterfaceHttpData data)throws Exception{
@@ -235,27 +275,13 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 	}
 	
 	
-	private void writeFileToImage(InterfaceHttpData data,Image img) {
-		FileUpload fileUpload = (FileUpload) data;
-        if (fileUpload.isCompleted()) {
-	    	try {
-				File receivedfile =fileUpload.getFile();
-				img.setFile(receivedfile);
-	    	}catch (Exception e) {
-				// TODO Auto-generated catch block
-				//responseContent.append("file is empty");
-			}
-        }
-		
-	}
-
 	private void writeAttributeToImage(InterfaceHttpData data, Image img) throws IOException {
 		Attribute attribute = (Attribute) data;
 		String value=attribute.getString();
 		String name=attribute.getName();	
-		if (name=="pictureName") img.setImageName(value);							
-		if (name=="userName") img.setUserName(value);
-		if (name=="category") img.setCategory(value);
+		if (name.equals("pictureName") ) img.setImageName(value);							
+		if (name.equals("userName") ) img.setUserName(value);
+		if (name.equals("category") ) img.setCategory(value);
 		
 	}
 
@@ -270,6 +296,20 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 	
 
 	
+	private void writeFileToImage(InterfaceHttpData data,Image img) {
+		FileUpload fileUpload = (FileUpload) data;
+	    if (fileUpload.isCompleted()) {
+	    	try {
+				File receivedfile =fileUpload.getFile();
+				img.setFile(receivedfile);
+	    	}catch (Exception e) {
+				// TODO Auto-generated catch block
+				//responseContent.append("file is empty");
+			}
+	    }
+		
+	}
+
 	private void writeFile(InterfaceHttpData data){
 		responseContent.append("\r\nBODY FileUpload: " + data.getHttpDataType().name() + ": " + data + "\r\n");
 		FileUpload fileUpload = (FileUpload) data;
