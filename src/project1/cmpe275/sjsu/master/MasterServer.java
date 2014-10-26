@@ -1,5 +1,6 @@
 package project1.cmpe275.sjsu.master;
 
+import project1.cmpe275.sjsu.conf.Configure;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -20,10 +21,9 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
  */
 public class MasterServer {
 	static final boolean SSL = System.getProperty("ssl") != null;
-    static final int PortForClient = Integer.parseInt(System.getProperty("port", SSL? "8443" : "8080"));
-    
-
-    static final int PortForSlave= 9090;
+    static final int PortForClient = Configure.MasterPortForClient;
+      
+    static final int PortForSlave= Configure.MasterPortForSlave;
 
 
     public static void main(String[] args) throws Exception {
