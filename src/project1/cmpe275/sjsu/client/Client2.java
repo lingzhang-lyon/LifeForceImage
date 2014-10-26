@@ -37,13 +37,13 @@ import project1.cmpe275.sjsu.model.Image;
  * 
  *
  */
-public class Client {
+public class Client2 {
 	
 
 	private static String HOST = "127.0.0.1";
 	private static int PORT = 8080;
 	static final String BASE_URL = System.getProperty("baseUrl", "http://127.0.0.1:8080/");
-    static final String FILE = System.getProperty("file", "image_1.jpg");
+    static final String FILE = System.getProperty("file", "/Users/lingzhang/Desktop/test1.jpeg");
 	static final String USERNAME ="yuan";
 	static final String PICNAME ="myclientpic.jpeg";
 	static final String CAT ="clientfood";
@@ -55,26 +55,8 @@ public class Client {
 	}
 	
 	
-	public static void clientPost(String host, int port, String baseURL, String filePath, String username, String picname, String category ){
-		 // setup the factory: here using a mixed memory/disk based on size threshold
-        HttpDataFactory fact = new DefaultHttpDataFactory(DefaultHttpDataFactory.MINSIZE); // Disk if MINSIZE exceed
-        
-        DiskFileUpload.deleteOnExitTemporaryFile = true; // should delete file on exit (in normal exit)
-        DiskFileUpload.baseDirectory = null; // system temp directory
-        DiskAttribute.deleteOnExitTemporaryFile = true; // should delete file on exit (in normal exit)
-        DiskAttribute.baseDirectory = null; // system temp directory		
-		
-        EventLoopGroup g = new NioEventLoopGroup();
- 
-        //Image image=new Image();
-        
+	public static void clientPost(String host, int port, String baseURL, String filePath, String username, String picname, String category ){        
         try {
-			Bootstrap b = new Bootstrap();
-			b.group(g)
-			 .channel(NioSocketChannel.class)
-			 .handler(new ClientInitializer());
-      
-						
 			URI uriSimple=new URI(baseURL + "formpost");
 			File file = new File(filePath);
 			if (!file.canRead()) {
@@ -83,67 +65,83 @@ public class Client {
 			
 			Image image=new Image(username, picname, category, file );
 			
-			createAndSendPostMessage(b, host, port,uriSimple, fact, image);
+			createAndSendPostMessage(host, port,uriSimple, image);
 			
 			//createAndSendPostMessage(bootstrap, HOST,PORT,uriSimple, file, factory, null);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally{
-			// Shut down executor threads to exit.
-            g.shutdownGracefully();
-            // Really clean all temporary files if they still exist
-            fact.cleanAllHttpDatas();
-		}
+		} 
 	}
 	
 
 	
-	private static void createAndSendPostMessage( Bootstrap bootstrap, String host, int port, 
-			URI uriSimple, HttpDataFactory factory, Image image) throws Exception{
-		 
-		// Start the connection attempt.
-        ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
-        // Wait until the connection attempt succeeds or fails.
-        Channel channel = future.sync().channel();
+	public static void createAndSendPostMessage( String host, int port, 
+			URI uriSimple, Image image) throws Exception{
+		
+		 HttpDataFactory factory = new DefaultHttpDataFactory(DefaultHttpDataFactory.MINSIZE); // Disk if MINSIZE exceed
+	        
+	        DiskFileUpload.deleteOnExitTemporaryFile = true; // should delete file on exit (in normal exit)
+	        DiskFileUpload.baseDirectory = null; // system temp directory
+	        DiskAttribute.deleteOnExitTemporaryFile = true; // should delete file on exit (in normal exit)
+	        DiskAttribute.baseDirectory = null; // system temp directory		
+			
+	     EventLoopGroup group = new NioEventLoopGroup();
+	     Bootstrap bootstrap = new Bootstrap();
+			bootstrap.group(group)
+			 .channel(NioSocketChannel.class)
+			 .handler(new ClientInitializer());
+		
+		try{
+			// Start the connection attempt.
+	        ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
+	        // Wait until the connection attempt succeeds or fails.
+	        Channel channel = future.sync().channel();
+	        
+	
+	        // Prepare the HTTP request.
+	        HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, uriSimple.toASCIIString());
+	
+	        //set headers
+	        // it is legal to add directly header or cookie into the request until finalize
+	        HttpHeaders headers = request.headers();
+	        setHeaders(headers, host, uriSimple);
+	        
+	              
+	        
+	        // Use the PostBody encoder
+	        HttpPostRequestEncoder bodyRequestEncoder =
+	                new HttpPostRequestEncoder(factory, request, true);  // false => not multipart
+	        		//new HttpPostRequestEncoder(factory, request, false);  // false => not multipart
+	       
+	        // add Form attribute
+	        setFormAttributes(bodyRequestEncoder, image);
+	        
+	
+	        bodyRequestEncoder.finalizeRequest();
+	        
+	        // send request
+	        channel.write(request);
+	
+	        // test if request was chunked and if so, finish the write
+	        if (bodyRequestEncoder.isChunked()) {
+	            channel.write(bodyRequestEncoder);
+	        }
+	        channel.flush();
+	
+	        // On standard program, it is clearly recommended to clean all files after each request
+	        //but here if we cleanfiles, it will delete the attribute values, so we don't do it here!!!!!!!!!!!!!
+	        //bodyRequestEncoder.cleanFiles();
+	
+	        // Wait for the server to close the connection.
+	        channel.closeFuture().sync();
         
-
-        // Prepare the HTTP request.
-        HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, uriSimple.toASCIIString());
-
-        //set headers
-        // it is legal to add directly header or cookie into the request until finalize
-        HttpHeaders headers = request.headers();
-        setHeaders(headers, host, uriSimple);
-        
-              
-        
-        // Use the PostBody encoder
-        HttpPostRequestEncoder bodyRequestEncoder =
-                new HttpPostRequestEncoder(factory, request, true);  // false => not multipart
-        		//new HttpPostRequestEncoder(factory, request, false);  // false => not multipart
-       
-        // add Form attribute
-        setFormAttributes(bodyRequestEncoder, image);
-        
-
-        bodyRequestEncoder.finalizeRequest();
-        
-        // send request
-        channel.write(request);
-
-        // test if request was chunked and if so, finish the write
-        if (bodyRequestEncoder.isChunked()) {
-            channel.write(bodyRequestEncoder);
-        }
-        channel.flush();
-
-        // On standard program, it is clearly recommended to clean all files after each request
-        //but here if we cleanfiles, it will delete the attribute values, so we don't do it here!!!!!!!!!!!!!
-        //bodyRequestEncoder.cleanFiles();
-
-        // Wait for the server to close the connection.
-        channel.closeFuture().sync();
+		}finally{
+			// Shut down executor threads to exit.
+            group.shutdownGracefully();
+            // Really clean all temporary files if they still exist
+            factory.cleanAllHttpDatas();
+		}
         		
 	}
 	

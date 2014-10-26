@@ -72,7 +72,7 @@ import project1.cmpe275.sjsu.model.Image;
 
 public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObject> {
 
-    private static final String desPath="~/Desktop/";
+    private static final String desPath="/Users/lingzhang/Desktop/";
 	
 	private static final Logger logger = Logger.getLogger(HttpUploadServerHandler.class.getName());
 

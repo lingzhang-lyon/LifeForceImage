@@ -26,6 +26,20 @@ public class MenuManager {
         sb.append("</table>\r\n");
 
 
+        // GET
+        sb.append("<CENTER>GET FORM<HR WIDTH=\"75%\" NOSHADE color=\"blue\"></CENTER>");
+        sb.append("<FORM ACTION=\"/formget\" METHOD=\"GET\">");
+        sb.append("<input type=hidden name=getform value=\"GET\">");
+        sb.append("<table border=\"0\">");
+        sb.append("<tr><td>Picture Name:<br><input type=text name=\"pictureName\" size=20></td></tr>");
+        sb.append("<tr><td>User Name:<br> <input type=text name=\"userName\" size=20></td></tr>");
+        sb.append("<tr><td>Category:<br> <input type=text name=\"category\" size=20></td></tr>");        
+        sb.append("</td></tr>");
+        sb.append("<tr><td><INPUT TYPE=\"submit\" NAME=\"Send\" VALUE=\"Send\"></INPUT></td>");
+        sb.append("<td><INPUT TYPE=\"reset\" NAME=\"Clear\" VALUE=\"Clear\" ></INPUT></td></tr>");
+        sb.append("</table></FORM>\r\n");
+        sb.append("<CENTER><HR WIDTH=\"75%\" NOSHADE color=\"blue\"></CENTER>");
+        
         // POST with enctype="multipart/form-data"
         sb.append("<CENTER>POST MULTIPART FORM<HR WIDTH=\"75%\" NOSHADE color=\"blue\"></CENTER>");
         sb.append("<FORM ACTION=\"/formpostmultipart\" ENCTYPE=\"multipart/form-data\" METHOD=\"POST\">");
