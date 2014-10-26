@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -129,10 +130,10 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 				    //then save the meta data to master database???????
 				    
 				    //find proper slave socket according to our replication and partition algorithm
-				 	Socket socket = findProperSlave(image);
+				 	ArrayList<Socket> sockets = findProperSlave(image);
 				 	
 				 	//send proper format of pacakage to slave
-				 	sendMessageToSlave(socket, image);	
+				 	sendMessageToSlave(sockets, image);	
 				 	
 				     reset();
 				     
@@ -181,7 +182,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 	 * @param img
 	 * 
 	 */
-	private void sendMessageToSlave(Socket socket, Image img) {
+	private void sendMessageToSlave(ArrayList<Socket> sockets, Image img) {
 		System.out.println("image file " + img.getImageName() +" was send to slave");
 		// TODO Auto-generated method stub
 		// will call MessageSender
@@ -196,7 +197,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 	 * @return Socket
 	 * 
 	 */
-	private Socket findProperSlave(Image img) {
+	private ArrayList<Socket> findProperSlave(Image img) {
 		// TODO Auto-generated method stub
 		//will call SlaveFinder
 		return null;
