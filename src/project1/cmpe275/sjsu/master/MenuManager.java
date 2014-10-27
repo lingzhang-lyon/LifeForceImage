@@ -33,7 +33,8 @@ public class MenuManager {
         sb.append("<table border=\"0\">");
         sb.append("<tr><td>Picture Name:<br><input type=text name=\"pictureName\" size=20></td></tr>");
         sb.append("<tr><td>User Name:<br> <input type=text name=\"userName\" size=20></td></tr>");
-        sb.append("<tr><td>Category:<br> <input type=text name=\"category\" size=20></td></tr>");        
+        sb.append("<tr><td>Category:<br> <input type=text name=\"category\" size=20></td></tr>");  
+        sb.append("<tr><td>UUID:<br> <input type=text name=\"uuid\" size=20></td></tr>"); 
         sb.append("</td></tr>");
         sb.append("<tr><td><INPUT TYPE=\"submit\" NAME=\"Send\" VALUE=\"Send\"></INPUT></td>");
         sb.append("<td><INPUT TYPE=\"reset\" NAME=\"Clear\" VALUE=\"Clear\" ></INPUT></td></tr>");

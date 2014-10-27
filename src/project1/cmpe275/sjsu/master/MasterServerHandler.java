@@ -6,14 +6,17 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.DecoderResult;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.handler.codec.http.multipart.Attribute;
 import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
 import io.netty.handler.codec.http.multipart.FileUpload;
@@ -29,9 +32,13 @@ import io.netty.util.CharsetUtil;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -91,7 +98,10 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 		    	responseContent.setLength(0);
 		    	responseContent.append("It's a Form reuest, REQUEST_URI: " + request.getUri() + "\r\n\r\n");
 
-		    	if (uri.getPath().equalsIgnoreCase("/formget") ) {		    		
+//		    	if (uri.getPath().equalsIgnoreCase("/formget") ) {		    		
+//		    		handleFormGetRequest(ctx);			        
+//		    	}
+		    	if (request.getMethod().equals(HttpMethod.GET) ) {		    		
 		    		handleFormGetRequest(ctx);			        
 		    	}
 		    	
@@ -170,12 +180,60 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 	
 	
 	//TODO 
-	private void handleFormGetRequest(ChannelHandlerContext ctx){
-		responseContent.append("It's a Form GET request. \r\n\r\nEND OF GET CONTENT~~~~~~~~~~\r\n");
+	private void handleFormGetRequest(ChannelHandlerContext ctx) throws Exception{
+		
+		responseContent.append("It's a Form GET request. ");
+		
+		//part of this code is from HttpSnoopServerHandler
+		 QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
+         Map<String, List<String>> params = queryStringDecoder.parameters();
+         Image img=new Image(); 
+         img.setUri(new URI(request.getUri()) );  
+         
+         if (!params.isEmpty()) {
+             for (Entry<String, List<String>> p: params.entrySet()) {
+                 String key = p.getKey();
+                 List<String> vals = p.getValue();
+                 for (String val : vals) {
+                	 responseContent.append("PARAM: ").append(key).append(" = ").append(val).append("\r\n");
+                 }                 
+             }
+             responseContent.append("\r\n");
+             img.setUuid(params.get("uuid").get(0));                       
+             img.setUserName(params.get("userName").get(0));
+             img.setImageName(params.get("pictureName").get(0));
+             img.setCategory(params.get("category").get(0));
+                         
+         }
+
+         ArrayList<Socket> sockets = findProperSlave(img);
+         Image resultImg = sendMessageToSlave(sockets, img);
+         
+       
+         if(resultImg!=null){
+	         responseContent.append("The requested image with uuid "+img.getUuid() +" is found.");
+	         responseContent.append("The UUID of the image is: "+resultImg.getUuid());
+	         responseContent.append("The Image Name of the image is: "+resultImg.getImageName());
+	         responseContent.append("The User of the image is: "+resultImg.getUserName());
+	         responseContent.append("The Created Time of the image is: "+resultImg.getCreated());
+	         
+	         writeImageBackToChannel(ctx, resultImg);
+         }else{
+        	 responseContent.append("The requested image with uuid "+img.getUuid() +" is not found.");
+         }
+       
+        
+		responseContent.append(" \r\n\r\nEND OF GET CONTENT~~~~~~~~~~\r\n");
 		writeResponseBackToChannel(ctx);
 	
 	}
+	
+	private void writeImageBackToChannel(ChannelHandlerContext ctx, Image img) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	
 	
 	private void handleFormPostMultipartRequest(ChannelHandlerContext ctx){
 		responseContent.append("It's a Form Multipart request. \r\n");
@@ -198,7 +256,6 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
             return;
         }
 		
-		//writeResponse(ctx);
 				
 	}
 
@@ -215,11 +272,11 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 	 * @param img
 	 * 
 	 */
-	private void sendMessageToSlave(ArrayList<Socket> sockets, Image img) {
+	private Image sendMessageToSlave(ArrayList<Socket> sockets, Image img) {
 		System.out.println("image file " + img.getImageName() +" was send to slave");
 		// TODO Auto-generated method stub
 		// will call MessageSender
-		
+		return null;
 		
 	}
 
