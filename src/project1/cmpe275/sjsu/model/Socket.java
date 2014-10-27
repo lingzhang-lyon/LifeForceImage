@@ -30,6 +30,24 @@ public class Socket {
 	public void setPort(int port) {
 		this.port = port;
 	}
+//get mac address
+public String getMacAddr() {  
+       String MacAddr = "";
+       String str = "";
+       try {
+           NetworkInterface NIC = NetworkInterface.getByName("eth0");
+           byte[] buf = NIC.getHardwareAddress();
+           for (int i = 0; i < buf.length; i++) {
+               str = str + byteHEX(buf[i]);
+           }
+           MacAddr = str.toUpperCase();
+       } catch (SocketException e) {
+           e.printStackTrace();
+           System.exit(-1);
+       }
+       return MacAddr;
+   }
+   
 //get local machine ip address
 public String getLocalIP() {
        String ip = "";
