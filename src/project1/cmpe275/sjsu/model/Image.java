@@ -19,7 +19,7 @@ public class Image {
 	
 	//TODO determine more attributes that needed
 	public String NodeAdress="";
-	public String created=""; 
+	public String created=""; // time stamp
 	
 	
 	//constructor

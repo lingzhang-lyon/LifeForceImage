@@ -15,5 +15,8 @@ public class Configure {
 	public static final String USERNAME ="tester";
 	public static final String PICNAME ="myclientpic.jpeg";
 	public static final String CAT ="clientfood";
+	
+	// configuration for slave
+	public static final int SLAVE_PORT = 10010;
 
 }

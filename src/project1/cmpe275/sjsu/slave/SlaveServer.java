@@ -1,5 +1,6 @@
 package project1.cmpe275.sjsu.slave;
 
+import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.slave.SlaveServerInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -24,8 +25,10 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
  *
  */
 public class SlaveServer {
+	
+    static final int SlavePort = Configure.SLAVE_PORT;
+
 	static final boolean SSL = System.getProperty("ssl") != null;
-    static final int PORT = Integer.parseInt(System.getProperty("port", SSL? "8443" : "9090"));
 
     public static void main(String[] args) throws Exception {
         // Configure SSL.
@@ -46,10 +49,10 @@ public class SlaveServer {
             b.handler(new LoggingHandler(LogLevel.INFO));
             b.childHandler(new SlaveServerInitializer(sslCtx));
 
-            Channel ch = b.bind(PORT).sync().channel();
+            Channel ch = b.bind(SlavePort).sync().channel();
 
             System.err.println("Open your web browser and navigate to " +
-                    (SSL? "https" : "http") + "://127.0.0.1:" + PORT + '/');
+                    (SSL? "https" : "http") + "://127.0.0.1:" + SlavePort + '/');
 
             ch.closeFuture().sync();
         } finally {
