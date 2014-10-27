@@ -19,8 +19,6 @@ import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import project1.cmpe275.sjsu.master.MasterServerHandler;
-
 public class SlaveServerHandler extends SimpleChannelInboundHandler<HttpObject> {
 	
 	private static final Logger logger = Logger.getLogger(SlaveServerHandler.class.getName());
