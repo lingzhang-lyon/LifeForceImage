@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu.master;
+package project1.cmpe275.sjsu.heartbeat;
 
 import static io.netty.buffer.Unpooled.copiedBuffer;
 import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_LENGTH;

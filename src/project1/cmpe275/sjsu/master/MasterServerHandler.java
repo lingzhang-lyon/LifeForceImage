@@ -43,17 +43,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import project1.cmpe275.sjsu.conf.Configure;
+import project1.cmpe275.sjsu.database.DatabaseManager;
 import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
 
-/**
- * 
- *
- */
-/**
- * @author lingzhang
- *
- */
+
 public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>{
 	
 	
@@ -98,9 +92,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 		    	responseContent.setLength(0);
 		    	responseContent.append("It's a Form reuest, REQUEST_URI: " + request.getUri() + "\r\n\r\n");
 
-//		    	if (uri.getPath().equalsIgnoreCase("/formget") ) {		    		
-//		    		handleFormGetRequest(ctx);			        
-//		    	}
+
 		    	if (request.getMethod().equals(HttpMethod.GET) ) {		    		
 		    		handleFormGetRequest(ctx);			        
 		    	}
@@ -121,65 +113,20 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 		}
 		
 		else if (msg instanceof HttpContent){
-			if (decoder!=null){		
-				responseContent.append("get more http content chunk\n");								
-				HttpContent chunk = (HttpContent) msg;
-				
-				//put data chunk into decoder
-				//once there is decode error, will close the channel				
-				try{
-					decoder.offer(chunk);
-				}catch (ErrorDataDecoderException e1) {
-                    e1.printStackTrace();
-                    responseContent.append(e1.getMessage());
-                    writeResponseBackToChannel(ctx);
-                    ctx.channel().close();
-                    return;
-                }
-				
-		
-				responseContent.append(" o ");	
-				
-				//read all the data from decoder and do what ever you want to treat the data!!!!!!!!!!!
-				// add information to responseContent
-				// store the attributes and file to image object!!!!!				
-				readHttpDataChunkByChunk(); 
-				
-				//if the data is the last part, write response to the channel
-				// or we can send the image to slave server!!!!!!!!!!!!!!!!!!
-				if (chunk instanceof LastHttpContent) {
-					
-					
-				    writeResponseBackToChannel(ctx);
-				    
-				    //save image meta data information to master server database
-				    saveImageInfoToLocalDatabase(image); 
-				    //may be we can use another channel to receive feedback from slave
-				    //then save the meta data to master database???????
-				    
-				    //find proper slave socket according to our replication and partition algorithm
-				 	ArrayList<Socket> sockets = findProperSlave(image);
-				 	
-				 	//send proper format of pacakage to slave
-				 	sendMessageToSlave(sockets, image);	
-				 	
-				     reset();
-				     
-				}
-			}else { 
-				responseContent.append("decoder not constructed");
-				writeResponseBackToChannel(ctx);
-			}
+			
+			handleFormPostContent(ctx, msg);
 			
 			
 			
 		}
 		
 	}
+
+
 	
 	
 	
-	//TODO 
+
 	private void handleFormGetRequest(ChannelHandlerContext ctx) throws Exception{
 		
 		responseContent.append("It's a Form GET request. ");
@@ -199,38 +146,57 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
                  }                 
              }
              responseContent.append("\r\n");
-             img.setUuid(params.get("uuid").get(0));                       
-             img.setUserName(params.get("userName").get(0));
-             img.setImageName(params.get("pictureName").get(0));
-             img.setCategory(params.get("category").get(0));
+             img.setUuid(params.get("uuid").get(0)); 
+             //later we could add more parameter in get request for searching image
+//             img.setUserName(params.get("userName").get(0));
+//             img.setImageName(params.get("pictureName").get(0));
+//             img.setCategory(params.get("category").get(0));
                          
          }
 
-         ArrayList<Socket> sockets = findProperSlave(img);
-         Image resultImg = sendMessageToSlave(sockets, img);
+         Socket socket = findProperSlaveForDownload(img);
          
+        DatabaseManager dm = new DatabaseManager();        
+        Image resultImg=null; 
+        try{
+         //TODO need to change the parameter for downloadFromDB();	
+         resultImg = dm.downloadFromDB(socket, img);
+         
+        } catch (Exception e){
+        	responseContent.append("Sorry, the search process met some problem");
+        }
+        
+         //TODO for test, need to be removed later
+         resultImg = new Image("tester","testpic", "testcat", null);
+         System.out.println("creat a test image named: " +resultImg.getImageName());
        
          if(resultImg!=null){
-	         responseContent.append("The requested image with uuid "+img.getUuid() +" is found.");
-	         responseContent.append("The UUID of the image is: "+resultImg.getUuid());
-	         responseContent.append("The Image Name of the image is: "+resultImg.getImageName());
-	         responseContent.append("The User of the image is: "+resultImg.getUserName());
-	         responseContent.append("The Created Time of the image is: "+resultImg.getCreated());
-	         
-	         writeImageBackToChannel(ctx, resultImg);
+        	 
+        	 //write back the information got from database --for test purpose
+        	 //can be removed later
+	         responseContent.append("The requested image with uuid "+img.getUuid() +" is found.\r\n");
+	         responseContent.append("The UUID of the image is: "+resultImg.getUuid()+"\r\n");
+	         responseContent.append("The Image Name of the image is: "+resultImg.getImageName()+"\r\n");
+	         responseContent.append("The User of the image is: "+resultImg.getUserName()+"\r\n");
+	         responseContent.append("The Created Time of the image is: "+resultImg.getCreated()+"\r\n");
+	         responseContent.append(" \r\n\r\nEND OF GET CONTENT~~~~~~~~~~\r\n");
+	 		 writeResponseBackToChannel(ctx);
+	 		 
+	 		 //TODO
+	 		 //or we can send the a message back contain image information and file
+	         	         
          }else{
         	 responseContent.append("The requested image with uuid "+img.getUuid() +" is not found.");
+        	 responseContent.append(" \r\n\r\nEND OF GET CONTENT~~~~~~~~~~\r\n");
+     		writeResponseBackToChannel(ctx);
          }
-       
-        
-		responseContent.append(" \r\n\r\nEND OF GET CONTENT~~~~~~~~~~\r\n");
-		writeResponseBackToChannel(ctx);
-	
+   
 	}
 	
-	private void writeImageBackToChannel(ChannelHandlerContext ctx, Image img) {
+	private Socket findProperSlaveForDownload(Image img) {
 		// TODO Auto-generated method stub
-		
+		// return SlaveFinder.findProperSlaveForDownload(img);
+		return null;
 	}
 
 	
@@ -259,35 +225,85 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 				
 	}
 
+	private void handleFormPostContent(ChannelHandlerContext ctx, HttpObject msg)
+			throws Exception {
+		
+		//only the formpost request will have HttpContent
+		
+		if (decoder!=null){		
+			//responseContent.append("get more http content chunk\n");								
+			HttpContent chunk = (HttpContent) msg;
+			
+			//put data chunk into decoder
+			//once there is decode error, will close the channel				
+			try{
+				decoder.offer(chunk);
+			}catch (ErrorDataDecoderException e1) {
+		        e1.printStackTrace();
+		        responseContent.append(e1.getMessage());
+		        writeResponseBackToChannel(ctx);
+		        ctx.channel().close();
+		        return;
+		    }
+			
+
+			responseContent.append(" o ");	
+			
+			//read all the data from decoder 
+			// add information to responseContent
+			// store the attributes and file to image object!!!!!
+			//now temperally has a function to write file to local file system, for test purpose
+			readHttpDataChunkByChunk(); 
+			
+			//if the data is the last part, write response to the channel
+			// or we can send the image to slave server!!!!!!!!!!!!!!!!!!
+			if (chunk instanceof LastHttpContent) {
+				
+				
+			    writeResponseBackToChannel(ctx);
+			    
+			    //save image meta data information to master server database
+			    //TODO
+			    saveImageInfoToLocalDatabase(image); 
+			    //may be we can use another channel to receive feedback from slave
+			    //then save the meta data to master database???????
+			    
+			    //find proper slave socket according to our replication and partition algorithm
+			    //TODO
+			 	ArrayList<Socket> sockets = findProperSlaveForUpload(image);
+			 	
+			 	//upload image to remote database
+			 	//TODO need to add more parameter for the method to select sockets			 	
+			 	DatabaseManager dm = new DatabaseManager();				 					 	
+//				 	dm.connectDatabase();
+//				 	dm.uploadToDB(image);
+
+			 	
+			    reset();
+			     
+			}
+		}else { 
+			responseContent.append("decoder not constructed");
+			writeResponseBackToChannel(ctx);
+		}
+	}
+	
+	
 	private void saveImageInfoToLocalDatabase(Image img ){
 		
-		System.out.println("image file " + img.getImageName() +" was saved to local database");
+		//System.out.println("image information " + img.getImageName() +" was saved to local database");
 		
 		//TODO add more code to store metadata to local database
 	}
 
-	/**
-	 * send proper format of pacakage to slave
-	 * @param socket
-	 * @param img
-	 * 
-	 */
-	private Image sendMessageToSlave(ArrayList<Socket> sockets, Image img) {
-		System.out.println("image file " + img.getImageName() +" was send to slave");
-		// TODO Auto-generated method stub
-		// will call MessageSender
-		return null;
 		
-	}
-
-	
 	/**
 	 * find proper slave socket according to our replication and partition algorithm
 	 * @param img
 	 * @return Socket
 	 * 
 	 */
-	private ArrayList<Socket> findProperSlave(Image img) {
+	private ArrayList<Socket> findProperSlaveForUpload(Image img) {
 		// TODO Auto-generated method stub
 		//will call SlaveFinder
 		return null;
@@ -309,7 +325,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 			        
 			 }
 		} catch (EndOfDataDecoderException e1) {
-			responseContent.append("\r\n\r\nEND OF CONTENT CHUNK BY CHUNK\r\n\r\n");
+			//responseContent.append("\r\n\r\nEND OF CONTENT CHUNK BY CHUNK\r\n\r\n");
 		}
 	}
 	
@@ -317,15 +333,15 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 	
 	private void writeHttpData(InterfaceHttpData data)throws Exception{
 		if (data.getHttpDataType() == HttpDataType.Attribute) {
-			writeAttribute(data);
 			writeAttributeToImage(data,image);
             
 		}
 		else if(data.getHttpDataType() == HttpDataType.FileUpload) {
 						
-			writeFile(data);
 			writeFileToImage(data,image);
-
+			
+			//TODO just for test, need to be removed later
+			writeFileToLocalTest(data);
 	
 		            
 		}		
@@ -343,14 +359,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 		
 	}
 
-	private void writeAttribute(InterfaceHttpData data) throws IOException{
-        Attribute attribute = (Attribute) data;
-        String value=attribute.getString();
-        responseContent.append("\r\nBODY Attribute: " + attribute.getHttpDataType().name() + ": "
-                + attribute + "\r\n");        
-       //print out the attribute
-       System.out.println("Attribute:" + attribute.getName() +": " + value);
-	}
+	
 	
 
 	
@@ -368,8 +377,9 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 		
 	}
 
-	private void writeFile(InterfaceHttpData data){
-		responseContent.append("\r\nBODY FileUpload: " + data.getHttpDataType().name() + ": " + data + "\r\n");
+	//for test purpose
+	//write the file to local file system
+	private void writeFileToLocalTest(InterfaceHttpData data){
 		FileUpload fileUpload = (FileUpload) data;
         if (fileUpload.isCompleted()) {
         	 fileUpload.isInMemory();            	 
@@ -390,7 +400,8 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<HttpObject>
 					if(receivedfile!=null){
 						dest.createNewFile();
 						fileUpload.renameTo(dest);
-						responseContent.append("file was saved to local");
+						System.out.println("file was saved to local for test purpose");
+						responseContent.append("\nfile was saved to local for test purpose");
 					}
 
 				    

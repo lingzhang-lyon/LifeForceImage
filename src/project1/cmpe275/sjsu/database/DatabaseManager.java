@@ -1,23 +1,22 @@
-package project1.cmpe275.sjsu.slave;
+package project1.cmpe275.sjsu.database;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
- 
+
 import org.bson.types.Binary;
- 
+
+import project1.cmpe275.sjsu.model.Image;
+import project1.cmpe275.sjsu.model.Socket;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
-
-import project1.cmpe275.sjsu.model.Image;
 
 public class DatabaseManager {
 	
@@ -62,8 +61,9 @@ public class DatabaseManager {
     	insert(uuid, fileName, client, uploadTime, storedName, category, collection);
     }
     
-    public void downloadFromDB() 
+    public Image downloadFromDB(Socket socket, Image img) 
     {
+    	return null;
     	// Retrieve an image where name = storedName, save to local as destFileName
 //    	String destFileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()) + ".jpg";
 //    	retrieve(storedName, destFileName, collection);

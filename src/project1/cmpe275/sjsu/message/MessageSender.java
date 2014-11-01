@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu.master;
+package project1.cmpe275.sjsu.message;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;

@@ -1,6 +1,7 @@
 package project1.cmpe275.sjsu.master;
 
 import project1.cmpe275.sjsu.conf.Configure;
+import project1.cmpe275.sjsu.heartbeat.MasterServerInitializer2;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -32,14 +33,14 @@ public class MasterServer {
     	StartChannelForClient start1= new StartChannelForClient();
     	Thread thread1=new Thread(start1);
     	
-    	//for listen slave heart beat
-    	StartChannelForSlave start2= new StartChannelForSlave();
-    	Thread thread2=new Thread(start2);
+//    	//for listen slave heart beat
+//    	StartChannelForSlave start2= new StartChannelForSlave();
+//    	Thread thread2=new Thread(start2);
     	
     	//we can add even more channel for different usage
     	
     	thread1.start();
-    	thread2.start();
+//    	thread2.start();
 
     }
     
@@ -80,48 +81,48 @@ public class MasterServer {
 			}	
     }
     
-    /**
-     * for listen slave heart beat
-     *
-     */
-    private static class StartChannelForSlave implements Runnable{
-    		   	
-		@Override
-		public void run()  {
-			
-		        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-		        EventLoopGroup workerGroup = new NioEventLoopGroup();
-		        try {
-		            // Configure SSL.
-		            final SslContext sslCtx;
-		            if (SSL) {
-		                SelfSignedCertificate ssc = new SelfSignedCertificate();
-		                sslCtx = SslContext.newServerContext(ssc.certificate(), ssc.privateKey());
-		            } else {
-		                sslCtx = null;
-		            }
-		            
-		            ServerBootstrap b = new ServerBootstrap();
-		            b.group(bossGroup, workerGroup);
-		            b.channel(NioServerSocketChannel.class);
-		            b.handler(new LoggingHandler(LogLevel.INFO));
-		            b.childHandler(new MasterServerInitializer2(sslCtx));
-		            //TODO need to change to heat beat Initializer, which connect to heart beat handler!!!!!
-		
-		            Channel ch = b.bind(PortForSlave).sync().channel();
-		
-		            System.err.println("Open your web browser and navigate to " +
-		                    (SSL? "https" : "http") + "://127.0.0.1:" + PortForSlave + '/');
-		
-		            ch.closeFuture().sync();
-		        } catch (Exception ex) {
-		        	System.err.println("Failed to setup channel for client");
-		        }finally {
-		            bossGroup.shutdownGracefully();
-		            workerGroup.shutdownGracefully();
-		        }	
-		}	
-	
-    }
+//    /**
+//     * for listen slave heart beat
+//     *
+//     */
+//    private static class StartChannelForSlave implements Runnable{
+//    		   	
+//		@Override
+//		public void run()  {
+//			
+//		        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+//		        EventLoopGroup workerGroup = new NioEventLoopGroup();
+//		        try {
+//		            // Configure SSL.
+//		            final SslContext sslCtx;
+//		            if (SSL) {
+//		                SelfSignedCertificate ssc = new SelfSignedCertificate();
+//		                sslCtx = SslContext.newServerContext(ssc.certificate(), ssc.privateKey());
+//		            } else {
+//		                sslCtx = null;
+//		            }
+//		            
+//		            ServerBootstrap b = new ServerBootstrap();
+//		            b.group(bossGroup, workerGroup);
+//		            b.channel(NioServerSocketChannel.class);
+//		            b.handler(new LoggingHandler(LogLevel.INFO));
+//		            b.childHandler(new MasterServerInitializer2(sslCtx));
+//		            //TODO need to change to heat beat Initializer, which connect to heart beat handler!!!!!
+//		
+//		            Channel ch = b.bind(PortForSlave).sync().channel();
+//		
+//		            System.err.println("Open your web browser and navigate to " +
+//		                    (SSL? "https" : "http") + "://127.0.0.1:" + PortForSlave + '/');
+//		
+//		            ch.closeFuture().sync();
+//		        } catch (Exception ex) {
+//		        	System.err.println("Failed to setup channel for client");
+//		        }finally {
+//		            bossGroup.shutdownGracefully();
+//		            workerGroup.shutdownGracefully();
+//		        }	
+//		}	
+//	
+//    }
     
 }

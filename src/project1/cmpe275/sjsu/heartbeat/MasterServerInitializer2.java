@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu.master;
+package project1.cmpe275.sjsu.heartbeat;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
