@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu;
+package project1.cmpe275.sjsu.example;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.EventLoopGroup;
@@ -75,21 +75,21 @@ public class HttpUploadClientTest {
             b.group(group).channel(NioSocketChannel.class).handler(new HttpUploadClientIntializer(sslCtx));
 
             // Simple Get form: no factory used (not usable)
-            List<Entry<String, String>> headers = project1.cmpe275.sjsu.HttpUploadClient.formget(b, host, port, get, uriSimple);
+            List<Entry<String, String>> headers = project1.cmpe275.sjsu.example.HttpUploadClient.formget(b, host, port, get, uriSimple);
             if (headers == null) {
                 factory.cleanAllHttpDatas();
                 return;
             }
 
             // Simple Post form: factory used for big attributes
-            List<InterfaceHttpData> bodylist = project1.cmpe275.sjsu.HttpUploadClient.formpost(b, host, port, uriSimple, file, factory, headers);
+            List<InterfaceHttpData> bodylist = project1.cmpe275.sjsu.example.HttpUploadClient.formpost(b, host, port, uriSimple, file, factory, headers);
             if (bodylist == null) {
                 factory.cleanAllHttpDatas();
                 return;
             }
 
             // Multipart Post form: factory used
-            project1.cmpe275.sjsu.HttpUploadClient.formpostmultipart(b, host, port, uriFile, factory, headers, bodylist);
+            project1.cmpe275.sjsu.example.HttpUploadClient.formpostmultipart(b, host, port, uriFile, factory, headers, bodylist);
         } finally {
             // Shut down executor threads to exit.
             group.shutdownGracefully();

@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu;
+package project1.cmpe275.sjsu.example;
 
 import java.io.File;
 import java.io.FileInputStream;

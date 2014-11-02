@@ -13,38 +13,38 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package project1.cmpe275.sjsu;
+package project1pbversion.cmpe275.sjsu.example.worldclock;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.HttpContentCompressor;
-import io.netty.handler.codec.http.HttpRequestDecoder;
-import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.ssl.SslContext;
 
-public class HttpUploadServerInitializer extends ChannelInitializer<SocketChannel> {
+public class WorldClockServerInitializer extends ChannelInitializer<SocketChannel> {
 
     private final SslContext sslCtx;
 
-    public HttpUploadServerInitializer(SslContext sslCtx) {
+    public WorldClockServerInitializer(SslContext sslCtx) {
         this.sslCtx = sslCtx;
     }
 
     @Override
-    public void initChannel(SocketChannel ch) {
-        ChannelPipeline pipeline = ch.pipeline();
-
+    public void initChannel(SocketChannel ch) throws Exception {
+        ChannelPipeline p = ch.pipeline();
         if (sslCtx != null) {
-            pipeline.addLast(sslCtx.newHandler(ch.alloc()));
+            p.addLast(sslCtx.newHandler(ch.alloc()));
         }
 
-        pipeline.addLast(new HttpRequestDecoder());
-        pipeline.addLast(new HttpResponseEncoder());
+        p.addLast(new ProtobufVarint32FrameDecoder());
+        p.addLast(new ProtobufDecoder(WorldClockProtocol.Locations.getDefaultInstance()));
 
-        // Remove the following line if you don't want automatic content compression.
-        pipeline.addLast(new HttpContentCompressor());
+        p.addLast(new ProtobufVarint32LengthFieldPrepender());
+        p.addLast(new ProtobufEncoder());
 
-        pipeline.addLast(new HttpUploadServerHandler());
+        p.addLast(new WorldClockServerHandler());
     }
 }

@@ -18,5 +18,16 @@ public class Configure {
 	
 	// configuration for slave
 	public static final int SLAVE_PORT = 10010;
+	
+	public static final String MongoHost ="127.0.0.1";
+	public static final int MongoPort =27017; 
+	public static final String DBName = "275db";
+	public static final String CollectionName = "Images_Collection_New";
+	
+	
+	
+	
+	//configure for new protobuf version MasterServerHandler
+	public static final boolean isTest = true;
 
 }

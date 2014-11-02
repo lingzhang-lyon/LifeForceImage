@@ -1,6 +1,6 @@
 package project1.cmpe275.sjsu.client;
 
-import project1.cmpe275.sjsu.HttpUploadClientHandler;
+import project1.cmpe275.sjsu.example.HttpUploadClientHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;

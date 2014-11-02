@@ -13,40 +13,38 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package project1.cmpe275.sjsu;
+package project1pbversion.cmpe275.sjsu.example.worldclock;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.HttpClientCodec;
-import io.netty.handler.codec.http.HttpContentDecompressor;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.ssl.SslContext;
-import io.netty.handler.stream.ChunkedWriteHandler;
 
-public class HttpUploadClientIntializer extends ChannelInitializer<SocketChannel> {
+public class WorldClockClientInitializer extends ChannelInitializer<SocketChannel> {
 
     private final SslContext sslCtx;
 
-    public HttpUploadClientIntializer(SslContext sslCtx) {
+    public WorldClockClientInitializer(SslContext sslCtx) {
         this.sslCtx = sslCtx;
     }
 
     @Override
     public void initChannel(SocketChannel ch) {
-        ChannelPipeline pipeline = ch.pipeline();
-
+        ChannelPipeline p = ch.pipeline();
         if (sslCtx != null) {
-            pipeline.addLast("ssl", sslCtx.newHandler(ch.alloc()));
+            p.addLast(sslCtx.newHandler(ch.alloc(), WorldClockClient.HOST, WorldClockClient.PORT));
         }
 
-        pipeline.addLast("codec", new HttpClientCodec());
+        p.addLast(new ProtobufVarint32FrameDecoder());
+        p.addLast(new ProtobufDecoder(WorldClockProtocol.LocalTimes.getDefaultInstance()));
 
-        // Remove the following line if you don't want automatic content decompression.
-        //pipeline.addLast("inflater", new HttpContentDecompressor());
+        p.addLast(new ProtobufVarint32LengthFieldPrepender());
+        p.addLast(new ProtobufEncoder());
 
-        // to be used since huge file transfer
-        pipeline.addLast("chunkedWriter", new ChunkedWriteHandler());
-
-        pipeline.addLast("handler", new HttpUploadClientHandler());
+        p.addLast(new WorldClockClientHandler());
     }
 }

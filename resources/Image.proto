@@ -1,0 +1,32 @@
+package protobuf;
+option java_package = "project1pbversion.cmpe275.sjsu.protobuf";
+option java_outer_classname = "ImagePB";
+
+message Request {
+    required Header header = 1;
+    required Payload body = 2;
+}
+
+message Header {
+	optional RequestType requestType = 1 [default = read];
+    optional ResponseFlag responseFlag = 2 [default = success];
+    optional int64 lastModified = 3;                     // Unix timestamp
+    optional int32 contentLength = 4;
+   
+    enum RequestType {
+        read = 0;
+        write = 1;
+        delete = 2;
+    }
+   
+    enum ResponseFlag {
+        success = 0;
+        failure = 1;
+    }
+}
+
+message Payload {
+	optional string uuid = 1;                            // Required for types 0 & 2
+    optional string name = 2;                            // Required for type 1
+    optional bytes data = 3;                             // Required for type 1
+}
