@@ -11,12 +11,15 @@ import java.util.logging.Logger;
 
 import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.database.DatabaseManager;
+import project1.cmpe275.sjsu.database.DatabaseManagerTest;
 import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 
 
@@ -45,7 +48,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
     
 	@Override
 	public void channelRead0(ChannelHandlerContext ctx, Request req) throws Exception {
-		RequestType type =req.getHeader().getRequestType();
+		RequestType type =req.getHeader().getPhotoHeader().getRequestType();
 		if(type.equals(RequestType.read)){
 		    handleReadRequest(ctx, req);
 		}
@@ -63,61 +66,111 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 	private void handleReadRequest(ChannelHandlerContext ctx, Request req) {
 		
 
-		String uuid=req.getBody().getUuid();		
+		String uuid=req.getBody().getPhotoPayload().getUuid();		
 		System.out.println("received read request for picture with UUID:"+uuid);
 
 		Image img=new Image(); 
 		img.setUuid(uuid);
 		Socket socket = findProperSlaveForDownload(img);
          
-        DatabaseManager dm = new DatabaseManager();        
-        Image resultImg=null; 
-        try{
-         //TODO need to change the parameter for downloadFromDB();	
-         resultImg = dm.downloadFromDB(socket, img);
+		//TODO  uncomment after finish implementation of DatabaseManager
+		//DatabaseManager dm = new DatabaseManager(); 
+		
+		//TODO just for test, need to be removed
+		DatabaseManagerTest dm = new DatabaseManagerTest();       
+
+         Request responseRequest=null;
          
-        } catch (Exception e){
-        	responseContent.append("Sorry, the search process met some problem");
-        }
-        
-         //TODO for test, need to be removed later
-        if(isTest){
-         resultImg = new Image("tester","testpic", "testcat", null);
-         resultImg.setUuid(uuid);//set received uuid to result image
-         System.out.println("creat a test image named: " +resultImg.getImageName());
-         System.out.println("with a UUID: " +resultImg.getImageName());
-         
-        }
-         //end of test code
-       
-         //create response message and write back to channel
-         Request.Builder builder = Request.newBuilder();        
-         Payload.Builder payloadbuilder = Payload.newBuilder();
-         Header.Builder headerbuilder = Header.newBuilder();
-         
-         if(resultImg!=null){
-        	 payloadbuilder.setUuid(resultImg.getUuid()).setName(resultImg.getImageName());
-        	 headerbuilder.setResponseFlag(ResponseFlag.success);	         	      
-         }else{
-        	 headerbuilder.setResponseFlag(ResponseFlag.failure);
+         //TODO need to change the parameter for uploadToDB();	
+         responseRequest = dm.downloadFromDB(socket, img);
+          
+          
+          //TODO for test, need to be removed later
+         if(isTest){              
+ 	         //create a test response message after uploaded to DB
+ 	         
+ 	         PhotoPayload pp=PhotoPayload.newBuilder()
+ 	        		 			.setUuid(uuid).setName("testReadPic")
+ 	        		 			.build();
+ 	         Payload p=Payload.newBuilder().setPhotoPayload(pp).build();
+ 	         
+ 	    	 PhotoHeader ph= PhotoHeader.newBuilder()
+ 	    			 		.setResponseFlag(ResponseFlag.success)
+ 	    			 		.setRequestType(RequestType.read)
+ 	    			 		.build();	         	      	       	    	 
+ 	    	 Header h=Header.newBuilder().setPhotoHeader(ph).build();
+ 	    
+ 	    	 
+ 	    	 responseRequest=Request.newBuilder()
+ 	    			 				.setHeader(h)
+ 	    			 				.setBody(p)
+ 	    			 				.build();
+ 	    	 
+ 	    	 System.out.println("UUID in response to read request: "
+ 	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
+     	 
          }
-    	 builder.setHeader(headerbuilder.build());
-    	 builder.setBody(payloadbuilder.build());
-    	 Request responseRequest=builder.build();
-    	 System.out.println("UUID in response request: "+ responseRequest.getBody().getUuid());
-    	 
- //   	 ctx.write(responseRequest);
-    	 
-    	// Write the response.
-    	 ChannelFuture future=ctx.channel().writeAndFlush(responseRequest);
-    	// Close the connection after the write operation is done.
-    	 future.addListener(ChannelFutureListener.CLOSE);
+     	// Write the response.
+     	 ChannelFuture future=ctx.channel().writeAndFlush(responseRequest);
+     	// Close the connection after the write operation is done.
+     	 future.addListener(ChannelFutureListener.CLOSE);
     	 
 	}
 	
 
 	private void handleWriteRequest(ChannelHandlerContext ctx, Request req) {
-		// TODO Auto-generated method stub
+		String uuid=req.getBody().getPhotoPayload().getUuid();		
+		System.out.println("received write request for picture with UUID:"+uuid);
+		String picname=req.getBody().getPhotoPayload().getName();		
+		System.out.println("received write request for picture with new name:"+picname);
+
+		Image img=new Image(); 
+		img.setUuid(uuid);
+		ArrayList<Socket> sockets = findProperSlaveForUpload(img);
+         
+		//TODO  uncomment after finish implementation of DatabaseManager
+		//DatabaseManager dm = new DatabaseManager(); 
+		
+		//TODO just for test, need to be removed
+		DatabaseManagerTest dm = new DatabaseManagerTest(); 
+        
+		Request responseRequest=null;
+       
+        //TODO need to change the parameter for uploadToDB();	
+        responseRequest = dm.uploadToDB(sockets, img);
+         
+         
+         //TODO for test, need to be removed later
+        if(isTest){              
+	         //create a test response message after uploaded to DB
+	         
+	         PhotoPayload pp=PhotoPayload.newBuilder()
+	        		 			.setUuid(uuid).setName(picname)
+	        		 			.build();
+	         Payload p=Payload.newBuilder().setPhotoPayload(pp).build();
+	         
+	    	 PhotoHeader ph= PhotoHeader.newBuilder()
+	    			 		.setResponseFlag(ResponseFlag.success)
+	    			 		.setRequestType(RequestType.write)
+	    			 		.build();	         	      	       	    	 
+	    	 Header h=Header.newBuilder().setPhotoHeader(ph).build();
+	    
+	    	 
+	    	 responseRequest=Request.newBuilder()
+	    			 				.setHeader(h)
+	    			 				.setBody(p)
+	    			 				.build();
+	    	 
+	    	 System.out.println("UUID in response to write request: "
+	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
+    	 
+        }
+    	// Write the response.
+    	 ChannelFuture future=ctx.channel().writeAndFlush(responseRequest);
+    	// Close the connection after the write operation is done.
+    	 future.addListener(ChannelFutureListener.CLOSE);
+		
+		
 		
 	}
 

@@ -5,12 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import org.bson.types.Binary;
 
 import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -56,7 +58,7 @@ public class DatabaseManagerTest {
 	}
 
 	// upload to database
-    public void uploadToDB(Image image) 
+    public Request uploadToDB(Image image) 
     {    	
     	// File properties
 //    	String fileName = "image_1.jpg";  // Original name in local file system
@@ -74,9 +76,11 @@ public class DatabaseManagerTest {
     	File imageFile = image.getFile();
     	// Insert an image
     	insert(imageFile, uuid, fileName, client, uploadTime, storedName, category, collection);
+    	
+    	return null;
     }
     
-    public Image downloadFromDB(Socket socket, Image img) 
+    public Request downloadFromDB(Socket socket, Image img) 
     {
     	return null;
     	// Retrieve an image where name = storedName, save to local as destFileName
@@ -140,4 +144,9 @@ public class DatabaseManagerTest {
             e.printStackTrace();
         }
     }
+
+	public Request uploadToDB(ArrayList<Socket> sockets, Image img) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

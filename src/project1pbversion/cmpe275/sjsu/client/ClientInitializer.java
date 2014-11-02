@@ -18,6 +18,8 @@ package project1pbversion.cmpe275.sjsu.client;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
@@ -32,11 +34,12 @@ public class ClientInitializer extends ChannelInitializer<SocketChannel> {
     public void initChannel(SocketChannel ch) {
         ChannelPipeline p = ch.pipeline();
 
-
-        p.addLast(new ProtobufVarint32FrameDecoder());
+        p.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
+        //p.addLast(new ProtobufVarint32FrameDecoder());
         p.addLast(new ProtobufDecoder(ImagePB.Request.getDefaultInstance()));
 
-        p.addLast(new ProtobufVarint32LengthFieldPrepender());
+        p.addLast("frameEncoder", new LengthFieldPrepender(4));
+        //p.addLast(new ProtobufVarint32LengthFieldPrepender());
         p.addLast(new ProtobufEncoder());
 
         p.addLast(new ClientHandler());

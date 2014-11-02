@@ -726,53 +726,19 @@ public final class ImagePB {
   public interface HeaderOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional .protobuf.Header.RequestType requestType = 1 [default = read];
+    // optional .protobuf.PhotoHeader photoHeader = 10;
     /**
-     * <code>optional .protobuf.Header.RequestType requestType = 1 [default = read];</code>
+     * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
      */
-    boolean hasRequestType();
+    boolean hasPhotoHeader();
     /**
-     * <code>optional .protobuf.Header.RequestType requestType = 1 [default = read];</code>
+     * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
      */
-    project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType getRequestType();
-
-    // optional .protobuf.Header.ResponseFlag responseFlag = 2 [default = success];
+    project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader getPhotoHeader();
     /**
-     * <code>optional .protobuf.Header.ResponseFlag responseFlag = 2 [default = success];</code>
+     * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
      */
-    boolean hasResponseFlag();
-    /**
-     * <code>optional .protobuf.Header.ResponseFlag responseFlag = 2 [default = success];</code>
-     */
-    project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag getResponseFlag();
-
-    // optional int64 lastModified = 3;
-    /**
-     * <code>optional int64 lastModified = 3;</code>
-     *
-     * <pre>
-     * Unix timestamp
-     * </pre>
-     */
-    boolean hasLastModified();
-    /**
-     * <code>optional int64 lastModified = 3;</code>
-     *
-     * <pre>
-     * Unix timestamp
-     * </pre>
-     */
-    long getLastModified();
-
-    // optional int32 contentLength = 4;
-    /**
-     * <code>optional int32 contentLength = 4;</code>
-     */
-    boolean hasContentLength();
-    /**
-     * <code>optional int32 contentLength = 4;</code>
-     */
-    int getContentLength();
+    project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeaderOrBuilder getPhotoHeaderOrBuilder();
   }
   /**
    * Protobuf type {@code protobuf.Header}
@@ -825,36 +791,17 @@ public final class ImagePB {
               }
               break;
             }
-            case 8: {
-              int rawValue = input.readEnum();
-              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType value = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(1, rawValue);
-              } else {
-                bitField0_ |= 0x00000001;
-                requestType_ = value;
+            case 82: {
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = photoHeader_.toBuilder();
               }
-              break;
-            }
-            case 16: {
-              int rawValue = input.readEnum();
-              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag value = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(2, rawValue);
-              } else {
-                bitField0_ |= 0x00000002;
-                responseFlag_ = value;
+              photoHeader_ = input.readMessage(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(photoHeader_);
+                photoHeader_ = subBuilder.buildPartial();
               }
-              break;
-            }
-            case 24: {
-              bitField0_ |= 0x00000004;
-              lastModified_ = input.readInt64();
-              break;
-            }
-            case 32: {
-              bitField0_ |= 0x00000008;
-              contentLength_ = input.readInt32();
+              bitField0_ |= 0x00000001;
               break;
             }
           }
@@ -896,257 +843,31 @@ public final class ImagePB {
       return PARSER;
     }
 
-    /**
-     * Protobuf enum {@code protobuf.Header.RequestType}
-     */
-    public enum RequestType
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>read = 0;</code>
-       */
-      read(0, 0),
-      /**
-       * <code>write = 1;</code>
-       */
-      write(1, 1),
-      /**
-       * <code>delete = 2;</code>
-       */
-      delete(2, 2),
-      ;
-
-      /**
-       * <code>read = 0;</code>
-       */
-      public static final int read_VALUE = 0;
-      /**
-       * <code>write = 1;</code>
-       */
-      public static final int write_VALUE = 1;
-      /**
-       * <code>delete = 2;</code>
-       */
-      public static final int delete_VALUE = 2;
-
-
-      public final int getNumber() { return value; }
-
-      public static RequestType valueOf(int value) {
-        switch (value) {
-          case 0: return read;
-          case 1: return write;
-          case 2: return delete;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<RequestType>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static com.google.protobuf.Internal.EnumLiteMap<RequestType>
-          internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<RequestType>() {
-              public RequestType findValueByNumber(int number) {
-                return RequestType.valueOf(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(index);
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.getDescriptor().getEnumTypes().get(0);
-      }
-
-      private static final RequestType[] VALUES = values();
-
-      public static RequestType valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int index;
-      private final int value;
-
-      private RequestType(int index, int value) {
-        this.index = index;
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:protobuf.Header.RequestType)
-    }
-
-    /**
-     * Protobuf enum {@code protobuf.Header.ResponseFlag}
-     */
-    public enum ResponseFlag
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>success = 0;</code>
-       */
-      success(0, 0),
-      /**
-       * <code>failure = 1;</code>
-       */
-      failure(1, 1),
-      ;
-
-      /**
-       * <code>success = 0;</code>
-       */
-      public static final int success_VALUE = 0;
-      /**
-       * <code>failure = 1;</code>
-       */
-      public static final int failure_VALUE = 1;
-
-
-      public final int getNumber() { return value; }
-
-      public static ResponseFlag valueOf(int value) {
-        switch (value) {
-          case 0: return success;
-          case 1: return failure;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<ResponseFlag>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static com.google.protobuf.Internal.EnumLiteMap<ResponseFlag>
-          internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<ResponseFlag>() {
-              public ResponseFlag findValueByNumber(int number) {
-                return ResponseFlag.valueOf(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(index);
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.getDescriptor().getEnumTypes().get(1);
-      }
-
-      private static final ResponseFlag[] VALUES = values();
-
-      public static ResponseFlag valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int index;
-      private final int value;
-
-      private ResponseFlag(int index, int value) {
-        this.index = index;
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:protobuf.Header.ResponseFlag)
-    }
-
     private int bitField0_;
-    // optional .protobuf.Header.RequestType requestType = 1 [default = read];
-    public static final int REQUESTTYPE_FIELD_NUMBER = 1;
-    private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType requestType_;
+    // optional .protobuf.PhotoHeader photoHeader = 10;
+    public static final int PHOTOHEADER_FIELD_NUMBER = 10;
+    private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader photoHeader_;
     /**
-     * <code>optional .protobuf.Header.RequestType requestType = 1 [default = read];</code>
+     * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
      */
-    public boolean hasRequestType() {
+    public boolean hasPhotoHeader() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional .protobuf.Header.RequestType requestType = 1 [default = read];</code>
+     * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
      */
-    public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType getRequestType() {
-      return requestType_;
-    }
-
-    // optional .protobuf.Header.ResponseFlag responseFlag = 2 [default = success];
-    public static final int RESPONSEFLAG_FIELD_NUMBER = 2;
-    private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag responseFlag_;
-    /**
-     * <code>optional .protobuf.Header.ResponseFlag responseFlag = 2 [default = success];</code>
-     */
-    public boolean hasResponseFlag() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+    public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader getPhotoHeader() {
+      return photoHeader_;
     }
     /**
-     * <code>optional .protobuf.Header.ResponseFlag responseFlag = 2 [default = success];</code>
+     * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
      */
-    public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag getResponseFlag() {
-      return responseFlag_;
-    }
-
-    // optional int64 lastModified = 3;
-    public static final int LASTMODIFIED_FIELD_NUMBER = 3;
-    private long lastModified_;
-    /**
-     * <code>optional int64 lastModified = 3;</code>
-     *
-     * <pre>
-     * Unix timestamp
-     * </pre>
-     */
-    public boolean hasLastModified() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>optional int64 lastModified = 3;</code>
-     *
-     * <pre>
-     * Unix timestamp
-     * </pre>
-     */
-    public long getLastModified() {
-      return lastModified_;
-    }
-
-    // optional int32 contentLength = 4;
-    public static final int CONTENTLENGTH_FIELD_NUMBER = 4;
-    private int contentLength_;
-    /**
-     * <code>optional int32 contentLength = 4;</code>
-     */
-    public boolean hasContentLength() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    /**
-     * <code>optional int32 contentLength = 4;</code>
-     */
-    public int getContentLength() {
-      return contentLength_;
+    public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeaderOrBuilder getPhotoHeaderOrBuilder() {
+      return photoHeader_;
     }
 
     private void initFields() {
-      requestType_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType.read;
-      responseFlag_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag.success;
-      lastModified_ = 0L;
-      contentLength_ = 0;
+      photoHeader_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -1161,16 +882,7 @@ public final class ImagePB {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, requestType_.getNumber());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, responseFlag_.getNumber());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeInt64(3, lastModified_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeInt32(4, contentLength_);
+        output.writeMessage(10, photoHeader_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1183,19 +895,7 @@ public final class ImagePB {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, requestType_.getNumber());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, responseFlag_.getNumber());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(3, lastModified_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, contentLength_);
+          .computeMessageSize(10, photoHeader_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1305,6 +1005,7 @@ public final class ImagePB {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getPhotoHeaderFieldBuilder();
         }
       }
       private static Builder create() {
@@ -1313,14 +1014,12 @@ public final class ImagePB {
 
       public Builder clear() {
         super.clear();
-        requestType_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType.read;
+        if (photoHeaderBuilder_ == null) {
+          photoHeader_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance();
+        } else {
+          photoHeaderBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
-        responseFlag_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag.success;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        lastModified_ = 0L;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        contentLength_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -1352,19 +1051,11 @@ public final class ImagePB {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.requestType_ = requestType_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
+        if (photoHeaderBuilder_ == null) {
+          result.photoHeader_ = photoHeader_;
+        } else {
+          result.photoHeader_ = photoHeaderBuilder_.build();
         }
-        result.responseFlag_ = responseFlag_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.lastModified_ = lastModified_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.contentLength_ = contentLength_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1381,17 +1072,8 @@ public final class ImagePB {
 
       public Builder mergeFrom(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header other) {
         if (other == project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.getDefaultInstance()) return this;
-        if (other.hasRequestType()) {
-          setRequestType(other.getRequestType());
-        }
-        if (other.hasResponseFlag()) {
-          setResponseFlag(other.getResponseFlag());
-        }
-        if (other.hasLastModified()) {
-          setLastModified(other.getLastModified());
-        }
-        if (other.hasContentLength()) {
-          setContentLength(other.getContentLength());
+        if (other.hasPhotoHeader()) {
+          mergePhotoHeader(other.getPhotoHeader());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -1420,24 +1102,1356 @@ public final class ImagePB {
       }
       private int bitField0_;
 
-      // optional .protobuf.Header.RequestType requestType = 1 [default = read];
-      private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType requestType_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType.read;
+      // optional .protobuf.PhotoHeader photoHeader = 10;
+      private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader photoHeader_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.Builder, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeaderOrBuilder> photoHeaderBuilder_;
       /**
-       * <code>optional .protobuf.Header.RequestType requestType = 1 [default = read];</code>
+       * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
+       */
+      public boolean hasPhotoHeader() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
+       */
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader getPhotoHeader() {
+        if (photoHeaderBuilder_ == null) {
+          return photoHeader_;
+        } else {
+          return photoHeaderBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
+       */
+      public Builder setPhotoHeader(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader value) {
+        if (photoHeaderBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          photoHeader_ = value;
+          onChanged();
+        } else {
+          photoHeaderBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
+       */
+      public Builder setPhotoHeader(
+          project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.Builder builderForValue) {
+        if (photoHeaderBuilder_ == null) {
+          photoHeader_ = builderForValue.build();
+          onChanged();
+        } else {
+          photoHeaderBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
+       */
+      public Builder mergePhotoHeader(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader value) {
+        if (photoHeaderBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              photoHeader_ != project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance()) {
+            photoHeader_ =
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.newBuilder(photoHeader_).mergeFrom(value).buildPartial();
+          } else {
+            photoHeader_ = value;
+          }
+          onChanged();
+        } else {
+          photoHeaderBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
+       */
+      public Builder clearPhotoHeader() {
+        if (photoHeaderBuilder_ == null) {
+          photoHeader_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance();
+          onChanged();
+        } else {
+          photoHeaderBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
+       */
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.Builder getPhotoHeaderBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getPhotoHeaderFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
+       */
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeaderOrBuilder getPhotoHeaderOrBuilder() {
+        if (photoHeaderBuilder_ != null) {
+          return photoHeaderBuilder_.getMessageOrBuilder();
+        } else {
+          return photoHeader_;
+        }
+      }
+      /**
+       * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.Builder, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeaderOrBuilder> 
+          getPhotoHeaderFieldBuilder() {
+        if (photoHeaderBuilder_ == null) {
+          photoHeaderBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.Builder, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeaderOrBuilder>(
+                  photoHeader_,
+                  getParentForChildren(),
+                  isClean());
+          photoHeader_ = null;
+        }
+        return photoHeaderBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.Header)
+    }
+
+    static {
+      defaultInstance = new Header(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.Header)
+  }
+
+  public interface PayloadOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional .protobuf.PhotoPayload photoPayload = 4;
+    /**
+     * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+     */
+    boolean hasPhotoPayload();
+    /**
+     * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+     */
+    project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload getPhotoPayload();
+    /**
+     * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+     */
+    project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayloadOrBuilder getPhotoPayloadOrBuilder();
+  }
+  /**
+   * Protobuf type {@code protobuf.Payload}
+   */
+  public static final class Payload extends
+      com.google.protobuf.GeneratedMessage
+      implements PayloadOrBuilder {
+    // Use Payload.newBuilder() to construct.
+    private Payload(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private Payload(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final Payload defaultInstance;
+    public static Payload getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public Payload getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Payload(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 34: {
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = photoPayload_.toBuilder();
+              }
+              photoPayload_ = input.readMessage(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(photoPayload_);
+                photoPayload_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Payload_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Payload_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.class, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<Payload> PARSER =
+        new com.google.protobuf.AbstractParser<Payload>() {
+      public Payload parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Payload(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Payload> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional .protobuf.PhotoPayload photoPayload = 4;
+    public static final int PHOTOPAYLOAD_FIELD_NUMBER = 4;
+    private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload photoPayload_;
+    /**
+     * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+     */
+    public boolean hasPhotoPayload() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+     */
+    public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload getPhotoPayload() {
+      return photoPayload_;
+    }
+    /**
+     * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+     */
+    public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayloadOrBuilder getPhotoPayloadOrBuilder() {
+      return photoPayload_;
+    }
+
+    private void initFields() {
+      photoPayload_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(4, photoPayload_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, photoPayload_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.Payload}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PayloadOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Payload_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Payload_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.class, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.Builder.class);
+      }
+
+      // Construct using project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getPhotoPayloadFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        if (photoPayloadBuilder_ == null) {
+          photoPayload_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.getDefaultInstance();
+        } else {
+          photoPayloadBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Payload_descriptor;
+      }
+
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload getDefaultInstanceForType() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.getDefaultInstance();
+      }
+
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload build() {
+        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload buildPartial() {
+        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload result = new project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        if (photoPayloadBuilder_ == null) {
+          result.photoPayload_ = photoPayload_;
+        } else {
+          result.photoPayload_ = photoPayloadBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload) {
+          return mergeFrom((project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload other) {
+        if (other == project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.getDefaultInstance()) return this;
+        if (other.hasPhotoPayload()) {
+          mergePhotoPayload(other.getPhotoPayload());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional .protobuf.PhotoPayload photoPayload = 4;
+      private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload photoPayload_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.Builder, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayloadOrBuilder> photoPayloadBuilder_;
+      /**
+       * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+       */
+      public boolean hasPhotoPayload() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+       */
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload getPhotoPayload() {
+        if (photoPayloadBuilder_ == null) {
+          return photoPayload_;
+        } else {
+          return photoPayloadBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+       */
+      public Builder setPhotoPayload(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload value) {
+        if (photoPayloadBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          photoPayload_ = value;
+          onChanged();
+        } else {
+          photoPayloadBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+       */
+      public Builder setPhotoPayload(
+          project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.Builder builderForValue) {
+        if (photoPayloadBuilder_ == null) {
+          photoPayload_ = builderForValue.build();
+          onChanged();
+        } else {
+          photoPayloadBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+       */
+      public Builder mergePhotoPayload(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload value) {
+        if (photoPayloadBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              photoPayload_ != project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.getDefaultInstance()) {
+            photoPayload_ =
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.newBuilder(photoPayload_).mergeFrom(value).buildPartial();
+          } else {
+            photoPayload_ = value;
+          }
+          onChanged();
+        } else {
+          photoPayloadBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+       */
+      public Builder clearPhotoPayload() {
+        if (photoPayloadBuilder_ == null) {
+          photoPayload_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.getDefaultInstance();
+          onChanged();
+        } else {
+          photoPayloadBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+       */
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.Builder getPhotoPayloadBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getPhotoPayloadFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+       */
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayloadOrBuilder getPhotoPayloadOrBuilder() {
+        if (photoPayloadBuilder_ != null) {
+          return photoPayloadBuilder_.getMessageOrBuilder();
+        } else {
+          return photoPayload_;
+        }
+      }
+      /**
+       * <code>optional .protobuf.PhotoPayload photoPayload = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.Builder, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayloadOrBuilder> 
+          getPhotoPayloadFieldBuilder() {
+        if (photoPayloadBuilder_ == null) {
+          photoPayloadBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.Builder, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayloadOrBuilder>(
+                  photoPayload_,
+                  getParentForChildren(),
+                  isClean());
+          photoPayload_ = null;
+        }
+        return photoPayloadBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.Payload)
+    }
+
+    static {
+      defaultInstance = new Payload(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.Payload)
+  }
+
+  public interface PhotoHeaderOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional .protobuf.PhotoHeader.RequestType requestType = 1 [default = read];
+    /**
+     * <code>optional .protobuf.PhotoHeader.RequestType requestType = 1 [default = read];</code>
+     */
+    boolean hasRequestType();
+    /**
+     * <code>optional .protobuf.PhotoHeader.RequestType requestType = 1 [default = read];</code>
+     */
+    project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType getRequestType();
+
+    // optional .protobuf.PhotoHeader.ResponseFlag responseFlag = 2 [default = success];
+    /**
+     * <code>optional .protobuf.PhotoHeader.ResponseFlag responseFlag = 2 [default = success];</code>
+     */
+    boolean hasResponseFlag();
+    /**
+     * <code>optional .protobuf.PhotoHeader.ResponseFlag responseFlag = 2 [default = success];</code>
+     */
+    project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag getResponseFlag();
+
+    // optional int64 lastModified = 3;
+    /**
+     * <code>optional int64 lastModified = 3;</code>
+     *
+     * <pre>
+     * Unix timestamp
+     * </pre>
+     */
+    boolean hasLastModified();
+    /**
+     * <code>optional int64 lastModified = 3;</code>
+     *
+     * <pre>
+     * Unix timestamp
+     * </pre>
+     */
+    long getLastModified();
+
+    // optional int32 contentLength = 4;
+    /**
+     * <code>optional int32 contentLength = 4;</code>
+     */
+    boolean hasContentLength();
+    /**
+     * <code>optional int32 contentLength = 4;</code>
+     */
+    int getContentLength();
+  }
+  /**
+   * Protobuf type {@code protobuf.PhotoHeader}
+   */
+  public static final class PhotoHeader extends
+      com.google.protobuf.GeneratedMessage
+      implements PhotoHeaderOrBuilder {
+    // Use PhotoHeader.newBuilder() to construct.
+    private PhotoHeader(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private PhotoHeader(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final PhotoHeader defaultInstance;
+    public static PhotoHeader getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public PhotoHeader getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private PhotoHeader(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              int rawValue = input.readEnum();
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType value = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                requestType_ = value;
+              }
+              break;
+            }
+            case 16: {
+              int rawValue = input.readEnum();
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag value = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(2, rawValue);
+              } else {
+                bitField0_ |= 0x00000002;
+                responseFlag_ = value;
+              }
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              lastModified_ = input.readInt64();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              contentLength_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_PhotoHeader_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_PhotoHeader_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.class, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<PhotoHeader> PARSER =
+        new com.google.protobuf.AbstractParser<PhotoHeader>() {
+      public PhotoHeader parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PhotoHeader(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PhotoHeader> getParserForType() {
+      return PARSER;
+    }
+
+    /**
+     * Protobuf enum {@code protobuf.PhotoHeader.RequestType}
+     */
+    public enum RequestType
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>read = 0;</code>
+       */
+      read(0, 0),
+      /**
+       * <code>write = 1;</code>
+       */
+      write(1, 1),
+      /**
+       * <code>delete = 2;</code>
+       */
+      delete(2, 2),
+      ;
+
+      /**
+       * <code>read = 0;</code>
+       */
+      public static final int read_VALUE = 0;
+      /**
+       * <code>write = 1;</code>
+       */
+      public static final int write_VALUE = 1;
+      /**
+       * <code>delete = 2;</code>
+       */
+      public static final int delete_VALUE = 2;
+
+
+      public final int getNumber() { return value; }
+
+      public static RequestType valueOf(int value) {
+        switch (value) {
+          case 0: return read;
+          case 1: return write;
+          case 2: return delete;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<RequestType>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<RequestType>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<RequestType>() {
+              public RequestType findValueByNumber(int number) {
+                return RequestType.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final RequestType[] VALUES = values();
+
+      public static RequestType valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private RequestType(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:protobuf.PhotoHeader.RequestType)
+    }
+
+    /**
+     * Protobuf enum {@code protobuf.PhotoHeader.ResponseFlag}
+     */
+    public enum ResponseFlag
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>success = 0;</code>
+       */
+      success(0, 0),
+      /**
+       * <code>failure = 1;</code>
+       */
+      failure(1, 1),
+      ;
+
+      /**
+       * <code>success = 0;</code>
+       */
+      public static final int success_VALUE = 0;
+      /**
+       * <code>failure = 1;</code>
+       */
+      public static final int failure_VALUE = 1;
+
+
+      public final int getNumber() { return value; }
+
+      public static ResponseFlag valueOf(int value) {
+        switch (value) {
+          case 0: return success;
+          case 1: return failure;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<ResponseFlag>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<ResponseFlag>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<ResponseFlag>() {
+              public ResponseFlag findValueByNumber(int number) {
+                return ResponseFlag.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDescriptor().getEnumTypes().get(1);
+      }
+
+      private static final ResponseFlag[] VALUES = values();
+
+      public static ResponseFlag valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private ResponseFlag(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:protobuf.PhotoHeader.ResponseFlag)
+    }
+
+    private int bitField0_;
+    // optional .protobuf.PhotoHeader.RequestType requestType = 1 [default = read];
+    public static final int REQUESTTYPE_FIELD_NUMBER = 1;
+    private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType requestType_;
+    /**
+     * <code>optional .protobuf.PhotoHeader.RequestType requestType = 1 [default = read];</code>
+     */
+    public boolean hasRequestType() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional .protobuf.PhotoHeader.RequestType requestType = 1 [default = read];</code>
+     */
+    public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType getRequestType() {
+      return requestType_;
+    }
+
+    // optional .protobuf.PhotoHeader.ResponseFlag responseFlag = 2 [default = success];
+    public static final int RESPONSEFLAG_FIELD_NUMBER = 2;
+    private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag responseFlag_;
+    /**
+     * <code>optional .protobuf.PhotoHeader.ResponseFlag responseFlag = 2 [default = success];</code>
+     */
+    public boolean hasResponseFlag() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional .protobuf.PhotoHeader.ResponseFlag responseFlag = 2 [default = success];</code>
+     */
+    public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag getResponseFlag() {
+      return responseFlag_;
+    }
+
+    // optional int64 lastModified = 3;
+    public static final int LASTMODIFIED_FIELD_NUMBER = 3;
+    private long lastModified_;
+    /**
+     * <code>optional int64 lastModified = 3;</code>
+     *
+     * <pre>
+     * Unix timestamp
+     * </pre>
+     */
+    public boolean hasLastModified() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional int64 lastModified = 3;</code>
+     *
+     * <pre>
+     * Unix timestamp
+     * </pre>
+     */
+    public long getLastModified() {
+      return lastModified_;
+    }
+
+    // optional int32 contentLength = 4;
+    public static final int CONTENTLENGTH_FIELD_NUMBER = 4;
+    private int contentLength_;
+    /**
+     * <code>optional int32 contentLength = 4;</code>
+     */
+    public boolean hasContentLength() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional int32 contentLength = 4;</code>
+     */
+    public int getContentLength() {
+      return contentLength_;
+    }
+
+    private void initFields() {
+      requestType_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType.read;
+      responseFlag_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag.success;
+      lastModified_ = 0L;
+      contentLength_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeEnum(1, requestType_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeEnum(2, responseFlag_.getNumber());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt64(3, lastModified_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeInt32(4, contentLength_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, requestType_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(2, responseFlag_.getNumber());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(3, lastModified_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(4, contentLength_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.PhotoHeader}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeaderOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_PhotoHeader_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_PhotoHeader_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.class, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.Builder.class);
+      }
+
+      // Construct using project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        requestType_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType.read;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        responseFlag_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag.success;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        lastModified_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        contentLength_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_PhotoHeader_descriptor;
+      }
+
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader getDefaultInstanceForType() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance();
+      }
+
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader build() {
+        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader buildPartial() {
+        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader result = new project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.requestType_ = requestType_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.responseFlag_ = responseFlag_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.lastModified_ = lastModified_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.contentLength_ = contentLength_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader) {
+          return mergeFrom((project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader other) {
+        if (other == project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance()) return this;
+        if (other.hasRequestType()) {
+          setRequestType(other.getRequestType());
+        }
+        if (other.hasResponseFlag()) {
+          setResponseFlag(other.getResponseFlag());
+        }
+        if (other.hasLastModified()) {
+          setLastModified(other.getLastModified());
+        }
+        if (other.hasContentLength()) {
+          setContentLength(other.getContentLength());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional .protobuf.PhotoHeader.RequestType requestType = 1 [default = read];
+      private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType requestType_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType.read;
+      /**
+       * <code>optional .protobuf.PhotoHeader.RequestType requestType = 1 [default = read];</code>
        */
       public boolean hasRequestType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional .protobuf.Header.RequestType requestType = 1 [default = read];</code>
+       * <code>optional .protobuf.PhotoHeader.RequestType requestType = 1 [default = read];</code>
        */
-      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType getRequestType() {
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType getRequestType() {
         return requestType_;
       }
       /**
-       * <code>optional .protobuf.Header.RequestType requestType = 1 [default = read];</code>
+       * <code>optional .protobuf.PhotoHeader.RequestType requestType = 1 [default = read];</code>
        */
-      public Builder setRequestType(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType value) {
+      public Builder setRequestType(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1447,33 +2461,33 @@ public final class ImagePB {
         return this;
       }
       /**
-       * <code>optional .protobuf.Header.RequestType requestType = 1 [default = read];</code>
+       * <code>optional .protobuf.PhotoHeader.RequestType requestType = 1 [default = read];</code>
        */
       public Builder clearRequestType() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        requestType_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType.read;
+        requestType_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType.read;
         onChanged();
         return this;
       }
 
-      // optional .protobuf.Header.ResponseFlag responseFlag = 2 [default = success];
-      private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag responseFlag_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag.success;
+      // optional .protobuf.PhotoHeader.ResponseFlag responseFlag = 2 [default = success];
+      private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag responseFlag_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag.success;
       /**
-       * <code>optional .protobuf.Header.ResponseFlag responseFlag = 2 [default = success];</code>
+       * <code>optional .protobuf.PhotoHeader.ResponseFlag responseFlag = 2 [default = success];</code>
        */
       public boolean hasResponseFlag() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional .protobuf.Header.ResponseFlag responseFlag = 2 [default = success];</code>
+       * <code>optional .protobuf.PhotoHeader.ResponseFlag responseFlag = 2 [default = success];</code>
        */
-      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag getResponseFlag() {
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag getResponseFlag() {
         return responseFlag_;
       }
       /**
-       * <code>optional .protobuf.Header.ResponseFlag responseFlag = 2 [default = success];</code>
+       * <code>optional .protobuf.PhotoHeader.ResponseFlag responseFlag = 2 [default = success];</code>
        */
-      public Builder setResponseFlag(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag value) {
+      public Builder setResponseFlag(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1483,11 +2497,11 @@ public final class ImagePB {
         return this;
       }
       /**
-       * <code>optional .protobuf.Header.ResponseFlag responseFlag = 2 [default = success];</code>
+       * <code>optional .protobuf.PhotoHeader.ResponseFlag responseFlag = 2 [default = success];</code>
        */
       public Builder clearResponseFlag() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        responseFlag_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.ResponseFlag.success;
+        responseFlag_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag.success;
         onChanged();
         return this;
       }
@@ -1574,18 +2588,18 @@ public final class ImagePB {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.Header)
+      // @@protoc_insertion_point(builder_scope:protobuf.PhotoHeader)
     }
 
     static {
-      defaultInstance = new Header(true);
+      defaultInstance = new PhotoHeader(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.Header)
+    // @@protoc_insertion_point(class_scope:protobuf.PhotoHeader)
   }
 
-  public interface PayloadOrBuilder
+  public interface PhotoPayloadOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // optional string uuid = 1;
@@ -1661,24 +2675,24 @@ public final class ImagePB {
     com.google.protobuf.ByteString getData();
   }
   /**
-   * Protobuf type {@code protobuf.Payload}
+   * Protobuf type {@code protobuf.PhotoPayload}
    */
-  public static final class Payload extends
+  public static final class PhotoPayload extends
       com.google.protobuf.GeneratedMessage
-      implements PayloadOrBuilder {
-    // Use Payload.newBuilder() to construct.
-    private Payload(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements PhotoPayloadOrBuilder {
+    // Use PhotoPayload.newBuilder() to construct.
+    private PhotoPayload(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private Payload(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private PhotoPayload(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final Payload defaultInstance;
-    public static Payload getDefaultInstance() {
+    private static final PhotoPayload defaultInstance;
+    public static PhotoPayload getDefaultInstance() {
       return defaultInstance;
     }
 
-    public Payload getDefaultInstanceForType() {
+    public PhotoPayload getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -1688,7 +2702,7 @@ public final class ImagePB {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private Payload(
+    private PhotoPayload(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1740,28 +2754,28 @@ public final class ImagePB {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Payload_descriptor;
+      return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_PhotoPayload_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Payload_fieldAccessorTable
+      return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_PhotoPayload_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.class, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.Builder.class);
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.class, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<Payload> PARSER =
-        new com.google.protobuf.AbstractParser<Payload>() {
-      public Payload parsePartialFrom(
+    public static com.google.protobuf.Parser<PhotoPayload> PARSER =
+        new com.google.protobuf.AbstractParser<PhotoPayload>() {
+      public PhotoPayload parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Payload(input, extensionRegistry);
+        return new PhotoPayload(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Payload> getParserForType() {
+    public com.google.protobuf.Parser<PhotoPayload> getParserForType() {
       return PARSER;
     }
 
@@ -1959,53 +2973,53 @@ public final class ImagePB {
       return super.writeReplace();
     }
 
-    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(byte[] data)
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(java.io.InputStream input)
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseDelimitedFrom(java.io.InputStream input)
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseDelimitedFrom(
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parseFrom(
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2014,7 +3028,7 @@ public final class ImagePB {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload prototype) {
+    public static Builder newBuilder(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -2026,24 +3040,24 @@ public final class ImagePB {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.Payload}
+     * Protobuf type {@code protobuf.PhotoPayload}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PayloadOrBuilder {
+       implements project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayloadOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Payload_descriptor;
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_PhotoPayload_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Payload_fieldAccessorTable
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_PhotoPayload_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.class, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.Builder.class);
+                project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.class, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.Builder.class);
       }
 
-      // Construct using project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.newBuilder()
+      // Construct using project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2078,23 +3092,23 @@ public final class ImagePB {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Payload_descriptor;
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_PhotoPayload_descriptor;
       }
 
-      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload getDefaultInstanceForType() {
-        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.getDefaultInstance();
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload getDefaultInstanceForType() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.getDefaultInstance();
       }
 
-      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload build() {
-        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload result = buildPartial();
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload build() {
+        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload buildPartial() {
-        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload result = new project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload(this);
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload buildPartial() {
+        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload result = new project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -2115,16 +3129,16 @@ public final class ImagePB {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload) {
-          return mergeFrom((project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload)other);
+        if (other instanceof project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload) {
+          return mergeFrom((project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload other) {
-        if (other == project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload.getDefaultInstance()) return this;
+      public Builder mergeFrom(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload other) {
+        if (other == project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload.getDefaultInstance()) return this;
         if (other.hasUuid()) {
           bitField0_ |= 0x00000001;
           uuid_ = other.uuid_;
@@ -2150,11 +3164,11 @@ public final class ImagePB {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload parsedMessage = null;
+        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload) e.getUnfinishedMessage();
+          parsedMessage = (project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -2413,15 +3427,15 @@ public final class ImagePB {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.Payload)
+      // @@protoc_insertion_point(builder_scope:protobuf.PhotoPayload)
     }
 
     static {
-      defaultInstance = new Payload(true);
+      defaultInstance = new PhotoPayload(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.Payload)
+    // @@protoc_insertion_point(class_scope:protobuf.PhotoPayload)
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
@@ -2439,6 +3453,16 @@ public final class ImagePB {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_Payload_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_PhotoHeader_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_PhotoHeader_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_PhotoPayload_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_PhotoPayload_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -2450,16 +3474,20 @@ public final class ImagePB {
     java.lang.String[] descriptorData = {
       "\n\013Image.proto\022\010protobuf\"L\n\007Request\022 \n\006he" +
       "ader\030\001 \002(\0132\020.protobuf.Header\022\037\n\004body\030\002 \002" +
-      "(\0132\021.protobuf.Payload\"\206\002\n\006Header\0227\n\013requ" +
-      "estType\030\001 \001(\0162\034.protobuf.Header.RequestT" +
-      "ype:\004read\022<\n\014responseFlag\030\002 \001(\0162\035.protob" +
-      "uf.Header.ResponseFlag:\007success\022\024\n\014lastM" +
-      "odified\030\003 \001(\003\022\025\n\rcontentLength\030\004 \001(\005\".\n\013" +
-      "RequestType\022\010\n\004read\020\000\022\t\n\005write\020\001\022\n\n\006dele" +
-      "te\020\002\"(\n\014ResponseFlag\022\013\n\007success\020\000\022\013\n\007fai" +
-      "lure\020\001\"3\n\007Payload\022\014\n\004uuid\030\001 \001(\t\022\014\n\004name\030",
-      "\002 \001(\t\022\014\n\004data\030\003 \001(\014B2\n\'project1pbversion" +
-      ".cmpe275.sjsu.protobufB\007ImagePB"
+      "(\0132\021.protobuf.Payload\"4\n\006Header\022*\n\013photo" +
+      "Header\030\n \001(\0132\025.protobuf.PhotoHeader\"7\n\007P" +
+      "ayload\022,\n\014photoPayload\030\004 \001(\0132\026.protobuf." +
+      "PhotoPayload\"\225\002\n\013PhotoHeader\022<\n\013requestT" +
+      "ype\030\001 \001(\0162!.protobuf.PhotoHeader.Request" +
+      "Type:\004read\022A\n\014responseFlag\030\002 \001(\0162\".proto" +
+      "buf.PhotoHeader.ResponseFlag:\007success\022\024\n" +
+      "\014lastModified\030\003 \001(\003\022\025\n\rcontentLength\030\004 \001",
+      "(\005\".\n\013RequestType\022\010\n\004read\020\000\022\t\n\005write\020\001\022\n" +
+      "\n\006delete\020\002\"(\n\014ResponseFlag\022\013\n\007success\020\000\022" +
+      "\013\n\007failure\020\001\"8\n\014PhotoPayload\022\014\n\004uuid\030\001 \001" +
+      "(\t\022\014\n\004name\030\002 \001(\t\022\014\n\004data\030\003 \001(\014B2\n\'projec" +
+      "t1pbversion.cmpe275.sjsu.protobufB\007Image" +
+      "PB"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2477,12 +3505,24 @@ public final class ImagePB {
           internal_static_protobuf_Header_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_Header_descriptor,
-              new java.lang.String[] { "RequestType", "ResponseFlag", "LastModified", "ContentLength", });
+              new java.lang.String[] { "PhotoHeader", });
           internal_static_protobuf_Payload_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_protobuf_Payload_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_Payload_descriptor,
+              new java.lang.String[] { "PhotoPayload", });
+          internal_static_protobuf_PhotoHeader_descriptor =
+            getDescriptor().getMessageTypes().get(3);
+          internal_static_protobuf_PhotoHeader_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_PhotoHeader_descriptor,
+              new java.lang.String[] { "RequestType", "ResponseFlag", "LastModified", "ContentLength", });
+          internal_static_protobuf_PhotoPayload_descriptor =
+            getDescriptor().getMessageTypes().get(4);
+          internal_static_protobuf_PhotoPayload_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_PhotoPayload_descriptor,
               new java.lang.String[] { "Uuid", "Name", "Data", });
           return null;
         }

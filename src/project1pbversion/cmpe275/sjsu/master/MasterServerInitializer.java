@@ -37,18 +37,14 @@ public class MasterServerInitializer extends ChannelInitializer<SocketChannel> {
 		 * framer with a max of 64 Mb message, 4 bytes are the length, and strip
 		 * 4 bytes
 		 */
-		//pipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
-
-		// pipeline.addLast("frameDecoder", new
-		// DebugFrameDecoder(67108864, 0, 4, 0, 4));
-
-		// decoder must be first
-		pipeline.addLast(new ProtobufVarint32FrameDecoder());
+		pipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
+		// pipeline.addLast("frameDecoder", new DebugFrameDecoder(67108864, 0, 4, 0, 4));
+		//pipeline.addLast(new ProtobufVarint32FrameDecoder());
 		pipeline.addLast("protobufDecoder", new ProtobufDecoder(ImagePB.Request.getDefaultInstance()));
 		
 		
-		//pipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
-		pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
+		pipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
+		//pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
 		pipeline.addLast("protobufEncoder", new ProtobufEncoder());
 
 		// our server processor (new instance for each connection)

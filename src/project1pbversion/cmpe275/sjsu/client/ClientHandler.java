@@ -32,10 +32,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<Request> {
     	
     	System.out.println("\nGot the feedback from Server-------");
     	StringBuilder sb= new StringBuilder();
-    	sb.append("\nOriginal Request Type: " + req.getHeader().getRequestType());
-    	sb.append("\nRespond Flag: " + req.getHeader().getResponseFlag());
-    	sb.append("\nUUID: " + req.getBody().getUuid());
-    	sb.append("\nImage Name: " + req.getBody().getName());
+    	sb.append("Original Request Type: " + req.getHeader().getPhotoHeader().getRequestType()+"\n");
+    	sb.append("Respond Flag: " + req.getHeader().getPhotoHeader().getResponseFlag()+"\n");
+    	sb.append("UUID: " + req.getBody().getPhotoPayload().getUuid()+"\n");
+    	sb.append("Image Name: " + req.getBody().getPhotoPayload().getName()+"\n");
     	
     	System.out.println(sb.toString());
     	

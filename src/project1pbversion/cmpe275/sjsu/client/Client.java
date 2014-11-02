@@ -20,8 +20,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 
 import java.net.URI;
 
@@ -29,13 +27,20 @@ import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.model.Image;
 import project1pbversion.cmpe275.sjsu.example.worldclock.WorldClockServer;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 
 /**
  * Sends a list of continent/city pairs to a {@link WorldClockServer} to
  * get the local times of the specified cities.
+ */
+/**
+ * @author lingzhang
+ *
  */
 public final class Client {
 
@@ -49,13 +54,8 @@ public final class Client {
     	
     	//TODO for get test, need to be removed later
         if(isTest){
-        	 System.out.println("test with get (read) request");	
-	         Image image = new Image();
-	         image.setUri(new URI(BASE_URL+"formget"));
-	         image.setUuid("testuuid");
-	         System.out.println("creat a test image with uuid: " +image.getUuid());
-	         createChannelAndSendRequest(image);
-         
+        	testGet();
+        	testPost();
         }
         //end of test code
         
@@ -64,115 +64,110 @@ public final class Client {
         
     }
     
-    public static void createChannelAndSendRequest(Image img) throws Exception{
+    public static void testGet() throws Exception{
+    	System.out.println("\ntest with get (read) request-----");	
+        Image image = new Image();
+        image.setUri(new URI(BASE_URL+"formget"));
+        image.setUuid("testuuidforget");
+        System.out.println("creat a test image with uuid: " +image.getUuid());
+        
+        //use a parameter to decide get or post directly
+        createChannelAndSendRequest(RequestType.read, image);
+    
+    	
+    }
+    
+    public static void testPost() throws Exception{
+		// TODO Auto-generated method stub
+    	System.out.println("\ntest with post (write) request------");	
+        Image image = new Image();
+        image.setUri(new URI(BASE_URL+"formpost"));
+        image.setUuid("testuuidforpost");
+        image.setImageName("testNewPicNameforpost");
+        System.out.println("creat a test image with uuid: " +image.getUuid());
+        
+        //use a parameter to decide get or post directly
+        createChannelAndSendRequest(RequestType.write, image);
+	}
+    
 
-        EventLoopGroup group = new NioEventLoopGroup();
-        try {
-            Bootstrap b = new Bootstrap();
-            b.group(group)
-             .channel(NioSocketChannel.class)
-             .handler(new ClientInitializer());
+    
+	/**
+	 * @param reqtype
+	 * @param img   must contain a valid uri, need to get host and port from uri
+	 * @throws Exception
+	 */
+	public static void createChannelAndSendRequest(RequestType reqtype,Image img) throws Exception{
+	
+	    EventLoopGroup group = new NioEventLoopGroup();
+	    try {
+	        Bootstrap b = new Bootstrap();
+	        b.group(group)
+	         .channel(NioSocketChannel.class)
+	         .handler(new ClientInitializer());
+	
+	        // Make a new connection.
+	       String host=img.getUri().getHost();
+	       int port=img.getUri().getPort();         
+	        Channel ch = b.connect(host, port).sync().channel();
+	        
+	        
+	        //convert img to a Request
+	        Request req= createRequest(reqtype, img);
+	        
+	        System.out.println("image uuid in the request: " +req.getBody().getPhotoPayload().getUuid());
+	        System.out.println("image name in the request: " +req.getBody().getPhotoPayload().getName());
+	        
+	        ch.writeAndFlush(req);
+	
+	        
+	     // Wait for the server to close the connection.
+	        ch.closeFuture().sync();
+	        
+	        ch.close();
+	
+	
+	    } finally {
+	        group.shutdownGracefully();
+	    }
+		
+		
+	}
 
-            // Make a new connection.
-           String host=img.getUri().getHost();
-           int port=img.getUri().getPort();         
-            Channel ch = b.connect(host, port).sync().channel();
-            
-            
-            //convert img to a Request
-          //  Request req= createRequest(img);
-           // Request req= createTestRequest();
-            Request req= createRequest(RequestType.read, img);
-            
-            System.out.println("image uuid in the request: " +req.getBody().getUuid());
-            
-            ch.writeAndFlush(req);
+	public static Request createRequest(RequestType reqtype, Image img)throws Exception{
+	    	
+		PhotoPayload.Builder ppb = PhotoPayload.newBuilder()
+		 			.setUuid(img.getUuid());
+		if(reqtype.equals(RequestType.write)){
+			ppb.setName(img.getImageName());
+			//TODO add image file data to photoPayload
+			//ppb.setData();
+		}
+		PhotoPayload pp=ppb.build();
+		Payload p=Payload.newBuilder().setPhotoPayload(pp).build();
+		
+		
+		PhotoHeader ph= PhotoHeader.newBuilder()
+				 		.setRequestType(reqtype)
+				 		.build();	         	      	       	    	 
+		Header h=Header.newBuilder().setPhotoHeader(ph).build();
+		
+		
+		Request request=Request.newBuilder()
+				 				.setHeader(h)
+				 				.setBody(p)
+				 				.build();
+	    
+		return request;
+	    	
+	    }
+
+
+    	
  
-            
-         // Wait for the server to close the connection.
-            ch.closeFuture().sync();
-            
-            ch.close();
-
-
-        } finally {
-            group.shutdownGracefully();
-        }
-    	
-    	
-    }
     
     
-    public static Request createRequest(Image img)throws Exception{ //restful 
-    	
-    	Request.Builder builder = Request.newBuilder();        
-        Payload.Builder payloadbuilder = Payload.newBuilder();
-        Header.Builder headerbuilder = Header.newBuilder();
-//        System.out.println("image uuid: " +img.getUuid()); 
-//        System.out.println(img.getUri().getPath());
-        
-        if(img.getUri().getPath().startsWith("/formget")){
-        	headerbuilder.setRequestType(RequestType.read);  
-        	payloadbuilder.setUuid(img.getUuid());
-        }
-        else if( img.getUri().getPath().startsWith("/formpost") ){
-        	headerbuilder.setRequestType(RequestType.write);  
-        	payloadbuilder.setUuid(img.getUuid()).setName(img.getImageName());
-        	//TODO we also need to set file into payload
-        	
-        }
-        
-        builder.setHeader(headerbuilder.build());
-   	 	builder.setBody(payloadbuilder.build());
-        return builder.build();
-    
-    	
-    }
-    
-    public static Request createRequest(RequestType reqtype, Image img)throws Exception{
-    	
-    	Request.Builder builder = Request.newBuilder();        
-        Payload.Builder payloadbuilder = Payload.newBuilder();
-        Header.Builder headerbuilder = Header.newBuilder();
-//        System.out.println("image uuid: " +img.getUuid()); 
-//        System.out.println(img.getUri().getPath());
-        
-        if(reqtype.equals(RequestType.read)){
-        	headerbuilder.setRequestType(RequestType.read);  
-        	payloadbuilder.setUuid(img.getUuid());
-        }
-        else if( reqtype.equals(RequestType.write)){
-        	headerbuilder.setRequestType(RequestType.write);  
-        	payloadbuilder.setUuid(img.getUuid()).setName(img.getImageName());
-        	//TODO we also need to set file into payload
-        	
-        }
-        
-        builder.setHeader(headerbuilder.build());
-   	 	builder.setBody(payloadbuilder.build());
-        return builder.build();
-    
-    	
-    }
-    
-public static Request createTestRequest()throws Exception{
-    	
-    	Request.Builder builder = Request.newBuilder();        
-        Payload.Builder payloadbuilder = Payload.newBuilder();
-        Header.Builder headerbuilder = Header.newBuilder();
-        
-        
-    	headerbuilder.setRequestType(RequestType.read);  
-    	payloadbuilder.setUuid("testuuid");
-        
-        
-        builder.setHeader(headerbuilder.build());
-   	 	builder.setBody(payloadbuilder.build());
-        return builder.build();
-    
-    	
-    }
-    
+   
     
     
 }
