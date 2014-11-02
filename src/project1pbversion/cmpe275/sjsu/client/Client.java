@@ -21,18 +21,21 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URI;
+
 
 import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.model.Image;
-import project1pbversion.cmpe275.sjsu.example.worldclock.WorldClockServer;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
+
+import com.google.protobuf.ByteString;
 
 /**
  * Sends a list of continent/city pairs to a {@link WorldClockServer} to
@@ -47,6 +50,7 @@ public final class Client {
     static final boolean SSL = System.getProperty("ssl") != null;
     private static final boolean isTest =Configure.isTest;
     static final String BASE_URL = System.getProperty("baseUrl", Configure.BASE_URL);
+    static final String filePath = System.getProperty("filePath", Configure.clientFilePath);
 
     public static void main(String[] args) throws Exception {
     	
@@ -78,12 +82,11 @@ public final class Client {
     }
     
     public static void testPost() throws Exception{
-		// TODO Auto-generated method stub
     	System.out.println("\ntest with post (write) request------");	
         Image image = new Image();
         image.setUri(new URI(BASE_URL+"formpost"));
         image.setUuid("testuuidforpost");
-        image.setImageName("testNewPicNameforpost");
+        image.setImageName("testNewPicNameforpost.jpeg");
         System.out.println("creat a test image with uuid: " +image.getUuid());
         
         //use a parameter to decide get or post directly
@@ -140,8 +143,12 @@ public final class Client {
 		 			.setUuid(img.getUuid());
 		if(reqtype.equals(RequestType.write)){
 			ppb.setName(img.getImageName());
-			//TODO add image file data to photoPayload
-			//ppb.setData();
+			
+			//add image file data to photoPayload
+			File file = new File(filePath);
+            ByteString data=convertFileToByteString(file);
+			ppb.setData(data);
+			
 		}
 		PhotoPayload pp=ppb.build();
 		Payload p=Payload.newBuilder().setPhotoPayload(pp).build();
@@ -160,7 +167,17 @@ public final class Client {
 	    
 		return request;
 	    	
-	    }
+	 }
+	
+	
+	public static ByteString convertFileToByteString(File file) throws Exception{
+		 @SuppressWarnings("resource")
+		FileInputStream f = new FileInputStream(file);           
+         byte b[] = new byte[f.available()];
+         f.read(b);
+         ByteString data=ByteString.copyFrom( b);
+         return data;
+	}
 
 
     	

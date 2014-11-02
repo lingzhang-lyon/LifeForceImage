@@ -5,12 +5,16 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import project1.cmpe275.sjsu.conf.Configure;
-import project1.cmpe275.sjsu.database.DatabaseManager;
 import project1.cmpe275.sjsu.database.DatabaseManagerTest;
 import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
@@ -21,6 +25,8 @@ import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
+
+import com.google.protobuf.ByteString;
 
 
 public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
@@ -63,7 +69,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 	}
 
 
-	private void handleReadRequest(ChannelHandlerContext ctx, Request req) {
+	private void handleReadRequest(ChannelHandlerContext ctx, Request req) throws Exception{
 		
 
 		String uuid=req.getBody().getPhotoPayload().getUuid();		
@@ -118,14 +124,25 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 	}
 	
 
-	private void handleWriteRequest(ChannelHandlerContext ctx, Request req) {
+
+	private void handleWriteRequest(ChannelHandlerContext ctx, Request req) throws Exception {
+
 		String uuid=req.getBody().getPhotoPayload().getUuid();		
 		System.out.println("received write request for picture with UUID:"+uuid);
 		String picname=req.getBody().getPhotoPayload().getName();		
 		System.out.println("received write request for picture with new name:"+picname);
 
+		ByteString data=req.getBody().getPhotoPayload().getData();
+		System.out.println("received write request for picture with new data:"+data.toString());
+		
+		//TODO need to convert ByteString data back to image file 
+		//the file is stored in local, is there any other way for zero copy?
+		File file=createFileInLocal(picname,desPath);
+		WriteByteStringToFile(data,file);
+
 		Image img=new Image(); 
 		img.setUuid(uuid);
+		img.setFile(file);
 		ArrayList<Socket> sockets = findProperSlaveForUpload(img);
          
 		//TODO  uncomment after finish implementation of DatabaseManager
@@ -197,6 +214,23 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		//System.out.println("image information " + img.getImageName() +" was saved to local database");
 		
 		//TODO add more code to store metadata to local database
+	}
+
+	private File createFileInLocal(String picname, String path) {
+		 String uploadTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());  // Time stamp
+		 String storedName = uploadTime  +"_"+ picname;  
+		 File dest = new File(path + storedName); 
+		 return dest;
+	}
+
+	@SuppressWarnings("resource")
+	private void WriteByteStringToFile(ByteString data, File file) throws Exception {
+		// TODO Auto-generated method stub
+		byte c[]=data.toByteArray();
+		FileOutputStream fout = new FileOutputStream(file);
+        fout.write(c);
+        fout.flush();
+		
 	}
 
     
