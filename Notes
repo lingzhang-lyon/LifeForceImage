@@ -22,5 +22,9 @@ Netty Version:
 Netty Example:
   https://github.com/netty/netty/tree/master/example/src/main/java/io/netty/example/http
   
+ProtoBuf version:
+2.5.0
+add protobuf-java-2.5.0.jar to buildpath
+  
 GitHub Tutorial:
   http://docs.joomla.org/Working_with_Git_and_Eclipse
