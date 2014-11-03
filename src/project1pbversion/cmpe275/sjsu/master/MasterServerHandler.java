@@ -6,6 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,7 @@ import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
+import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 
 import com.google.protobuf.ByteString;
 
@@ -88,8 +90,9 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		 //return a responseRequest, which contain all the image infomation
           
           //TODO for test, need to be removed later
-         if(isTest){              
-         	responseRequest=createRequestMessage(uuid,"testPic.jpeg",ResponseFlag.success,RequestType.read);
+         if(isTest){ 
+        	img.setImageName("testReadResponse.jpeg"); 
+         	responseRequest=MessageManager.createResponseRequest(img,ResponseFlag.success,RequestType.read);
    	 
  	    	 System.out.println("UUID in response to read request: "
  	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
@@ -116,8 +119,8 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		
 		//TODO need to convert ByteString data back to image file 
 		//the file is stored in local, is there any other way for zero copy?
-		File file=createFileInLocal(picname,desPath);
-		WriteByteStringToFile(data,file);
+		File file=MessageManager.createFile(picname,desPath);
+		MessageManager.writeByteStringToFile(data,file);
 
 		Image img=new Image(); 
 		img.setUuid(uuid);
@@ -138,8 +141,8 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
          //TODO for test, need to be removed later
         if(isTest){              
 	         //create a test response message after uploaded to DB
-        	responseRequest=createRequestMessage(uuid,picname,ResponseFlag.success,RequestType.write);
-	     
+        	responseRequest=MessageManager.createResponseRequest(img,ResponseFlag.success,RequestType.write);
+        	
 	    	 System.out.println("UUID in response to write request: "
 	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
     	 
@@ -158,67 +161,9 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		
 	}
 
-	private Image findMetadata(Image img) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	private Socket findProperSlaveForDownload(Image img) {
-		// TODO Auto-generated method stub
-		// return SlaveFinder.findProperSlaveForDownload(img);
-		return null;
-	}
 
 	
-	private ArrayList<Socket> findProperSlaveForUpload(Image img) {
-		// TODO Auto-generated method stub
-		//will call SlaveFinder
-		return null;
-	}
-
-	private void saveImageInfoToLocalDatabase(Image img ){
-		
-		//System.out.println("image information " + img.getImageName() +" was saved to local database");
-		
-		//TODO add more code to store metadata to local database
-	}
-
-	private File createFileInLocal(String picname, String path) {
-		 String uploadTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());  // Time stamp
-		 String storedName = uploadTime  +"_"+ picname;  
-		 File dest = new File(path + storedName); 
-		 return dest;
-	}
-
-	@SuppressWarnings("resource")
-	private void WriteByteStringToFile(ByteString data, File file) throws Exception {
-		byte c[]=data.toByteArray();
-		FileOutputStream fout = new FileOutputStream(file);
-        fout.write(c);
-        fout.flush();
-		
-	}
-	
-	private Request createRequestMessage(String uuid, String picname, ResponseFlag res, RequestType type){
-		PhotoPayload pp=PhotoPayload.newBuilder()
-				 			.setUuid(uuid).setName(picname)
-				 			.build();
-		Payload p=Payload.newBuilder().setPhotoPayload(pp).build();
-		
-		PhotoHeader ph= PhotoHeader.newBuilder()
-				 		.setResponseFlag(res)
-				 		.setRequestType(type)
-				 		.build();	         	      	       	    	 
-		Header h=Header.newBuilder().setPhotoHeader(ph).build();
-		
-		
-		Request request=Request.newBuilder()
-				 				.setHeader(h)
-				 				.setBody(p)
-				 				.build();
-		return request;
-	}
-
     
 
 }
