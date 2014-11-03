@@ -24,7 +24,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URI;
-
+import java.util.Scanner;
 
 import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.model.Image;
@@ -47,25 +47,89 @@ import com.google.protobuf.ByteString;
  */
 public final class Client {
 
-    static final boolean SSL = System.getProperty("ssl") != null;
-    private static final boolean isTest =Configure.isTest;
+   // private static final boolean isTest =Configure.isTest;
+    private static final boolean isTest =true;
     static final String BASE_URL = System.getProperty("baseUrl", Configure.BASE_URL);
     static final String filePath = System.getProperty("filePath", Configure.clientFilePath);
 
-    public static void main(String[] args) throws Exception {
+    @SuppressWarnings("resource")
+	public static void main(String[] args) throws Exception {
     	
     	System.out.println("Start Client***************\n");
-    	
-    	//TODO for get test, need to be removed later
+     
+    	// for test only
         if(isTest){
         	testGet();
         	testPost();
         }
         //end of test code
         
-        
-        //TODO create a user interface to input the request and picture information
-        
+        else{//if not test
+        // create a user interface to input the request and picture information
+	        String reqtype="";
+	    	do{
+		    	 System.out.println("enter the your request type:");
+		         Scanner reader = new Scanner(System.in);
+		         System.out.println("a. Read | b. Write |c. Quit ");
+		         
+		         reqtype=reader.nextLine();
+		    	
+		                  
+		
+		         if(reqtype.equals("a")){
+		        	 System.out.println("enter the UUID of picture:");
+		             String uuid=reader.nextLine();
+		             
+		             // create and send read request
+		             Image image = new Image();
+		             image.setUri(new URI(BASE_URL+"formget"));
+		             image.setUuid(uuid);
+		             System.out.println("creat a test image with uuid: " +image.getUuid());	             
+		             //use a parameter to decide get or post directly
+		             createChannelAndSendRequest(RequestType.read, image);
+		        	 reqtype="";
+		         }
+		         
+		         else if(reqtype.equals("b")){
+		        	 System.out.println("enter the UUID of picture:");
+		             String uuid=reader.nextLine();
+		        	 
+		        	 System.out.println("enter the path of picture:");
+		             String path=reader.nextLine(); 
+		             //TODO need to validate the input path
+		             File file = new File(path);
+		             //if file not found should input again
+		             
+		             System.out.println("enter the name of picture:");
+		             String picname=reader.nextLine(); 
+		             //TODO need to validate input name. should not contain "/"
+		             
+		             
+		           // create and send write request
+		             System.out.println("\ntest with post (write) request------");	
+		             Image image = new Image();
+		             image.setUri(new URI(BASE_URL+"formpost"));
+		             image.setUuid(uuid);	             
+		             image.setImageName(picname);	             
+		             image.setFile(file);
+		             System.out.println("creat a test image with uuid: " +image.getUuid());	             
+		             //use a parameter to decide get or post directly
+		             createChannelAndSendRequest(RequestType.write, image);
+		             
+		             reqtype="";
+		         }
+		         else if(reqtype.equals("c")){
+		        	 System.out.println("Goodbye!");
+		         }
+		         
+		         else{
+		        	 System.out.println("you didn't input correct charactor");
+		        	 reqtype="";
+		         }
+	         
+	    	} while(!reqtype.equals("c") );
+        }
+    	
     }
     
     public static void testGet() throws Exception{
@@ -87,6 +151,8 @@ public final class Client {
         image.setUri(new URI(BASE_URL+"formpost"));
         image.setUuid("testuuidforpost");
         image.setImageName("testNewPicNameforpost.jpeg");
+        File file = new File(filePath);
+        image.setFile(file);
         System.out.println("creat a test image with uuid: " +image.getUuid());
         
         //use a parameter to decide get or post directly
@@ -145,8 +211,7 @@ public final class Client {
 			ppb.setName(img.getImageName());
 			
 			//add image file data to photoPayload
-			File file = new File(filePath);
-            ByteString data=convertFileToByteString(file);
+            ByteString data=convertFileToByteString(img.getFile());
 			ppb.setData(data);
 			
 		}

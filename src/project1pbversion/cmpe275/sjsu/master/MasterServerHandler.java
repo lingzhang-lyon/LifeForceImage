@@ -77,41 +77,20 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 
 		Image img=new Image(); 
 		img.setUuid(uuid);
-		Socket socket = findProperSlaveForDownload(img);
-         
-		//TODO  uncomment after finish implementation of DatabaseManager
-		//DatabaseManager dm = new DatabaseManager(); 
+		 Request responseRequest=null;
 		
-		//TODO just for test, need to be removed
-		DatabaseManagerTest dm = new DatabaseManagerTest();       
-
-         Request responseRequest=null;
-         
-         //TODO need to change the parameter for uploadToDB();	
-         responseRequest = dm.downloadFromDB(socket, img);
-          
+		 //TODO use partition manager	 
+		 // PartitionManager pm=new PartitionManager();		 		 
+		 // responseRequest = pm.download(img);
+        //TODO 
+		 //pm.download(img) should be able to find where the image is, 
+		 //and download from slave DB
+		 //return a responseRequest, which contain all the image infomation
           
           //TODO for test, need to be removed later
          if(isTest){              
- 	         //create a test response message after uploaded to DB
- 	         
- 	         PhotoPayload pp=PhotoPayload.newBuilder()
- 	        		 			.setUuid(uuid).setName("testReadPic")
- 	        		 			.build();
- 	         Payload p=Payload.newBuilder().setPhotoPayload(pp).build();
- 	         
- 	    	 PhotoHeader ph= PhotoHeader.newBuilder()
- 	    			 		.setResponseFlag(ResponseFlag.success)
- 	    			 		.setRequestType(RequestType.read)
- 	    			 		.build();	         	      	       	    	 
- 	    	 Header h=Header.newBuilder().setPhotoHeader(ph).build();
- 	    
- 	    	 
- 	    	 responseRequest=Request.newBuilder()
- 	    			 				.setHeader(h)
- 	    			 				.setBody(p)
- 	    			 				.build();
- 	    	 
+         	responseRequest=createRequestMessage(uuid,"testPic.jpeg",ResponseFlag.success,RequestType.read);
+   	 
  	    	 System.out.println("UUID in response to read request: "
  	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
      	 
@@ -143,41 +122,24 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		Image img=new Image(); 
 		img.setUuid(uuid);
 		img.setFile(file);
-		ArrayList<Socket> sockets = findProperSlaveForUpload(img);
-         
-		//TODO  uncomment after finish implementation of DatabaseManager
-		//DatabaseManager dm = new DatabaseManager(); 
+		img.setImageName(picname);
 		
-		//TODO just for test, need to be removed
-		DatabaseManagerTest dm = new DatabaseManagerTest(); 
-        
+         
 		Request responseRequest=null;
-       
-        //TODO need to change the parameter for uploadToDB();	
-        responseRequest = dm.uploadToDB(sockets, img);
+		
+		 //TODO use partition manager	 
+		 // PartitionManager pm=new PartitionManager();		 		 
+		 // Boolean res= pm.upload(img);
+		//TODO pm.upload(img) should be able to find proper socket, 
+		 //and upload to slave DB
+		 //return a responseRequest, which contain success or failure information
          
          
          //TODO for test, need to be removed later
         if(isTest){              
 	         //create a test response message after uploaded to DB
-	         
-	         PhotoPayload pp=PhotoPayload.newBuilder()
-	        		 			.setUuid(uuid).setName(picname)
-	        		 			.build();
-	         Payload p=Payload.newBuilder().setPhotoPayload(pp).build();
-	         
-	    	 PhotoHeader ph= PhotoHeader.newBuilder()
-	    			 		.setResponseFlag(ResponseFlag.success)
-	    			 		.setRequestType(RequestType.write)
-	    			 		.build();	         	      	       	    	 
-	    	 Header h=Header.newBuilder().setPhotoHeader(ph).build();
-	    
-	    	 
-	    	 responseRequest=Request.newBuilder()
-	    			 				.setHeader(h)
-	    			 				.setBody(p)
-	    			 				.build();
-	    	 
+        	responseRequest=createRequestMessage(uuid,picname,ResponseFlag.success,RequestType.write);
+	     
 	    	 System.out.println("UUID in response to write request: "
 	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
     	 
@@ -194,6 +156,11 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 	private void handleDeleteRequest(ChannelHandlerContext ctx, Request req) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	private Image findMetadata(Image img) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private Socket findProperSlaveForDownload(Image img) {
@@ -225,12 +192,31 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 
 	@SuppressWarnings("resource")
 	private void WriteByteStringToFile(ByteString data, File file) throws Exception {
-		// TODO Auto-generated method stub
 		byte c[]=data.toByteArray();
 		FileOutputStream fout = new FileOutputStream(file);
         fout.write(c);
         fout.flush();
 		
+	}
+	
+	private Request createRequestMessage(String uuid, String picname, ResponseFlag res, RequestType type){
+		PhotoPayload pp=PhotoPayload.newBuilder()
+				 			.setUuid(uuid).setName(picname)
+				 			.build();
+		Payload p=Payload.newBuilder().setPhotoPayload(pp).build();
+		
+		PhotoHeader ph= PhotoHeader.newBuilder()
+				 		.setResponseFlag(res)
+				 		.setRequestType(type)
+				 		.build();	         	      	       	    	 
+		Header h=Header.newBuilder().setPhotoHeader(ph).build();
+		
+		
+		Request request=Request.newBuilder()
+				 				.setHeader(h)
+				 				.setBody(p)
+				 				.build();
+		return request;
 	}
 
     

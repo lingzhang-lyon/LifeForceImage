@@ -19,6 +19,8 @@ public class Image {
 	
 	//TODO determine more attributes that needed
 	public String NodeAdress="";
+	public String BackupNodeAdress="";
+	
 	public String created=""; // time stamp
 	
 	
@@ -114,11 +116,11 @@ public class Image {
 	}
 	
 	public String getBackupNodeAdress() {
-		return NodeAdress;
+		return BackupNodeAdress;
 	}
 
 	public void setBackupNodeAdress(String nodeAdress) {
-		NodeAdress = nodeAdress;
+		BackupNodeAdress = nodeAdress;
 	}
 	
 	
