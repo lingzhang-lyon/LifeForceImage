@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-<<<<<<< HEAD
-	<name>cmpe275project1CaoNew_CpForProtobuf2</name>
-=======
 	<name>cmpe275project1CaoNew_CpForProtobuf3</name>
->>>>>>> change master and client to process image file data
 	<comment></comment>
 	<projects>
 	</projects>
