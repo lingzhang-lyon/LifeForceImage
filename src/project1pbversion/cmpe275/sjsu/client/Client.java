@@ -48,29 +48,29 @@ import com.google.protobuf.ByteString;
  */
 public final class Client {
 
-   // private static final boolean isTest =Configure.isTest;
-    private static final boolean isTest =true;
 	static final String filePath = System.getProperty("filePath", Configure.clientFilePath);
+	public static final String HOST = "127.0.0.1";
+	public static final int PORT = 8080;
 
     @SuppressWarnings("resource")
 	public static void main(String[] args) throws Exception {
     	
     	System.out.println("Start Client***************\n");
     	Scanner reader0 = new Scanner(System.in);
-    	System.out.println("Enter the host your want to connect, like: 127.0.0.1");
-    	String host=reader0.nextLine();
-    	System.out.println("Enter the port your of the host, like 8080");
-    	int port=reader0.nextInt();
+    	System.out.println("a.Just simple test(use static configure)  | b. Input your own configure:");
+    	String isTest=reader0.nextLine();
     	
-    	// for test only
-        if(isTest){
-        	testGet(host, port);
-        	testPost(host, port);
-        }
-        //end of test code
-        
+    	if (isTest.equals("a")){ //if it's just a simple test
+    		testGet(HOST,PORT);
+        	testPost(HOST,PORT);
+    	} 
         else{//if not test
         // create a user interface to input the request and picture information
+        	System.out.println("Enter the host your want to connect, like: 127.0.0.1");
+        	String host=reader0.nextLine();
+        	System.out.println("Enter the port your of the host, like 8080");
+        	int port=reader0.nextInt();
+        	
 	        String reqtype="";
 	    	do{
 		    	 System.out.println("\n*******Enter the your request type:");

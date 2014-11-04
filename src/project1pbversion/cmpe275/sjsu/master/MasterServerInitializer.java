@@ -15,8 +15,9 @@ import project1pbversion.cmpe275.sjsu.protobuf.ImagePB;
 
 public class MasterServerInitializer extends ChannelInitializer<SocketChannel> {
 	boolean compress = false;
+	boolean saveToLocal = false;
 
-	public MasterServerInitializer(boolean enableCompression) {
+	public MasterServerInitializer(boolean enableCompression, boolean enbleSaveToLocal) {
 		compress = enableCompression;
 	}
 
@@ -48,6 +49,6 @@ public class MasterServerInitializer extends ChannelInitializer<SocketChannel> {
 		pipeline.addLast("protobufEncoder", new ProtobufEncoder());
 
 		// our server processor (new instance for each connection)
-		pipeline.addLast("handler", new MasterServerHandler());
+		pipeline.addLast("handler", new MasterServerHandler(saveToLocal));
 	}
 }

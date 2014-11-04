@@ -6,7 +6,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +26,12 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 	private static final boolean isTest =Configure.isTest;
 	private static final String desPath=Configure.desPath;
 	private static final Logger logger = Logger.getLogger(MasterServerHandler.class.getName());
+	private static boolean saveToLocal=false;
 	
+	
+	MasterServerHandler(boolean saveToLocal){
+		this.saveToLocal=saveToLocal;
+	}
 	
  	@Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
@@ -115,17 +119,22 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		ByteString data=req.getBody().getPhotoPayload().getData();
 		System.out.println("received write request for picture with new data:"+data.toString());
 		
-		//TODO test for save file to master local file system
-		File file=MessageManager.createFile(picname,desPath);
-		MessageManager.writeByteStringToFile(data,file);
-
-		Image img=new Image(); 
+		//if choose to save to master local file system
+//		if(saveToLocal){
+			File file=MessageManager.createFile(picname,desPath);
+			MessageManager.writeByteStringToFile(data,file);
+//		}
+		//TODO after refactor DBManager, to handle the byteString in image object, no need file in image object
+		//we can choose to not save to local, now we need this for temperary transfer
+		
+		
+		
+		Image img=new Image();
+		img.setFile(file); //can be delete later after refactor DBManager
 		img.setUuid(uuid);
-		img.setFile(file);
 		img.setImageName(picname);
 		img.setData(data);
-		
-         
+		       
 		Request responseRequest=null;
 		
 		 //TODO use partition manager	 

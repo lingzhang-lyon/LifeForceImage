@@ -21,10 +21,9 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import java.io.File;
 import java.util.Scanner;
 
-import project1.cmpe275.sjsu.conf.Configure;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 
 import com.google.protobuf.ByteString;
