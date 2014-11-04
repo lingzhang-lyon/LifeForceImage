@@ -19,11 +19,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.io.File;
+import java.util.Scanner;
 
-import project1.cmpe275.sjsu.conf.Configure;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 
 import com.google.protobuf.ByteString;
@@ -31,7 +31,6 @@ import com.google.protobuf.ByteString;
 public class ClientHandler extends SimpleChannelInboundHandler<Request> {
 
 
-    private static final String savePath = Configure.ClientSavePath;
 
 	@Override
     public void channelRead0(ChannelHandlerContext ctx, Request req) throws Exception {
@@ -47,17 +46,26 @@ public class ClientHandler extends SimpleChannelInboundHandler<Request> {
     	sb.append("Respond Flag: " + reFlag+"\n");
     	sb.append("UUID: " + uuid +"\n");
     	sb.append("Image Name: " +picname+"\n");
- 
-    	if(type.equals(RequestType.read)){
-	    	ByteString data=req.getBody().getPhotoPayload().getData();   	
-			sb.append("Received data:"+data.toString()+"\n");		
-			File file=MessageManager.createFile("feedback_"+req.getBody().getPhotoPayload().getName(),savePath);
-			MessageManager.writeByteStringToFile(data,file);
-    	}
     	System.out.println(sb.toString());
     	
-		
+    	if(type.equals(RequestType.read) && reFlag.equals(ResponseFlag.success)){
+	    	ByteString data=req.getBody().getPhotoPayload().getData();   	
+			System.out.println("Received data:"+data.toString());
     	
+	    	@SuppressWarnings("resource")
+			Scanner reader = new Scanner(System.in);
+	        System.out.println("Do you want to save file to local file system? (Y/N)");
+	        String saveToLocal=reader.nextLine();
+	        if(saveToLocal.equals("Y")||saveToLocal.equals("y")){
+	        	System.out.println("Please input the path you want to save the picture");
+	        	System.out.println("Like: /Users/lingzhang/Desktop/");
+	        	String savePath=reader.nextLine();
+				File file=MessageManager.createFile("feedback_"+req.getBody().getPhotoPayload().getName(),savePath);
+				MessageManager.writeByteStringToFile(data,file);
+				System.out.println("The file has been saved to your local file system");
+	        }
+		
+    	}
     	
 
     }

@@ -23,7 +23,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.URI;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import project1.cmpe275.sjsu.conf.Configure;
@@ -34,6 +34,7 @@ import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
+import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 
 import com.google.protobuf.ByteString;
 
@@ -47,28 +48,32 @@ import com.google.protobuf.ByteString;
  */
 public final class Client {
 
-   // private static final boolean isTest =Configure.isTest;
-    private static final boolean isTest =false;
-    static final String BASE_URL = System.getProperty("baseUrl", Configure.BASE_URL);
-    static final String filePath = System.getProperty("filePath", Configure.clientFilePath);
+	static final String filePath = System.getProperty("filePath", Configure.clientFilePath);
+	public static final String HOST = "127.0.0.1";
+	public static final int PORT = 8080;
 
     @SuppressWarnings("resource")
 	public static void main(String[] args) throws Exception {
     	
     	System.out.println("Start Client***************\n");
-     
-    	// for test only
-        if(isTest){
-        	testGet();
-        	testPost();
-        }
-        //end of test code
-        
+    	Scanner reader0 = new Scanner(System.in);
+    	System.out.println("a.Just simple test(use static configure)  | b. Input your own configure:");
+    	String isTest=reader0.nextLine();
+    	
+    	if (isTest.equals("a")){ //if it's just a simple test
+    		testGet(HOST,PORT);
+        	testPost(HOST,PORT);
+    	} 
         else{//if not test
         // create a user interface to input the request and picture information
+        	System.out.println("Enter the host your want to connect, like: 127.0.0.1");
+        	String host=reader0.nextLine();
+        	System.out.println("Enter the port your of the host, like 8080");
+        	int port=reader0.nextInt();
+        	
 	        String reqtype="";
 	    	do{
-		    	 System.out.println("enter the your request type:");
+		    	 System.out.println("\n*******Enter the your request type:");
 		         Scanner reader = new Scanner(System.in);
 		         System.out.println("a.Read | b.Write | c.Delete | d.Quit ");
 		         
@@ -79,14 +84,13 @@ public final class Client {
 		         if(reqtype.equals("a")){
 		        	 System.out.println("enter the UUID of picture:");
 		             String uuid=reader.nextLine();
-		             
+
 		             // create and send read request
 		             Image image = new Image();
-		             image.setUri(new URI(BASE_URL+"formget"));
 		             image.setUuid(uuid);
 		             System.out.println("creat a test image with uuid: " +image.getUuid());	             
 		             //use a parameter to decide get or post directly
-		             createChannelAndSendRequest(RequestType.read, image);
+		             createChannelAndSendRequest(RequestType.read, image, host, port);
 		        	 reqtype="";
 		         }
 		         
@@ -95,26 +99,36 @@ public final class Client {
 		             String uuid=reader.nextLine();
 		        	 
 		        	 System.out.println("enter the path of picture:");
+		        	 System.out.println("like: /Users/lingzhang/Desktop/test1.jpeg");
 		             String path=reader.nextLine(); 
-		             //TODO need to validate the input path
-		             File file = new File(path);
-		             //if file not found should input again
+		             File file= new File(System.getProperty("filePath", path));
+		             
+		             //TODO need to validate the input path		            	             
+		             if(!InputValidator.validateFile(file) ){
+		            	 System.out.println("your input file path have some issues");
+		            	 continue;
+		            	//if file not found should input again
+		             }
+		             
 		             
 		             System.out.println("enter the name of picture:");
 		             String picname=reader.nextLine(); 
 		             //TODO need to validate input name. should not contain "/"
-		             
+		             if(!InputValidator.validateName(picname) ){
+		            	 System.out.println("your input file name have some issues");
+		            	 continue;
+		            	//if file not found should input again
+		             }
 		             
 		           // create and send write request
 		             System.out.println("\ntest with post (write) request------");	
 		             Image image = new Image();
-		             image.setUri(new URI(BASE_URL+"formpost"));
 		             image.setUuid(uuid);	             
 		             image.setImageName(picname);	             
 		             image.setFile(file);
 		             System.out.println("creat a test image with uuid: " +image.getUuid());	             
 		             //use a parameter to decide get or post directly
-		             createChannelAndSendRequest(RequestType.write, image);
+		             createChannelAndSendRequest(RequestType.write, image, host, port);
 		             
 		             reqtype="";
 		         }
@@ -125,10 +139,9 @@ public final class Client {
 		             // create and send write request
 		             System.out.println("\ntest with delete request------");	
 		             Image image = new Image();
-		             image.setUri(new URI(BASE_URL+"formpost"));
 		             image.setUuid(uuid);
 		             
-		             createChannelAndSendRequest(RequestType.delete, image);
+		             createChannelAndSendRequest(RequestType.delete, image, host, port);
 		             
 		         }
 		         else if(reqtype.equals("d")){
@@ -145,23 +158,21 @@ public final class Client {
     	
     }
     
-    public static void testGet() throws Exception{
+    public static void testGet( String host, int port) throws Exception{
     	System.out.println("\ntest with get (read) request-----");	
         Image image = new Image();
-        image.setUri(new URI(BASE_URL+"formget"));
         image.setUuid("testuuidforget");
         System.out.println("creat a test image with uuid: " +image.getUuid());
         
         //use a parameter to decide get or post directly
-        createChannelAndSendRequest(RequestType.read, image);
+        createChannelAndSendRequest(RequestType.read, image,   host,  port);
     
     	
     }
     
-    public static void testPost() throws Exception{
+    public static void testPost( String host, int port) throws Exception{
     	System.out.println("\ntest with post (write) request------");	
         Image image = new Image();
-        image.setUri(new URI(BASE_URL+"formpost"));
         image.setUuid("testuuidforpost");
         image.setImageName("testLing.jpeg");
         File file = new File(filePath);
@@ -169,7 +180,7 @@ public final class Client {
         System.out.println("creat a test image with uuid: " +image.getUuid());
         
         //use a parameter to decide get or post directly
-        createChannelAndSendRequest(RequestType.write, image);
+        createChannelAndSendRequest(RequestType.write, image, host, port);
 	}
     
 
@@ -179,7 +190,7 @@ public final class Client {
 	 * @param img   must contain a valid uri, need to get host and port from uri
 	 * @throws Exception
 	 */
-	public static void createChannelAndSendRequest(RequestType reqtype,Image img) throws Exception{
+	public static void createChannelAndSendRequest(RequestType reqtype,Image img, String host, int port) throws Exception{
 	
 	    EventLoopGroup group = new NioEventLoopGroup();
 	    try {
@@ -189,8 +200,6 @@ public final class Client {
 	         .handler(new ClientInitializer());
 	
 	        // Make a new connection.
-	       String host=img.getUri().getHost();
-	       int port=img.getUri().getPort();         
 	        Channel ch = b.connect(host, port).sync().channel();
 	        
 	        
@@ -224,7 +233,7 @@ public final class Client {
 			ppb.setName(img.getImageName());
 			
 			//add image file data to photoPayload
-            ByteString data=convertFileToByteString(img.getFile());
+            ByteString data=MessageManager.convertFileToByteString(img.getFile());
 			ppb.setData(data);
 			
 		}
@@ -248,14 +257,7 @@ public final class Client {
 	 }
 	
 	
-	public static ByteString convertFileToByteString(File file) throws Exception{
-		 @SuppressWarnings("resource")
-		FileInputStream f = new FileInputStream(file);           
-         byte b[] = new byte[f.available()];
-         f.read(b);
-         ByteString data=ByteString.copyFrom( b);
-         return data;
-	}
+
 
 
     	
