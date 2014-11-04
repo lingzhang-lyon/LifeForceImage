@@ -28,6 +28,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
+import com.mongodb.WriteResult;
 
 /**
  *  Database Operations Manager
@@ -44,6 +45,7 @@ public class DatabaseManager {
 	static final int 	MongoPort = Configure.MongoPort;
 	static final String DBName = Configure.DBName;
 	static final String CollectionName = Configure.CollectionName;
+	
 	
 	/**
 	 *  Database Connecting Method
@@ -62,6 +64,7 @@ public class DatabaseManager {
         } 
 	}
     
+	
     /**
 	 *  Image downloading Method
 	 */
@@ -69,6 +72,10 @@ public class DatabaseManager {
     {
     	// return variable
     	Request downloadResponseRequest = null;
+    	boolean responseFlag = false;
+    	String fileName = null;
+    	ByteString imageData = null;
+    	PhotoPayload pp = null;
     			
     	// Connect to DB
     	DatabaseManager dm = new DatabaseManager();
@@ -77,22 +84,31 @@ public class DatabaseManager {
     	// Parse the info of image
     	String uuid = img.getUuid();
     	
-    	// Download an image to DB by UUID
+    	// Download an image from DB by UUID
     	Image retrievedImage = retrieveProperties(uuid, collection);
-    	String fileName = retrievedImage.getImageName();
-    	
-    	byte[] imageData = retrieveByte(uuid, collection);
+    	    	
+    	if(retrievedImage.imageName != "") {
+    		responseFlag = true;
+    		fileName = retrievedImage.getImageName();
+    		imageData = ByteString.copyFrom(retrieveByte(uuid, collection));
+    		
+    		pp = PhotoPayload.newBuilder()
+					  		 .setUuid(uuid)
+					  		 .setName(fileName)
+					  		 .setData(imageData)
+					  		 .build();
+    	} else {
+    		pp = PhotoPayload.newBuilder()
+					  		 .setUuid(uuid)
+					  		 .build();
+    	}
     	
     	// Organize return info
-    	PhotoPayload pp = PhotoPayload.newBuilder()
-    								  .setUuid(uuid)
-    								  .setName(fileName)
-    								  .setData(ByteString.copyFrom(imageData))
-    								  .build();
+    	
     	Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
 
     	PhotoHeader ph = PhotoHeader.newBuilder()
-    								.setResponseFlag(ResponseFlag.success)
+    								.setResponseFlag(responseFlag? ResponseFlag.success : ResponseFlag.failure)
    									.setRequestType(RequestType.read)
    									.build();	         	      	       	    	 
     	Header h = Header.newBuilder().setPhotoHeader(ph).build();
@@ -110,10 +126,11 @@ public class DatabaseManager {
     	// Close DB
     }
 
+    
     /**
 	 *  Image uploading Method
 	 */
-	public Request uploadToDB(ArrayList<Socket> sockets, Image img) {
+	public Request uploadToDB(Socket socket, Image img) {
 		// return variable
 		Request uploadResponseRequest = null;
 		
@@ -158,6 +175,49 @@ public class DatabaseManager {
 		return uploadResponseRequest;
 	}
 	
+	
+    /**
+	 *  Image deleting Method
+	 */
+	public Request deleteInDB(Socket socket, Image img) {
+		// return variable
+		Request deleteResponseRequest = null;
+		
+		DatabaseManager dm = new DatabaseManager();
+		dm.connectDatabase();
+		
+		String uuid 	= img.getUuid();
+		String fileName = img.getImageName();
+		
+		// Delete an image in DB
+		delete(uuid, collection);
+		
+		// Organize return info
+    	PhotoPayload pp = PhotoPayload.newBuilder()
+    								  .setUuid(uuid).setName(fileName)
+    								  .build();
+    	Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
+
+    	PhotoHeader ph = PhotoHeader.newBuilder()
+    								.setResponseFlag(ResponseFlag.success)
+   									.setRequestType(RequestType.delete)
+   									.build();	         	      	       	    	 
+    	Header h = Header.newBuilder().setPhotoHeader(ph).build();
+
+    	deleteResponseRequest = Request.newBuilder()
+    								   .setHeader(h)
+    								   .setBody(p)
+    								   .build();
+
+    	System.out.println("UUID in response to delete: "
+	 			+ deleteResponseRequest.getBody().getPhotoPayload().getUuid());
+    	
+    	// Close DB
+		
+		return deleteResponseRequest;
+	}
+	
+	
     /**
 	 *  Info Inserting Method
 	 */
@@ -166,8 +226,7 @@ public class DatabaseManager {
     				   File fileData, 
     				   DBCollection collection)
     {
-        try
-        {
+        try {
             File imageFile = fileData;
             FileInputStream f = new FileInputStream(imageFile);
  
@@ -188,7 +247,7 @@ public class DatabaseManager {
             
             collection.insert(o);
             
-            System.out.println("Inserted record.");
+            System.out.println("Inserted record of " + uuid);
  
             f.close();
  
@@ -197,13 +256,19 @@ public class DatabaseManager {
         }
     }
     
+    
     /**
-  	 *  Info Retrieving Method
+  	 *  Image Byte Data Retrieving Method
   	 */
     public byte[] retrieveByte(String uuid, DBCollection collection)
     {
-    	byte[] c;
+    	byte[] c = null;
     	DBObject obj = collection.findOne(new BasicDBObject("Uuid", uuid));
+    	
+    	// Nothing found 
+    	if (obj == null)
+    		return c;
+    	
 		c = (byte[])obj.get("Image");
 		
 		System.out.println("Bytedata of " + uuid +" retrieved.");
@@ -211,6 +276,10 @@ public class DatabaseManager {
 		return c;
     }
     
+    
+    /**
+  	 *  Image Properties Retrieving Method
+  	 */
 	public Image retrieveProperties(String uuid, DBCollection collection)
 	{
 		String fileName;
@@ -218,6 +287,10 @@ public class DatabaseManager {
 		
 		DBObject obj = collection.findOne(new BasicDBObject("Uuid", uuid));
 
+		// Nothing found 
+		if (obj == null)
+			return retrievedImage;
+		
 		// Set retrieved file name
 		fileName = (String)obj.get("Image Name");              
 		retrievedImage.setImageName(fileName);
@@ -229,5 +302,15 @@ public class DatabaseManager {
 		
 		return retrievedImage;
 	}
-      
+	
+	
+	/**
+  	 *  Info deleting Method
+  	 */
+	public void delete(String uuid, DBCollection collection)
+	{	
+		WriteResult result = collection.remove(new BasicDBObject("Uuid", uuid));
+		
+	    System.out.println("Image of " + uuid +" deleted with " + result.getN() + " records");
+	}
 }
