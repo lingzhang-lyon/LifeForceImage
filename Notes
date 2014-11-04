@@ -28,3 +28,6 @@ add protobuf-java-2.5.0.jar to buildpath
   
 GitHub Tutorial:
   http://docs.joomla.org/Working_with_Git_and_Eclipse
+
+Connect remote MongoDB:
+  http://ghosttx.com/2012/03/how-to-connect-to-a-remote-mongodb-server-with-mongohub-for-mac/
