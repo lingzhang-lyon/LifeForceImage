@@ -1,7 +1,5 @@
 package project1pbversion.cmpe275.sjsu.master;
 
-import project1.cmpe275.sjsu.conf.Configure;
-import project1.cmpe275.sjsu.heartbeat.MasterServerInitializer2;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -9,8 +7,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.util.SelfSignedCertificate;
+import project1.cmpe275.sjsu.conf.Configure;
 
 
 public class MasterServer {
