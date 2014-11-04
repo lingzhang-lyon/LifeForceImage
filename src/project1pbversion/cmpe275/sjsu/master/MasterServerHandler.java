@@ -27,7 +27,6 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 	private static final boolean isTest =Configure.isTest;
 	private static final String desPath=Configure.desPath;
 	private static final Logger logger = Logger.getLogger(MasterServerHandler.class.getName());
-	private final StringBuilder responseContent = new StringBuilder();
 	
 	
  	@Override
@@ -36,7 +35,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
  	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-	     logger.log(Level.WARNING, responseContent.toString(), cause);
+	     logger.log(Level.WARNING,"Something wrong with server:" , cause);
 	     ctx.channel().close();
 	}
 	
@@ -116,8 +115,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		ByteString data=req.getBody().getPhotoPayload().getData();
 		System.out.println("received write request for picture with new data:"+data.toString());
 		
-		//TODO need to convert ByteString data back to image file 
-		//the file is stored in local, is there any other way for zero copy?
+		//TODO test for save file to master local file system
 		File file=MessageManager.createFile(picname,desPath);
 		MessageManager.writeByteStringToFile(data,file);
 
@@ -125,6 +123,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		img.setUuid(uuid);
 		img.setFile(file);
 		img.setImageName(picname);
+		img.setData(data);
 		
          
 		Request responseRequest=null;
