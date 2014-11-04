@@ -70,7 +70,7 @@ public final class Client {
 	    	do{
 		    	 System.out.println("enter the your request type:");
 		         Scanner reader = new Scanner(System.in);
-		         System.out.println("a. Read | b. Write |c. Quit ");
+		         System.out.println("a.Read | b.Write | c.Delete | d.Quit ");
 		         
 		         reqtype=reader.nextLine();
 		    	
@@ -119,6 +119,19 @@ public final class Client {
 		             reqtype="";
 		         }
 		         else if(reqtype.equals("c")){
+		        	 System.out.println("enter the UUID of picture:");
+		             String uuid=reader.nextLine();
+		             
+		             // create and send write request
+		             System.out.println("\ntest with delete request------");	
+		             Image image = new Image();
+		             image.setUri(new URI(BASE_URL+"formpost"));
+		             image.setUuid(uuid);
+		             
+		             createChannelAndSendRequest(RequestType.delete, image);
+		             
+		         }
+		         else if(reqtype.equals("d")){
 		        	 System.out.println("Goodbye!");
 		         }
 		         

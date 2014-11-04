@@ -9,6 +9,7 @@ public class Configure {
 	public static final int MasterPortForSlave= 9090;
 	
 	public static final String clientFilePath="/Users/lingzhang/Desktop/test1.jpeg";
+	public static final String ClientSavePath = "/Users/lingzhang/Desktop/";
 	public static final String HOST = "127.0.0.1";
 	public static final int PORT = 8080;
 	public static final String BASE_URL = System.getProperty("baseUrl", "http://127.0.0.1:8080/");
@@ -31,5 +32,6 @@ public class Configure {
 	
 	//configure for new protobuf version MasterServerHandler
 	public static final boolean isTest = true;
+	
 
 }
