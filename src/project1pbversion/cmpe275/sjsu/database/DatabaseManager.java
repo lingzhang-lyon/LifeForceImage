@@ -113,7 +113,7 @@ public class DatabaseManager {
     /**
 	 *  Image uploading Method
 	 */
-	public Request uploadToDB(ArrayList<Socket> sockets, Image img) {
+	public Request uploadToDB(Socket socket, Image img) {
 		// return variable
 		Request uploadResponseRequest = null;
 		
