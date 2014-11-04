@@ -50,7 +50,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<Request> {
  
     	if(type.equals(RequestType.read)){
 	    	ByteString data=req.getBody().getPhotoPayload().getData();   	
-			sb.append("Received data:"+data.toString());		
+			sb.append("Received data:"+data.toString()+"\n");		
 			File file=MessageManager.createFile("feedback_"+req.getBody().getPhotoPayload().getName(),savePath);
 			MessageManager.writeByteStringToFile(data,file);
     	}

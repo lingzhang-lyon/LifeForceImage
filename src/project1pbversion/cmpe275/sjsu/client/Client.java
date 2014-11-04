@@ -140,7 +140,7 @@ public final class Client {
 		        	 reqtype="";
 		         }
 	         
-	    	} while(!reqtype.equals("c") );
+	    	} while(!reqtype.equals("d") );
         }
     	
     }
