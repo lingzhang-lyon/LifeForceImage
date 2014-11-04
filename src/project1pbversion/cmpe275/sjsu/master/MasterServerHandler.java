@@ -148,7 +148,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		 //return a responseRequest, which contain success or failure information
 		Socket socket = null;
 		DatabaseManager dm = new DatabaseManager();
-		responseRequest = dm.uploadToDB(socket, img);
+		responseRequest = dm.uploadToDB(sockets, img);
 		System.out.println("UUID in response to write request: "
 	 			+ responseRequest.getBody().getPhotoPayload().getUuid()); 
          //TODO for test, need to be removed later
