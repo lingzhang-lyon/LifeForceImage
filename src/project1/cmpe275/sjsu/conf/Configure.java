@@ -2,14 +2,15 @@ package project1.cmpe275.sjsu.conf;
 
 public class Configure {
 	
-	public static final String desPath="/Users/lingzhang/Desktop/";
-	//public static final String desPath="~/Desktop/";
+//	public static final String desPath="/Users/lingzhang/Desktop/";
+	public static final String ProjectRootPath = System.getProperty("user.dir");
+	public static final String desPath=ProjectRootPath + "/ImageCacheFolder/";
 	static final boolean SSL = System.getProperty("ssl") != null;
 	public static final int MasterPortForClient = Integer.parseInt(System.getProperty("port", SSL? "8443" : "8080"));
 	public static final int MasterPortForSlave= 9090;
 	
-	public static final String clientFilePath="/Users/lingzhang/Desktop/test1.jpeg";
-	public static final String ClientSavePath = "/Users/lingzhang/Desktop/";
+	public static final String clientFilePath= ProjectRootPath + "/ImageCacheFolder/test1.jpeg";
+	public static final String ClientSavePath = ProjectRootPath + "/ImageCacheFolder/";
 	public static final String HOST = "127.0.0.1";
 	public static final int PORT = 8080;
 	public static final String BASE_URL = System.getProperty("baseUrl", "http://127.0.0.1:8080/");
@@ -21,10 +22,9 @@ public class Configure {
 	public static final int SLAVE_PORT = 10010;
 	
 	public static final String MongoHost ="127.0.0.1";
-	//public static final String MongoHost ="10.189.26.83";
 	public static final int MongoPort =27017; 
 	public static final String DBName = "275db";
-	public static final String CollectionName = "Images_Collection_New";
+	public static final String CollectionName = "Images_Collection_BSD";
 	public static final int NumberOfReplication = 2;
 	
 	
