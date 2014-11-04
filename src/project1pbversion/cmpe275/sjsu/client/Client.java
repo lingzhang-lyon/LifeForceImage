@@ -48,7 +48,7 @@ import com.google.protobuf.ByteString;
 public final class Client {
 
    // private static final boolean isTest =Configure.isTest;
-    private static final boolean isTest =true;
+    private static final boolean isTest =false;
     static final String BASE_URL = System.getProperty("baseUrl", Configure.BASE_URL);
     static final String filePath = System.getProperty("filePath", Configure.clientFilePath);
 
@@ -150,7 +150,7 @@ public final class Client {
         Image image = new Image();
         image.setUri(new URI(BASE_URL+"formpost"));
         image.setUuid("testuuidforpost");
-        image.setImageName("testNewPicNameforpost.jpeg");
+        image.setImageName("testLing.jpeg");
         File file = new File(filePath);
         image.setFile(file);
         System.out.println("creat a test image with uuid: " +image.getUuid());

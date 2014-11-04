@@ -19,6 +19,7 @@ import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.database.DatabaseManagerTest;
 import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
+import project1pbversion.cmpe275.sjsu.database.DatabaseManager;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader;
@@ -88,16 +89,25 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		 //pm.download(img) should be able to find where the image is, 
 		 //and download from slave DB
 		 //return a responseRequest, which contain all the image infomation
-          
+         
+		 //TODO
+		 //if pm.download(img) return fail response
+		 
+		 Socket socket = null;
+		 DatabaseManager dm = new DatabaseManager();
+		 responseRequest = dm.downloadFromDB(socket, img);
+		 System.out.println("UUID in response to read request: "
+		 + responseRequest.getBody().getPhotoPayload().getUuid());
+		 
           //TODO for test, need to be removed later
-         if(isTest){ 
-        	img.setImageName("testReadResponse.jpeg"); 
-         	responseRequest=MessageManager.createResponseRequest(img,ResponseFlag.success,RequestType.read);
-   	 
- 	    	 System.out.println("UUID in response to read request: "
- 	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
-     	 
-         }
+//         if(isTest){ 
+//        	img.setImageName("testReadResponse.jpeg"); 
+//         	responseRequest=MessageManager.createResponseRequest(img,ResponseFlag.success,RequestType.read);
+//   	 
+// 	    	 System.out.println("UUID in response to read request: "
+// 	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
+//     	 
+//         }
      	// Write the response.
      	 ChannelFuture future=ctx.channel().writeAndFlush(responseRequest);
      	// Close the connection after the write operation is done.
@@ -136,17 +146,20 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		//TODO pm.upload(img) should be able to find proper socket, 
 		 //and upload to slave DB
 		 //return a responseRequest, which contain success or failure information
-         
-         
+		ArrayList<Socket> sockets = null;
+		DatabaseManager dm = new DatabaseManager();
+		responseRequest = dm.uploadToDB(sockets, img);
+		System.out.println("UUID in response to write request: "
+	 			+ responseRequest.getBody().getPhotoPayload().getUuid()); 
          //TODO for test, need to be removed later
-        if(isTest){              
-	         //create a test response message after uploaded to DB
-        	responseRequest=MessageManager.createResponseRequest(img,ResponseFlag.success,RequestType.write);
-        	
-	    	 System.out.println("UUID in response to write request: "
-	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
-    	 
-        }
+//        if(isTest){              
+//	         //create a test response message after uploaded to DB
+//        	responseRequest=MessageManager.createResponseRequest(img,ResponseFlag.success,RequestType.write);
+//        	
+//	    	 System.out.println("UUID in response to write request: "
+//	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
+//    	 
+//        }
     	// Write the response.
     	 ChannelFuture future=ctx.channel().writeAndFlush(responseRequest);
     	// Close the connection after the write operation is done.

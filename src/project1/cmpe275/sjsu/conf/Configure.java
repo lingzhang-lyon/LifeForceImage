@@ -20,6 +20,7 @@ public class Configure {
 	public static final int SLAVE_PORT = 10010;
 	
 	public static final String MongoHost ="127.0.0.1";
+	//public static final String MongoHost ="10.189.26.83";
 	public static final int MongoPort =27017; 
 	public static final String DBName = "275db";
 	public static final String CollectionName = "Images_Collection_New";
