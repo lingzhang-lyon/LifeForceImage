@@ -2,11 +2,8 @@ package project1pbversion.cmpe275.sjsu.database;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 import org.bson.types.Binary;
 
@@ -86,8 +83,8 @@ public class DatabaseManager {
     	
     	// Download an image from DB by UUID
     	Image retrievedImage = retrieveProperties(uuid, collection);
-    	    	
-    	if(retrievedImage.imageName != "") {
+
+    	if(retrievedImage.imageName != "") {  // Retrieve successfully
     		responseFlag = true;
     		fileName = retrievedImage.getImageName();
     		imageData = ByteString.copyFrom(retrieveByte(uuid, collection));
@@ -97,14 +94,13 @@ public class DatabaseManager {
 					  		 .setName(fileName)
 					  		 .setData(imageData)
 					  		 .build();
-    	} else {
+    	} else {  // Retrieve failed
     		pp = PhotoPayload.newBuilder()
 					  		 .setUuid(uuid)
 					  		 .build();
     	}
     	
     	// Organize return info
-    	
     	Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
 
     	PhotoHeader ph = PhotoHeader.newBuilder()
