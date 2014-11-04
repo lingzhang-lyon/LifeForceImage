@@ -24,6 +24,7 @@ public class Configure {
 	public static final int MongoPort =27017; 
 	public static final String DBName = "275db";
 	public static final String CollectionName = "Images_Collection_New";
+	public static final int NumberOfReplication = 2;
 	
 	
 	
