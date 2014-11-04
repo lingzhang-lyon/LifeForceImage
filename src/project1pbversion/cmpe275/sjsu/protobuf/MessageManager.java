@@ -49,6 +49,28 @@ public class MessageManager {
 		return request;
 	}
 	
+	public static Request createSampleRequest(String uuid, RequestType reqtype) throws Exception{
+		
+		PhotoPayload.Builder ppb = PhotoPayload.newBuilder()
+	 			.setUuid(uuid);
+		PhotoPayload pp=ppb.build();
+		Payload p=Payload.newBuilder().setPhotoPayload(pp).build();
+		
+		
+		PhotoHeader ph= PhotoHeader.newBuilder()
+				 		.setRequestType(reqtype)
+				 		.build();	         	      	       	    	 
+		Header h=Header.newBuilder().setPhotoHeader(ph).build();
+		
+		
+		Request request=Request.newBuilder()
+				 				.setHeader(h)
+				 				.setBody(p)
+				 				.build();
+	    
+		return request;
+	}
+	
 
 	public static ByteString convertFileToByteString(File file) throws Exception{
 		 @SuppressWarnings("resource")

@@ -114,7 +114,11 @@ public final class Client {
 		             System.out.println("enter the name of picture:");
 		             String picname=reader.nextLine(); 
 		             //TODO need to validate input name. should not contain "/"
-		             
+		             if(!InputValidator.validateName(picname) ){
+		            	 System.out.println("your input file name have some issues");
+		            	 continue;
+		            	//if file not found should input again
+		             }
 		             
 		           // create and send write request
 		             System.out.println("\ntest with post (write) request------");	

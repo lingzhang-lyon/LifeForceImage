@@ -13,8 +13,10 @@ import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
 import project1pbversion.cmpe275.sjsu.database.DatabaseManager;
+import project1pbversion.cmpe275.sjsu.othercluster.OtherClusterManager;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 
@@ -89,6 +91,14 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		 responseRequest = dm.downloadFromDB(socket, img);
 		 System.out.println("UUID in response to read request: "
 		 + responseRequest.getBody().getPhotoPayload().getUuid());
+		 
+		 
+		 //TODO if could not find in our cluster, pass the request to other cluster!!!!!!!!!!!!
+		 //need to set timeout, if after long time still don't get success, will return failure to client!!!!!
+//		 if(responseRequest.getHeader().getPhotoHeader().equals(ResponseFlag.failure)){
+//			 responseRequest=passRequestToOtherCluster(req);
+//			 
+//		 }
 		 
           //TODO for test, need to be removed later
 //         if(isTest){ 
@@ -204,6 +214,18 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 	}
 
 
+	private Request passRequestToOtherCluster( Request req) throws Exception{
+		Socket otherClusterSocket=new Socket("127.0.0.1", 8080); //need to find other socket!!!!
+		 
+		 //create a new Request for passing, add originator information in the request
+		 Request.Builder builder=Request.newBuilder(req);
+		 builder.setHeader(Header.newBuilder(req.getHeader()).setOriginator(1));
+		 Request passRequest=builder.build();
+		 
+		 Request resRequest=OtherClusterManager.createChannelAndSendRequest(otherClusterSocket, passRequest);
+		 return resRequest;
+		 
+	}
 
 	
     

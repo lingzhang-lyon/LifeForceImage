@@ -8,4 +8,9 @@ public class InputValidator {
 		//TODO
 		return true;
 	}
+
+	public static boolean validateName(String picname) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }
