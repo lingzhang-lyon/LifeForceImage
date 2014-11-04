@@ -19,6 +19,7 @@ public class MasterServerInitializer extends ChannelInitializer<SocketChannel> {
 
 	public MasterServerInitializer(boolean enableCompression, boolean enbleSaveToLocal) {
 		compress = enableCompression;
+		saveToLocal = enbleSaveToLocal;
 	}
 
 	@Override

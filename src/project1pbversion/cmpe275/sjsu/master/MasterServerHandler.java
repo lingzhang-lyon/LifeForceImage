@@ -31,8 +31,8 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 	private static boolean saveToLocal=false;
 	
 	
-	MasterServerHandler(boolean saveToLocal){
-		this.saveToLocal=saveToLocal;
+	public MasterServerHandler(boolean savetolocal){
+		this.saveToLocal=savetolocal;
 	}
 	
  	@Override
@@ -130,17 +130,17 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		System.out.println("received write request for picture with new data:"+data.toString());
 		
 		//if choose to save to master local file system
-//		if(saveToLocal){
+		if(saveToLocal){
 			File file=MessageManager.createFile(picname,desPath);
 			MessageManager.writeByteStringToFile(data,file);
-//		}
+		}
 		//TODO after refactor DBManager, to handle the byteString in image object, no need file in image object
 		//we can choose to not save to local, now we need this for temperary transfer
 		
 		
 		
 		Image img=new Image();
-		img.setFile(file); //can be delete later after refactor DBManager
+//		img.setFile(file); //can be delete later after refactor DBManager
 		img.setUuid(uuid);
 		img.setImageName(picname);
 		img.setData(data);
