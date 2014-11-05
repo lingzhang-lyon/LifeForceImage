@@ -33,19 +33,26 @@ public class PartitionManager {
 			r1=true;
 		}
 		if(req2.getHeader().getPhotoHeader().getResponseFlag() == ResponseFlag.success){
-			r2=true;
-			
+			r2=true;	
 		}
+		// if Success, write to the meta-data table and  return any request
 		if(r1&&r2) {
 			this.storeToMasterDB(socket.get(0),image);
 			this.storeToMasterDB(socket.get(1), image);
 			return req1;
 		}
-		if(r1)
-		return req2;
-		else if(r2)
-			return req1;
-		return req1;			
+		// if anyone fails, recall the upload process
+		else if(r1&&(!r2)){
+		    DB.deleteInDB(socket.get(0), image);
+			return this.upload(image);
+		}
+		else if(r2&&(!r1)){
+			DB.deleteInDB(socket.get(1), image);
+			return this.upload(image);
+		}
+		//both fails. recall in some time, then timeout return false request;
+		return this.upload(image);	//
+		
 		
 	}
 	
@@ -106,6 +113,7 @@ public class PartitionManager {
 	public Request delete(Image image){
 		ArrayList<Socket> soc = new ArrayList<Socket>();
 		ArrayList<String> soc_str = new ArrayList<String>();
+		boolean r1=false, r2= false;	
 		try {
 			Mongo mongo = new Mongo("localhost", 27017);
 			DB db = mongo.getDB("275db");  // Connect DB
@@ -124,14 +132,31 @@ public class PartitionManager {
 		}  // Connect DB Server
 		if(soc_str!= null)
 		soc = this.trans(soc_str);
-		else return ds
 		
 	        DatabaseManager DB = new DatabaseManager();
-	        Request req1=DB.deleteFromDB(soc.get(0), image);
-	        Request req2=DB.deleteFromDB(soc.get(1), image);
-		
-		
-		return null;
+	        Request req1=DB.deleteInDB(soc.get(0), image);
+	        Request req2=DB.deleteInDB(soc.get(1), image);
+	        if(req1.getHeader().getPhotoHeader().getResponseFlag() == ResponseFlag.success){
+				r1=true;
+			}
+			if(req2.getHeader().getPhotoHeader().getResponseFlag() == ResponseFlag.success){
+				r2=true;	
+			}
+			if(r1&&r2) {
+				return req1;
+			}
+			// if anyone fails, recall the upload process
+			else if(r1&&(!r2)){
+			    DB.uploadToDB(soc.get(0), image);
+				return this.delete(image);
+			}
+			else if(r2&&(!r1)){
+				DB.uploadToDB(soc.get(1), image);
+				return this.delete(image);
+			}
+			//both fails. recall in some time, then timeout return false request;
+			return this.delete(image);	//
+	        
 		
 	}
 
