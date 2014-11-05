@@ -22,8 +22,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Scanner;
@@ -180,6 +178,23 @@ public final class Client {
         Image image = new Image();
         image.setUuid(uuid);
         image.setImageName("testForPost.jpeg");
+        
+        ByteString filedata=null;
+        File file= new File(System.getProperty("filePath", filePath));
+        filedata=MessageManager.convertFileToByteString(file);
+        image.setData(filedata);
+       
+        System.out.println("creat a test image with uuid: " +image.getUuid());
+        
+        //use a parameter to decide get or post directly
+        createChannelAndSendRequest(RequestType.write, image, host, port);
+	}
+    
+    public static void testPost( String host, int port, String uuid, String filePath, String filename) throws Exception{
+    	System.out.println("\ntest with post (write) request------");	
+        Image image = new Image();
+        image.setUuid(uuid);
+        image.setImageName(filename);
         
         ByteString filedata=null;
         File file= new File(System.getProperty("filePath", filePath));

@@ -23,49 +23,99 @@ public class MasterServer {
 		Scanner reader0 = new Scanner(System.in);
     	System.out.println("a.Just simple test(use static configure)  | b. Input your own configure:");
     	String input=reader0.nextLine();
-    	int port;
-    	boolean saveToLocal=false;
+    	int port=PortForClient;
+    	boolean saveToLocal=true;
+    	boolean usePartition=false;
+		boolean passFailedRequestToOtherCluster=false;
+		boolean dummyTestForMasterHandler=false;
+		
+    	if (input.equals("b")){ //input own configure
     	
-    	if (input.equals("a")){
-    		port=PortForClient;
-    		saveToLocal=true;
-    	}
-    	else{
 	    	System.out.println("enter the port open for client, like: 8080");
 	    	port =reader0.nextInt();
 	    	Scanner reader = new Scanner(System.in);
-	    	System.out.println("Do you want to save received file to master server local file system? (Y/N) ");
-	    	String res=reader.nextLine();
-	    	if(res.equals("Y")||res.equals("y")){
-	    		saveToLocal=true;
-	    	}
 	    	
-    	}	
+	    	
+	    	System.out.println("Do you want to just dummy Test For MasterHandler? (Y/N) ");
+	    	String res4=reader.nextLine();
+	    	if(res4.equals("Y")||res4.equals("y")){
+	    		dummyTestForMasterHandler=true;
+	    	}else{
+	    		dummyTestForMasterHandler=false;
+	    		
+	    		System.out.println("Do you want to save received file to master server local file system? (Y/N) ");
+		    	String res1=reader.nextLine();
+		    	if(res1.equals("Y")||res1.equals("y")){
+		    		saveToLocal=true;
+		    	}else{
+		    		saveToLocal=false;
+		    	}
+	    	
+		    	System.out.println("Do you want to use partion? (Y/N) ");
+		    	String res2=reader.nextLine();
+		    	if(res2.equals("Y")||res2.equals("y")){
+		    		usePartition=true;
+		    	}else{
+		    		usePartition=false;
+		    	}
+		    	System.out.println("Do you want to pass Failed Request To Other Cluster? (Y/N) ");
+		    	String res3=reader.nextLine();
+		    	if(res3.equals("Y")||res3.equals("y")){
+		    		passFailedRequestToOtherCluster=true;
+		    	}else{
+		    		passFailedRequestToOtherCluster=false;
+		    	}
+	    	}	
+	    	    	
+    	}
     	
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-        try {
-
-            
-            ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup);
-            b.channel(NioServerSocketChannel.class);
-            b.handler(new LoggingHandler(LogLevel.INFO));
-            boolean compress=false;            
-            b.childHandler(new MasterServerInitializer(compress,saveToLocal));  //false means no compression
-
-            Channel ch = b.bind(port).sync().channel();
-
-
-            ch.closeFuture().sync();
-            
-        } catch (Exception ex) {
-        	System.err.println("Failed to setup channel for client");
-        }finally {
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
-        }
+    	System.out.println("Your configure: "
+				+ "\nport= "+PortForClient
+				+ "\nsaveToLocal= "+ saveToLocal
+				+ "\nusePartition= "+ usePartition
+				+ "\npassFailedRequestToOtherCluster= "+ passFailedRequestToOtherCluster
+				+ "\ndummyTestForMasterHandler= "+dummyTestForMasterHandler 
+				);
+    	
+    	startMasterServer(port,saveToLocal, usePartition, 
+    			passFailedRequestToOtherCluster,dummyTestForMasterHandler );
 				
+    }
+    
+    public static void startMasterServer(int portForClient, boolean saveToLocal, boolean usePartition,
+    						boolean passFailedRequestToOtherCluster, boolean dummyTestForMasterHandler){
+    	 
+    	
+    	 EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+         EventLoopGroup workerGroup = new NioEventLoopGroup();
+         try {
+
+             
+        	 MasterServerHandler.setUsePartition(usePartition);
+        	 MasterServerHandler.setPassFailedRequestToOtherCluster(passFailedRequestToOtherCluster);
+        	 MasterServerHandler.setDummyTestForMasterHandle(dummyTestForMasterHandler);
+        	 
+        	 
+             ServerBootstrap b = new ServerBootstrap();
+             b.group(bossGroup, workerGroup);
+             b.channel(NioServerSocketChannel.class);
+             b.handler(new LoggingHandler(LogLevel.INFO));
+             boolean compress=false;            
+             b.childHandler(new MasterServerInitializer(compress,saveToLocal));  //false means no compression
+
+             Channel ch = b.bind(portForClient).sync().channel();
+
+
+             ch.closeFuture().sync();
+             
+         } catch (Exception ex) {
+         	System.err.println("Failed to setup channel for client");
+         }finally {
+             bossGroup.shutdownGracefully();
+             workerGroup.shutdownGracefully();
+         }
+    	
+    	
     }
     
 

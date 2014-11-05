@@ -17,16 +17,8 @@ package project1pbversion.cmpe275.sjsu.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-
-import java.io.File;
-import java.util.Scanner;
-
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
-
-import com.google.protobuf.ByteString;
 
 public class ClientHandler extends SimpleChannelInboundHandler<Request> {
 

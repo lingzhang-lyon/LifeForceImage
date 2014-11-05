@@ -4,6 +4,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.TimeoutException;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -12,11 +13,12 @@ import java.util.logging.Logger;
 import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
+import project1.cmpe275.sjsu.partionAndReplication.PartitionManager;
 import project1pbversion.cmpe275.sjsu.database.DatabaseManager;
 import project1pbversion.cmpe275.sjsu.othercluster.OtherClusterManager;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 
@@ -25,17 +27,68 @@ import com.google.protobuf.ByteString;
 
 public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 	
-	private static final boolean isTest =Configure.isTest;
 	private static final String desPath=Configure.desPath;
 	private static final Logger logger = Logger.getLogger(MasterServerHandler.class.getName());
 	private static boolean saveToLocal=false;
+	private static boolean usePartition=false;
+	private static boolean passFailedRequestToOtherCluster=false;
+	private static boolean dummyTestForMasterHandler=false;
 	
-	
+	public static boolean isSaveToLocal() {
+		return saveToLocal;
+	}
+
+
+	public static void setSaveToLocal(boolean saveToLocal) {
+		MasterServerHandler.saveToLocal = saveToLocal;
+	}
+
+
+
+	public static boolean isDummyTestForMasterHandle() {
+		return dummyTestForMasterHandler;
+	}
+
+
+
+	public static void setDummyTestForMasterHandle(boolean dummyTestForMasterHandle) {
+		MasterServerHandler.dummyTestForMasterHandler = dummyTestForMasterHandle;
+	}
+
+
+
+	public static boolean isPassFailedRequestToOtherCluster() {
+		return passFailedRequestToOtherCluster;
+	}
+
+
+
+	public static void setPassFailedRequestToOtherCluster(
+			boolean passFailedRequestToOtherCluster) {
+		MasterServerHandler.passFailedRequestToOtherCluster = passFailedRequestToOtherCluster;
+	}
+
+
+
 	public MasterServerHandler(boolean savetolocal){
 		this.saveToLocal=savetolocal;
 	}
 	
- 	@Override
+	
+	
+ 	public static boolean isUsePartition() {
+		return usePartition;
+	}
+
+
+
+	public static void setUsePartition(boolean usePartition) {
+		MasterServerHandler.usePartition = usePartition;
+	}
+
+
+
+	@Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
     }
  	
@@ -76,39 +129,49 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		Image img=new Image(); 
 		img.setUuid(uuid);
 		 Request responseRequest=null;
-		
-		 //TODO use partition manager	 
-		 // PartitionManager pm=new PartitionManager();		 		 
-		 // responseRequest = pm.download(img);
-        //TODO 
-		 //pm.download(img) should be able to find where the image is, 
-		 //and download from slave DB
-		 //return a responseRequest, which contain all the image infomation
-         
-		//TODO test for DatabaseManager , need to be removed later
-		 Socket socket = null;
-		 DatabaseManager dm = new DatabaseManager();
-		 responseRequest = dm.downloadFromDB(socket, img);
-		 System.out.println("UUID in response to read request: "
-		 + responseRequest.getBody().getPhotoPayload().getUuid());
 		 
+         // for test, didn't interact with DB, just return failure response
+        if(dummyTestForMasterHandler){ 
+        	responseRequest=MessageManager.createResponseRequest(img,ResponseFlag.failure,RequestType.read);
+  	 
+	    	 System.out.println("Just a dummy test for master handler: ResponseFlag: "
+	    			 			+ responseRequest.getHeader().getPhotoHeader().getResponseFlag());
+    	 
+        }
+        else{
 		 
-		 //TODO if could not find in our cluster, pass the request to other cluster!!!!!!!!!!!!
-		 //need to set timeout, if after long time still don't get success, will return failure to client!!!!!
-//		 if(responseRequest.getHeader().getPhotoHeader().equals(ResponseFlag.failure)){
-//			 responseRequest=passRequestToOtherCluster(req);
-//			 
-//		 }
-		 
-          //TODO for test, need to be removed later
-//         if(isTest){ 
-//        	img.setImageName("testReadResponse.jpeg"); 
-//         	responseRequest=MessageManager.createResponseRequest(img,ResponseFlag.success,RequestType.read);
-//   	 
-// 	    	 System.out.println("UUID in response to read request: "
-// 	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
-//     	 
-//         }
+			 if(usePartition){//use partition manager
+				   PartitionManager pm=new PartitionManager();		 		 
+				  responseRequest = pm.download(img);
+		    
+				 //pm.download(img) should be able to find where the image is, 
+				 //and download from slave DB
+				 //return a responseRequest, which contain all the image infomation 
+			 }
+			 else{ //don't use partition manager         
+				 Socket socket = null; //TODO use default socket
+				 DatabaseManager dm = new DatabaseManager();
+				 responseRequest = dm.downloadFromDB(socket, img);
+				 System.out.println("UUID in response to read request: "
+				 + responseRequest.getBody().getPhotoPayload().getUuid());
+			 }
+			 
+			 
+			 if(passFailedRequestToOtherCluster){
+			 //if could not find in our cluster, pass the request to other cluster!!!!!!!!!!!!
+			 //need to set timeout, if after long time still don't get success, will return failure to client!!!!!
+				 if(responseRequest.getHeader().getPhotoHeader().equals(ResponseFlag.failure)){
+					 try{
+						 responseRequest=passRequestToOtherCluster(req);
+					 }catch(TimeoutException e){
+						 //if timeout from the channel that send and receive msg from other cluster
+						 System.out.println("timeout: didn't received feedback from other cluster ");
+					 }
+				 }
+			 }
+		 		 
+        } 
+
 		 
      	// Write the response.
      	 ChannelFuture future=ctx.channel().writeAndFlush(responseRequest);
@@ -135,43 +198,56 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 			MessageManager.writeByteStringToFile(data,file);
 			System.out.println("received file data with uuid:<"+uuid+ ">was saved in master local file system at \n" + desPath);
 		}
-		//TODO after refactor DBManager, to handle the byteString in image object, no need file in image object
-		//we can choose to not save to local, now we need this for temperary transfer
-		
-		
-		
+
+
 		Image img=new Image();
-//		img.setFile(file); //can be delete later after refactor DBManager
 		img.setUuid(uuid);
 		img.setImageName(picname);
 		img.setData(data);
 		       
 		Request responseRequest=null;
 		
-		 //TODO use partition manager	 
-		 // PartitionManager pm=new PartitionManager();		 		 
-		 // responseRequest= pm.upload(img);
-		//TODO pm.upload(img) should be able to find proper socket, 
-		 //and upload to slave DB
-		 //return a responseRequest, which contain success or failure information
+       if(dummyTestForMasterHandler){              
+	         //create a test response message after uploaded to DB
+       	responseRequest=MessageManager.createResponseRequest(img,ResponseFlag.success,RequestType.write);
+       	
+	    	 System.out.println("UUID in response to write request: "
+	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
+   	 
+       }
+       else{ 
 		
+    	   if(usePartition){//use partition manager 
+			  PartitionManager pm=new PartitionManager();		 		 
+			  responseRequest= pm.upload(img);
+			//TODO pm.upload(img) should be able to find proper socket, 
+			 //and upload to slave DB
+			 //return a responseRequest, which contain success or failure information
+    	   }
+    	   else{ //don't use partition manager 
+				Socket socket = null;
+				DatabaseManager dm = new DatabaseManager();
+				responseRequest = dm.uploadToDB(socket, img);
+				System.out.println("UUID in response to write request: "
+			 			+ responseRequest.getBody().getPhotoPayload().getUuid()); 
+    	   }
+    	   
+		  if(passFailedRequestToOtherCluster){
+			 //if could not find in our cluster, pass the request to other cluster!!!!!!!!!!!!
+			 //need to set timeout, if after long time still don't get success, will return failure to client!!!!!
+				 if(responseRequest.getHeader().getPhotoHeader().equals(ResponseFlag.failure)){
+					 try{
+						 responseRequest=passRequestToOtherCluster(req);
+					 }catch(TimeoutException e){
+						 //if timeout from the channel that send and receive msg from other cluster
+						 System.out.println("timeout: didn't received feedback from other cluster ");
+					 }
+				 }
+		   }    	   
+    	   
+    	   
+       }
 
-		//TODO test for DatabaseManager , need to be removed later
-		Socket socket = null;
-		DatabaseManager dm = new DatabaseManager();
-		responseRequest = dm.uploadToDB(socket, img);
-		System.out.println("UUID in response to write request: "
-	 			+ responseRequest.getBody().getPhotoPayload().getUuid()); 
-		
-         //TODO for test, need to be removed later
-//        if(isTest){              
-//	         //create a test response message after uploaded to DB
-//        	responseRequest=MessageManager.createResponseRequest(img,ResponseFlag.success,RequestType.write);
-//        	
-//	    	 System.out.println("UUID in response to write request: "
-//	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
-//    	 
-//        }
     	// Write the response.
     	 ChannelFuture future=ctx.channel().writeAndFlush(responseRequest);
     	// Close the connection after the write operation is done.
@@ -185,26 +261,52 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		// TODO Auto-generated method stub
 		String uuid=req.getBody().getPhotoPayload().getUuid();		
 		System.out.println("received delete request for picture with UUID:"+uuid);
+		
 		Request responseRequest=null;
 		Image img=new Image(); 
 		img.setUuid(uuid);
 		
-		 //TODO use partition manager	 
-		 // PartitionManager pm=new PartitionManager();		 		 
-		 // responseRequest= pm.delete(img);
-		//TODO pm.delete(img) should be able to find proper socket, 
-		 //and upload to slave DB
-		 //return a responseRequest, which contain success or failure information
 		
-		//TODO for test, need to be removed later
-      if(isTest){              
+		if(dummyTestForMasterHandler){              
 	         //create a test response message after uploaded to DB
-      	responseRequest=MessageManager.createResponseRequest(img,ResponseFlag.success,RequestType.delete);
+			responseRequest=MessageManager.createResponseRequest(img,ResponseFlag.success,RequestType.delete);
       	
 	    	 System.out.println("UUID in response to delete request: "
 	    			 			+ responseRequest.getBody().getPhotoPayload().getUuid());
   	 
-      }
+		}
+		else{
+			 if(usePartition){//use partition manager 
+				  PartitionManager pm=new PartitionManager();		 		 
+				  responseRequest= pm.delete(img);
+				//TODO pm.upload(img) should be able to find proper socket, 
+				 //and upload to slave DB
+				 //return a responseRequest, which contain success or failure information
+		   	   }
+		   	   else{ //don't use partition manager 
+						Socket socket = null;
+						DatabaseManager dm = new DatabaseManager();
+						responseRequest = dm.deleteInDB(socket, img);
+						System.out.println("UUID in response to delete request: "
+					 			+ responseRequest.getBody().getPhotoPayload().getUuid()); 
+		   	   }
+			 
+			  if(passFailedRequestToOtherCluster){
+				 //if could not find in our cluster, pass the request to other cluster!!!!!!!!!!!!
+				 //need to set timeout, if after long time still don't get success, will return failure to client!!!!!
+					 if(responseRequest.getHeader().getPhotoHeader().equals(ResponseFlag.failure)){
+						 try{
+							 responseRequest=passRequestToOtherCluster(req);
+						 }catch(TimeoutException e){
+							 //if timeout from the channel that send and receive msg from other cluster
+							 System.out.println("timeout: didn't received feedback from other cluster ");
+						 }
+					 }
+			  }
+			 
+			 
+		}
+		
 		
 		// Write the response.
 	   	 ChannelFuture future=ctx.channel().writeAndFlush(responseRequest);
@@ -227,6 +329,8 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		 return resRequest;
 		 
 	}
+	
+	
 
 	
     
