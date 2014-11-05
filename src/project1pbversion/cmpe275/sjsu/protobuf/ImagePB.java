@@ -726,6 +726,41 @@ public final class ImagePB {
   public interface HeaderOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
+    // optional int32 originator = 2;
+    /**
+     * <code>optional int32 originator = 2;</code>
+     */
+    boolean hasOriginator();
+    /**
+     * <code>optional int32 originator = 2;</code>
+     */
+    int getOriginator();
+
+    // optional string tag = 3;
+    /**
+     * <code>optional string tag = 3;</code>
+     */
+    boolean hasTag();
+    /**
+     * <code>optional string tag = 3;</code>
+     */
+    java.lang.String getTag();
+    /**
+     * <code>optional string tag = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getTagBytes();
+
+    // optional int64 time = 4;
+    /**
+     * <code>optional int64 time = 4;</code>
+     */
+    boolean hasTime();
+    /**
+     * <code>optional int64 time = 4;</code>
+     */
+    long getTime();
+
     // optional .protobuf.PhotoHeader photoHeader = 10;
     /**
      * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
@@ -791,9 +826,24 @@ public final class ImagePB {
               }
               break;
             }
+            case 16: {
+              bitField0_ |= 0x00000001;
+              originator_ = input.readInt32();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000002;
+              tag_ = input.readBytes();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000004;
+              time_ = input.readInt64();
+              break;
+            }
             case 82: {
               project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+              if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 subBuilder = photoHeader_.toBuilder();
               }
               photoHeader_ = input.readMessage(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.PARSER, extensionRegistry);
@@ -801,7 +851,7 @@ public final class ImagePB {
                 subBuilder.mergeFrom(photoHeader_);
                 photoHeader_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000001;
+              bitField0_ |= 0x00000008;
               break;
             }
           }
@@ -844,6 +894,81 @@ public final class ImagePB {
     }
 
     private int bitField0_;
+    // optional int32 originator = 2;
+    public static final int ORIGINATOR_FIELD_NUMBER = 2;
+    private int originator_;
+    /**
+     * <code>optional int32 originator = 2;</code>
+     */
+    public boolean hasOriginator() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional int32 originator = 2;</code>
+     */
+    public int getOriginator() {
+      return originator_;
+    }
+
+    // optional string tag = 3;
+    public static final int TAG_FIELD_NUMBER = 3;
+    private java.lang.Object tag_;
+    /**
+     * <code>optional string tag = 3;</code>
+     */
+    public boolean hasTag() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string tag = 3;</code>
+     */
+    public java.lang.String getTag() {
+      java.lang.Object ref = tag_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          tag_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string tag = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTagBytes() {
+      java.lang.Object ref = tag_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        tag_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional int64 time = 4;
+    public static final int TIME_FIELD_NUMBER = 4;
+    private long time_;
+    /**
+     * <code>optional int64 time = 4;</code>
+     */
+    public boolean hasTime() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional int64 time = 4;</code>
+     */
+    public long getTime() {
+      return time_;
+    }
+
     // optional .protobuf.PhotoHeader photoHeader = 10;
     public static final int PHOTOHEADER_FIELD_NUMBER = 10;
     private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader photoHeader_;
@@ -851,7 +976,7 @@ public final class ImagePB {
      * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
      */
     public boolean hasPhotoHeader() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
      * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
@@ -867,6 +992,9 @@ public final class ImagePB {
     }
 
     private void initFields() {
+      originator_ = 0;
+      tag_ = "";
+      time_ = 0L;
       photoHeader_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
@@ -882,6 +1010,15 @@ public final class ImagePB {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(2, originator_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(3, getTagBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt64(4, time_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeMessage(10, photoHeader_);
       }
       getUnknownFields().writeTo(output);
@@ -894,6 +1031,18 @@ public final class ImagePB {
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, originator_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, getTagBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(4, time_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(10, photoHeader_);
       }
@@ -1014,12 +1163,18 @@ public final class ImagePB {
 
       public Builder clear() {
         super.clear();
+        originator_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        tag_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        time_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000004);
         if (photoHeaderBuilder_ == null) {
           photoHeader_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance();
         } else {
           photoHeaderBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -1051,6 +1206,18 @@ public final class ImagePB {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
+        result.originator_ = originator_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.tag_ = tag_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.time_ = time_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
         if (photoHeaderBuilder_ == null) {
           result.photoHeader_ = photoHeader_;
         } else {
@@ -1072,6 +1239,17 @@ public final class ImagePB {
 
       public Builder mergeFrom(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header other) {
         if (other == project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.getDefaultInstance()) return this;
+        if (other.hasOriginator()) {
+          setOriginator(other.getOriginator());
+        }
+        if (other.hasTag()) {
+          bitField0_ |= 0x00000002;
+          tag_ = other.tag_;
+          onChanged();
+        }
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
         if (other.hasPhotoHeader()) {
           mergePhotoHeader(other.getPhotoHeader());
         }
@@ -1102,6 +1280,146 @@ public final class ImagePB {
       }
       private int bitField0_;
 
+      // optional int32 originator = 2;
+      private int originator_ ;
+      /**
+       * <code>optional int32 originator = 2;</code>
+       */
+      public boolean hasOriginator() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional int32 originator = 2;</code>
+       */
+      public int getOriginator() {
+        return originator_;
+      }
+      /**
+       * <code>optional int32 originator = 2;</code>
+       */
+      public Builder setOriginator(int value) {
+        bitField0_ |= 0x00000001;
+        originator_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 originator = 2;</code>
+       */
+      public Builder clearOriginator() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        originator_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional string tag = 3;
+      private java.lang.Object tag_ = "";
+      /**
+       * <code>optional string tag = 3;</code>
+       */
+      public boolean hasTag() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string tag = 3;</code>
+       */
+      public java.lang.String getTag() {
+        java.lang.Object ref = tag_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          tag_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string tag = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTagBytes() {
+        java.lang.Object ref = tag_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          tag_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string tag = 3;</code>
+       */
+      public Builder setTag(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        tag_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string tag = 3;</code>
+       */
+      public Builder clearTag() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        tag_ = getDefaultInstance().getTag();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string tag = 3;</code>
+       */
+      public Builder setTagBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        tag_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional int64 time = 4;
+      private long time_ ;
+      /**
+       * <code>optional int64 time = 4;</code>
+       */
+      public boolean hasTime() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional int64 time = 4;</code>
+       */
+      public long getTime() {
+        return time_;
+      }
+      /**
+       * <code>optional int64 time = 4;</code>
+       */
+      public Builder setTime(long value) {
+        bitField0_ |= 0x00000004;
+        time_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int64 time = 4;</code>
+       */
+      public Builder clearTime() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        time_ = 0L;
+        onChanged();
+        return this;
+      }
+
       // optional .protobuf.PhotoHeader photoHeader = 10;
       private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader photoHeader_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
@@ -1110,7 +1428,7 @@ public final class ImagePB {
        * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
        */
       public boolean hasPhotoHeader() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
        * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
@@ -1135,7 +1453,7 @@ public final class ImagePB {
         } else {
           photoHeaderBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000008;
         return this;
       }
       /**
@@ -1149,7 +1467,7 @@ public final class ImagePB {
         } else {
           photoHeaderBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000008;
         return this;
       }
       /**
@@ -1157,7 +1475,7 @@ public final class ImagePB {
        */
       public Builder mergePhotoHeader(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader value) {
         if (photoHeaderBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+          if (((bitField0_ & 0x00000008) == 0x00000008) &&
               photoHeader_ != project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance()) {
             photoHeader_ =
               project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.newBuilder(photoHeader_).mergeFrom(value).buildPartial();
@@ -1168,7 +1486,7 @@ public final class ImagePB {
         } else {
           photoHeaderBuilder_.mergeFrom(value);
         }
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000008;
         return this;
       }
       /**
@@ -1181,14 +1499,14 @@ public final class ImagePB {
         } else {
           photoHeaderBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
       /**
        * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
        */
       public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.Builder getPhotoHeaderBuilder() {
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000008;
         onChanged();
         return getPhotoHeaderFieldBuilder().getBuilder();
       }
@@ -3474,20 +3792,21 @@ public final class ImagePB {
     java.lang.String[] descriptorData = {
       "\n\013Image.proto\022\010protobuf\"L\n\007Request\022 \n\006he" +
       "ader\030\001 \002(\0132\020.protobuf.Header\022\037\n\004body\030\002 \002" +
-      "(\0132\021.protobuf.Payload\"4\n\006Header\022*\n\013photo" +
-      "Header\030\n \001(\0132\025.protobuf.PhotoHeader\"7\n\007P" +
-      "ayload\022,\n\014photoPayload\030\004 \001(\0132\026.protobuf." +
-      "PhotoPayload\"\225\002\n\013PhotoHeader\022<\n\013requestT" +
-      "ype\030\001 \001(\0162!.protobuf.PhotoHeader.Request" +
-      "Type:\004read\022A\n\014responseFlag\030\002 \001(\0162\".proto" +
-      "buf.PhotoHeader.ResponseFlag:\007success\022\024\n" +
-      "\014lastModified\030\003 \001(\003\022\025\n\rcontentLength\030\004 \001",
-      "(\005\".\n\013RequestType\022\010\n\004read\020\000\022\t\n\005write\020\001\022\n" +
-      "\n\006delete\020\002\"(\n\014ResponseFlag\022\013\n\007success\020\000\022" +
-      "\013\n\007failure\020\001\"8\n\014PhotoPayload\022\014\n\004uuid\030\001 \001" +
-      "(\t\022\014\n\004name\030\002 \001(\t\022\014\n\004data\030\003 \001(\014B2\n\'projec" +
-      "t1pbversion.cmpe275.sjsu.protobufB\007Image" +
-      "PB"
+      "(\0132\021.protobuf.Payload\"c\n\006Header\022\022\n\norigi" +
+      "nator\030\002 \001(\005\022\013\n\003tag\030\003 \001(\t\022\014\n\004time\030\004 \001(\003\022*" +
+      "\n\013photoHeader\030\n \001(\0132\025.protobuf.PhotoHead" +
+      "er\"7\n\007Payload\022,\n\014photoPayload\030\004 \001(\0132\026.pr" +
+      "otobuf.PhotoPayload\"\225\002\n\013PhotoHeader\022<\n\013r" +
+      "equestType\030\001 \001(\0162!.protobuf.PhotoHeader." +
+      "RequestType:\004read\022A\n\014responseFlag\030\002 \001(\0162" +
+      "\".protobuf.PhotoHeader.ResponseFlag:\007suc",
+      "cess\022\024\n\014lastModified\030\003 \001(\003\022\025\n\rcontentLen" +
+      "gth\030\004 \001(\005\".\n\013RequestType\022\010\n\004read\020\000\022\t\n\005wr" +
+      "ite\020\001\022\n\n\006delete\020\002\"(\n\014ResponseFlag\022\013\n\007suc" +
+      "cess\020\000\022\013\n\007failure\020\001\"8\n\014PhotoPayload\022\014\n\004u" +
+      "uid\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\014\n\004data\030\003 \001(\014B2\n" +
+      "\'project1pbversion.cmpe275.sjsu.protobuf" +
+      "B\007ImagePB"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -3505,7 +3824,7 @@ public final class ImagePB {
           internal_static_protobuf_Header_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_Header_descriptor,
-              new java.lang.String[] { "PhotoHeader", });
+              new java.lang.String[] { "Originator", "Tag", "Time", "PhotoHeader", });
           internal_static_protobuf_Payload_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_protobuf_Payload_fieldAccessorTable = new

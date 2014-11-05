@@ -3,6 +3,8 @@ package project1.cmpe275.sjsu.model;
 import java.io.File;
 import java.net.URI;
 
+import com.google.protobuf.ByteString;
+
 /**
  * This class is the model for storing image attributes and the file 
  * as well as some other component needed for MasterServer and SlaveServer
@@ -16,6 +18,7 @@ public class Image {
 	public File file=null;
 	public URI uri=null;
 	public String uuid=""; 
+	public ByteString data=null;
 	
 	//TODO determine more attributes that needed
 	public String NodeAdress="";
@@ -39,6 +42,14 @@ public class Image {
 	}
 
 	
+	public ByteString getData() {
+		return data;
+	}
+
+	public void setData(ByteString data) {
+		this.data = data;
+	}
+
 	//getter and setter
 	
 	

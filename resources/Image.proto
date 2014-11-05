@@ -7,6 +7,9 @@ message Request {
     required Payload body = 2;
 }
 message Header {
+    optional int32 originator = 2;
+    optional string tag = 3;
+    optional int64 time = 4;
     optional PhotoHeader photoHeader = 10;
 }
 

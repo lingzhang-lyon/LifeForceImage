@@ -13,38 +13,35 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package project1pbversion.cmpe275.sjsu.example.worldclock;
+package project1pbversion.cmpe275.sjsu.othercluster;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.ssl.SslContext;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB;
 
-public class WorldClockServerInitializer extends ChannelInitializer<SocketChannel> {
+public class OtherClusterInitializer extends ChannelInitializer<SocketChannel> {
 
-    private final SslContext sslCtx;
-
-    public WorldClockServerInitializer(SslContext sslCtx) {
-        this.sslCtx = sslCtx;
-    }
 
     @Override
-    public void initChannel(SocketChannel ch) throws Exception {
+    public void initChannel(SocketChannel ch) {
         ChannelPipeline p = ch.pipeline();
-        if (sslCtx != null) {
-            p.addLast(sslCtx.newHandler(ch.alloc()));
-        }
 
-        p.addLast(new ProtobufVarint32FrameDecoder());
-        p.addLast(new ProtobufDecoder(WorldClockProtocol.Locations.getDefaultInstance()));
+        p.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
+        //p.addLast(new ProtobufVarint32FrameDecoder());
+        p.addLast(new ProtobufDecoder(ImagePB.Request.getDefaultInstance()));
 
-        p.addLast(new ProtobufVarint32LengthFieldPrepender());
+        p.addLast("frameEncoder", new LengthFieldPrepender(4));
+        //p.addLast(new ProtobufVarint32LengthFieldPrepender());
         p.addLast(new ProtobufEncoder());
 
-        p.addLast(new WorldClockServerHandler());
+        p.addLast(new OtherClusterHandler());
     }
 }

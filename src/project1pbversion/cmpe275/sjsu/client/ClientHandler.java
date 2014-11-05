@@ -15,32 +15,27 @@
  */
 package project1pbversion.cmpe275.sjsu.client;
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-import java.util.regex.Pattern;
+import java.io.File;
+import java.util.Scanner;
 
-import project1.cmpe275.sjsu.model.Image;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
+import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
+
+import com.google.protobuf.ByteString;
 
 public class ClientHandler extends SimpleChannelInboundHandler<Request> {
 
+	private static boolean enableSaveOption=true;
 
-    @Override
+	@Override
     public void channelRead0(ChannelHandlerContext ctx, Request req) throws Exception {
-    	
-    	System.out.println("\nGot the feedback from Server-------");
-    	StringBuilder sb= new StringBuilder();
-    	sb.append("Original Request Type: " + req.getHeader().getPhotoHeader().getRequestType()+"\n");
-    	sb.append("Respond Flag: " + req.getHeader().getPhotoHeader().getResponseFlag()+"\n");
-    	sb.append("UUID: " + req.getBody().getPhotoPayload().getUuid()+"\n");
-    	sb.append("Image Name: " + req.getBody().getPhotoPayload().getName()+"\n");
-    	
-    	System.out.println(sb.toString());
-    	
-		
-    	
+		System.out.println("\nGot the feedback from Server-------");
+		MessageManager.handleResponse(req,enableSaveOption);
     	
 
     }
@@ -50,4 +45,15 @@ public class ClientHandler extends SimpleChannelInboundHandler<Request> {
         cause.printStackTrace();
         ctx.close();
     }
+
+	public boolean isEnableSaveOption() {
+		return enableSaveOption;
+	}
+
+	public static void setEnableSaveOption(boolean enableSaveOption) {
+		ClientHandler.enableSaveOption = enableSaveOption;
+	}
+    
+    
+    
 }

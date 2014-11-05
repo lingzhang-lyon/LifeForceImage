@@ -2,11 +2,8 @@ package project1pbversion.cmpe275.sjsu.database;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 import org.bson.types.Binary;
 
@@ -38,7 +35,6 @@ public class DatabaseManager {
 	public static Mongo mongo;
 	public static DB db;
 	public static DBCollection collection;
-//	public static Image image;
 	
 	static final String filePath = System.getProperty("file", Configure.clientFilePath);
 	static final String MongoHost = Configure.MongoHost;
@@ -86,25 +82,24 @@ public class DatabaseManager {
     	
     	// Download an image from DB by UUID
     	Image retrievedImage = retrieveProperties(uuid, collection);
-    	    	
-    	if(retrievedImage.imageName != "") {
+
+    	if(retrievedImage.imageName != "") {  // Retrieve successfully
     		responseFlag = true;
     		fileName = retrievedImage.getImageName();
-    		imageData = ByteString.copyFrom(retrieveByte(uuid, collection));
+    		imageData = retrieveData(uuid, collection);
     		
     		pp = PhotoPayload.newBuilder()
 					  		 .setUuid(uuid)
 					  		 .setName(fileName)
 					  		 .setData(imageData)
 					  		 .build();
-    	} else {
+    	} else {  // Retrieve failed
     		pp = PhotoPayload.newBuilder()
 					  		 .setUuid(uuid)
 					  		 .build();
     	}
     	
     	// Organize return info
-    	
     	Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
 
     	PhotoHeader ph = PhotoHeader.newBuilder()
@@ -139,13 +134,13 @@ public class DatabaseManager {
 		dm.connectDatabase();
 		
 		// Parse the info of image
-		String 	uuid			= img.getUuid();
-    	String 	fileName		= img.getImageName();
-    	String 	client			= img.getUserName();
-    	String 	uploadTime		= img.getCreated();
-    	String 	storedName		= client + uploadTime + fileName;
-    	String 	category		= img.getCategory();
-    	File	fileData		= img.getFile();
+		String 		uuid		= img.getUuid();
+    	String 		fileName	= img.getImageName();
+    	String 		client		= img.getUserName();
+    	String 		uploadTime	= img.getCreated();
+    	String 		storedName	= client + uploadTime + fileName;
+    	String 		category	= img.getCategory();
+    	ByteString	fileData	= img.getData();
 
     	// Insert an image to DB
     	insert(uuid, fileName, client, uploadTime, storedName, category, fileData, collection);
@@ -223,57 +218,38 @@ public class DatabaseManager {
 	 */
     public void insert(String uuid, String originalName, String client, 
     				   String uploadTime, String storedName, String category, 
-    				   File fileData, 
+    				   ByteString imageData, 
     				   DBCollection collection)
     {
-        try {
-            File imageFile = fileData;
-            FileInputStream f = new FileInputStream(imageFile);
- 
-            byte b[] = new byte[f.available()];
-            f.read(b);
- 
-            // data of image
-            Binary data = new Binary(b);
-            BasicDBObject o = new BasicDBObject();
-            
-            // prepare inserting statement
-            o.append("Uuid", uuid)
-             .append("Image Name", storedName)
-             .append("Upload User", client)
-             .append("Upload Time", uploadTime)
-             .append("Category", category)
-             .append("Image",data);
-            
-            collection.insert(o);
-            
-            System.out.println("Inserted record of " + uuid);
- 
-            f.close();
- 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    	BasicDBObject o = new BasicDBObject();
+        
+        // prepare inserting statement
+        o.append("Uuid", uuid)
+         .append("Image Name", storedName)
+         .append("Upload User", client)
+         .append("Upload Time", uploadTime)
+         .append("Category", category)
+         .append("Image Data",imageData);
+        
+        collection.insert(o);
+        
+        System.out.println("Inserted record of " + uuid + ", file size = " + imageData.size());
     }
     
     
     /**
   	 *  Image Byte Data Retrieving Method
   	 */
-    public byte[] retrieveByte(String uuid, DBCollection collection)
+    public ByteString retrieveData(String uuid, DBCollection collection)
     {
-    	byte[] c = null;
+    	ByteString retrievedImageData = null;
     	DBObject obj = collection.findOne(new BasicDBObject("Uuid", uuid));
     	
-    	// Nothing found 
-    	if (obj == null)
-    		return c;
-    	
-		c = (byte[])obj.get("Image");
+    	retrievedImageData = ByteString.copyFrom((obj.get("Image Data").toString().getBytes()));
 		
-		System.out.println("Bytedata of " + uuid +" retrieved.");
+		System.out.println("Retrieved Byte String data of " + uuid +", data size = " + retrievedImageData.size());
 		
-		return c;
+		return retrievedImageData;
     }
     
     
@@ -298,7 +274,7 @@ public class DatabaseManager {
 		// Set retrieved file name
 		retrievedImage.setUuid(uuid);
 
-		System.out.println("Properties of " + uuid +" retrieved.");
+		System.out.println("Retrieved Properties of " + uuid +" , file name = " + fileName);
 		
 		return retrievedImage;
 	}
