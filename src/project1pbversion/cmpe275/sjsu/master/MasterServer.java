@@ -70,7 +70,7 @@ public class MasterServer {
     	}
     	
     	System.out.println("Your configure: "
-				+ "\nport= "+PortForClient
+				+ "\nport= "+port
 				+ "\nsaveToLocal= "+ saveToLocal
 				+ "\nusePartition= "+ usePartition
 				+ "\npassFailedRequestToOtherCluster= "+ passFailedRequestToOtherCluster
@@ -90,7 +90,7 @@ public class MasterServer {
          EventLoopGroup workerGroup = new NioEventLoopGroup();
          try {
 
-             
+        	 MasterServerHandler.setSaveToLocal(saveToLocal);
         	 MasterServerHandler.setUsePartition(usePartition);
         	 MasterServerHandler.setPassFailedRequestToOtherCluster(passFailedRequestToOtherCluster);
         	 MasterServerHandler.setDummyTestForMasterHandle(dummyTestForMasterHandler);
@@ -101,7 +101,7 @@ public class MasterServer {
              b.channel(NioServerSocketChannel.class);
              b.handler(new LoggingHandler(LogLevel.INFO));
              boolean compress=false;            
-             b.childHandler(new MasterServerInitializer(compress,saveToLocal));  //false means no compression
+             b.childHandler(new MasterServerInitializer(compress));  //false means no compression
 
              Channel ch = b.bind(portForClient).sync().channel();
 

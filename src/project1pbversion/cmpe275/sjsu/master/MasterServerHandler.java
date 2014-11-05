@@ -68,12 +68,6 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		MasterServerHandler.passFailedRequestToOtherCluster = passFailedRequestToOtherCluster;
 	}
 
-
-
-	public MasterServerHandler(boolean savetolocal){
-		this.saveToLocal=savetolocal;
-	}
-	
 	
 	
  	public static boolean isUsePartition() {

@@ -9,9 +9,7 @@ import org.junit.Test;
 public class ClientTest {
 
 	@Test
-	public void test() throws InterruptedException{
-		//for both
-		//multiThreadTest(1,null) ; 
+	public void testForRead() throws InterruptedException{
 		
 		//for read
     	//uuid for multiread same pic
@@ -22,10 +20,19 @@ public class ClientTest {
 		ClientHandler.setEnableSaveOption(false);
 		multiThreadTest(2,uuid) ; 
 		
-		//for write
-		//multiThreadTest(3, null) ; 
 	}
 	
+	@Test
+	public void testForBoth() throws InterruptedException{
+		//for both
+		multiThreadTest(1,null) ; 
+	}	
+	
+	@Test
+	public void testForWrite() throws InterruptedException{
+		//for write
+		multiThreadTest(3, null) ; 
+	}
 	
 	
 	@SuppressWarnings("resource")
