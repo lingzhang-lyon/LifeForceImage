@@ -245,7 +245,7 @@ public class DatabaseManager {
     	ByteString retrievedImageData = null;
     	DBObject obj = collection.findOne(new BasicDBObject("Uuid", uuid));
     	
-    	retrievedImageData = (ByteString)obj.get("Image Data");
+    	retrievedImageData = ByteString.copyFrom((obj.get("Image Data").toString().getBytes()));
 		
 		System.out.println("Retrieved Byte String data of " + uuid +", data size = " + retrievedImageData.size());
 		
