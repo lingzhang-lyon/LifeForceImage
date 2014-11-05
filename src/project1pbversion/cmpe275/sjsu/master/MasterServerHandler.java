@@ -133,6 +133,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		if(saveToLocal){
 			File file=MessageManager.createFile(picname,desPath);
 			MessageManager.writeByteStringToFile(data,file);
+			System.out.println("received file data was saved in master local file system at " + desPath);
 		}
 		//TODO after refactor DBManager, to handle the byteString in image object, no need file in image object
 		//we can choose to not save to local, now we need this for temperary transfer

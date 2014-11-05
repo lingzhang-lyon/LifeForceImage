@@ -24,6 +24,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Scanner;
 
 import project1.cmpe275.sjsu.conf.Configure;
@@ -61,8 +63,10 @@ public final class Client {
     	String isTest=reader0.nextLine();
     	
     	if (isTest.equals("a")){ //if it's just a simple test
-    		testGet(HOST,PORT);
-        	testPost(HOST,PORT);
+    		String uuid= createUuid("testPic", "ling");
+    		testPost(HOST,PORT, uuid, filePath);
+    		testGet(HOST,PORT, uuid);
+        	
     	} 
         else{//if not test
         // create a user interface to input the request and picture information
@@ -81,7 +85,7 @@ public final class Client {
 		    	
 		                  
 		
-		         if(reqtype.equals("a")){
+		         if(reqtype.equals("a")){ //read
 		        	 System.out.println("enter the UUID of picture:");
 		             String uuid=reader.nextLine();
 
@@ -94,23 +98,24 @@ public final class Client {
 		        	 reqtype="";
 		         }
 		         
-		         else if(reqtype.equals("b")){
+		         else if(reqtype.equals("b")){ //write
 		        	 System.out.println("enter the UUID of picture:");
 		             String uuid=reader.nextLine();
 		        	 
 		        	 System.out.println("enter the path of picture:");
 		        	 System.out.println("like: /Users/lingzhang/Desktop/test1.jpeg");
 		             String path=reader.nextLine(); 
-		             File file= new File(System.getProperty("filePath", path));
 		             
-		             //TODO need to validate the input path		            	             
-		             if(!InputValidator.validateFile(file) ){
+		             ByteString filedata=null;
+		             try{
+			             File file= new File(System.getProperty("filePath", path));
+			             filedata=MessageManager.convertFileToByteString(file);
+		             }catch (Exception e){
 		            	 System.out.println("your input file path have some issues");
 		            	 continue;
-		            	//if file not found should input again
 		             }
-		             
-		             
+
+		            		             
 		             System.out.println("enter the name of picture:");
 		             String picname=reader.nextLine(); 
 		             //TODO need to validate input name. should not contain "/"
@@ -125,18 +130,18 @@ public final class Client {
 		             Image image = new Image();
 		             image.setUuid(uuid);	             
 		             image.setImageName(picname);	             
-		             image.setFile(file);
+		             image.setData(filedata);
 		             System.out.println("creat a test image with uuid: " +image.getUuid());	             
 		             //use a parameter to decide get or post directly
 		             createChannelAndSendRequest(RequestType.write, image, host, port);
 		             
 		             reqtype="";
 		         }
-		         else if(reqtype.equals("c")){
+		         else if(reqtype.equals("c")){ //delete
 		        	 System.out.println("enter the UUID of picture:");
 		             String uuid=reader.nextLine();
 		             
-		             // create and send write request
+		             // create and send delete request
 		             System.out.println("\ntest with delete request------");	
 		             Image image = new Image();
 		             image.setUuid(uuid);
@@ -158,10 +163,10 @@ public final class Client {
     	
     }
     
-    public static void testGet( String host, int port) throws Exception{
+    public static void testGet( String host, int port, String uuid) throws Exception{
     	System.out.println("\ntest with get (read) request-----");	
         Image image = new Image();
-        image.setUuid("testuuidforget");
+        image.setUuid(uuid);
         System.out.println("creat a test image with uuid: " +image.getUuid());
         
         //use a parameter to decide get or post directly
@@ -170,13 +175,17 @@ public final class Client {
     	
     }
     
-    public static void testPost( String host, int port) throws Exception{
+    public static void testPost( String host, int port, String uuid, String filePath) throws Exception{
     	System.out.println("\ntest with post (write) request------");	
         Image image = new Image();
-        image.setUuid("testuuidforpost");
-        image.setImageName("testLing.jpeg");
-        File file = new File(filePath);
-        image.setFile(file);
+        image.setUuid(uuid);
+        image.setImageName("testForPost.jpeg");
+        
+        ByteString filedata=null;
+        File file= new File(System.getProperty("filePath", filePath));
+        filedata=MessageManager.convertFileToByteString(file);
+        image.setData(filedata);
+       
         System.out.println("creat a test image with uuid: " +image.getUuid());
         
         //use a parameter to decide get or post directly
@@ -231,10 +240,7 @@ public final class Client {
 		 			.setUuid(img.getUuid());
 		if(reqtype.equals(RequestType.write)){
 			ppb.setName(img.getImageName());
-			
-			//add image file data to photoPayload
-            ByteString data=MessageManager.convertFileToByteString(img.getFile());
-			ppb.setData(data);
+			ppb.setData(img.getData());
 			
 		}
 		PhotoPayload pp=ppb.build();
@@ -256,7 +262,11 @@ public final class Client {
 	    	
 	 }
 	
-	
+	public static String createUuid(String picname, String username) {
+		 String uploadTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());  // Time stamp
+		 String uuid = uploadTime  +"_"+ username +"_"+ picname;  
+		 return uuid;
+	}
 
 
 

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Scanner;
 
 import project1.cmpe275.sjsu.model.Image;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
@@ -95,5 +96,55 @@ public class MessageManager {
 		 String storedName = uploadTime  +"_"+ picname;  
 		 File dest = new File(path + storedName); 
 		 return dest;
+	}
+	
+	
+	
+	public static void handleResponse(Request req) throws Exception{
+		RequestType type = req.getHeader().getPhotoHeader().getRequestType();
+		ResponseFlag reFlag=req.getHeader().getPhotoHeader().getResponseFlag();
+		String uuid = req.getBody().getPhotoPayload().getUuid();
+		String picname=  req.getBody().getPhotoPayload().getName();
+		
+    	
+    	StringBuilder sb= new StringBuilder();
+    	sb.append("Original Request Type: " + type+"\n");
+    	sb.append("Respond Flag: " + reFlag+"\n");
+    	sb.append("UUID: " + uuid +"\n");
+    	sb.append("Image Name: " +picname+"\n");
+    	System.out.println(sb.toString());
+    	
+    	if(type.equals(RequestType.read) && reFlag.equals(ResponseFlag.success)){
+	    	ByteString data=req.getBody().getPhotoPayload().getData();   	
+			System.out.println("Received data:"+data.toString());
+    	
+	    	@SuppressWarnings("resource")
+			Scanner reader = new Scanner(System.in);
+	    	
+	    	boolean tosave;
+	    	do{
+		        System.out.println("Do you want to save file to local file system? (Y/N)");
+		        String saveToLocal=reader.nextLine();
+		        if(saveToLocal.equals("Y")||saveToLocal.equals("y")){
+		        	tosave=true;
+		        	System.out.println("Please input the path you want to save the picture");
+		        	System.out.println("Like: /Users/lingzhang/Desktop/");
+		        	String savePath=reader.nextLine();
+		        	try{
+						File file=MessageManager.createFile("feedback_"+req.getBody().getPhotoPayload().getName(),savePath);
+						MessageManager.writeByteStringToFile(data,file);
+						System.out.println("The file has been saved to your local file system");
+						tosave=false;
+		        	}catch(Exception e){
+		        		System.out.println("somthing wrong, maybe your path is not correct?");
+		        		continue;
+		        	}
+		        }else{
+		        	tosave=false;
+		        	System.out.println("Goodbye!");
+		        }
+	    	}while(tosave);
+    	}
+    	
 	}
 }

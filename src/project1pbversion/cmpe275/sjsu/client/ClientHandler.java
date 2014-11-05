@@ -34,38 +34,8 @@ public class ClientHandler extends SimpleChannelInboundHandler<Request> {
 
 	@Override
     public void channelRead0(ChannelHandlerContext ctx, Request req) throws Exception {
-    	
-		RequestType type = req.getHeader().getPhotoHeader().getRequestType();
-		ResponseFlag reFlag=req.getHeader().getPhotoHeader().getResponseFlag();
-		String uuid = req.getBody().getPhotoPayload().getUuid();
-		String picname=  req.getBody().getPhotoPayload().getName();
-		
-    	System.out.println("\nGot the feedback from Server-------");
-    	StringBuilder sb= new StringBuilder();
-    	sb.append("Original Request Type: " + type+"\n");
-    	sb.append("Respond Flag: " + reFlag+"\n");
-    	sb.append("UUID: " + uuid +"\n");
-    	sb.append("Image Name: " +picname+"\n");
-    	System.out.println(sb.toString());
-    	
-    	if(type.equals(RequestType.read) && reFlag.equals(ResponseFlag.success)){
-	    	ByteString data=req.getBody().getPhotoPayload().getData();   	
-			System.out.println("Received data:"+data.toString());
-    	
-	    	@SuppressWarnings("resource")
-			Scanner reader = new Scanner(System.in);
-	        System.out.println("Do you want to save file to local file system? (Y/N)");
-	        String saveToLocal=reader.nextLine();
-	        if(saveToLocal.equals("Y")||saveToLocal.equals("y")){
-	        	System.out.println("Please input the path you want to save the picture");
-	        	System.out.println("Like: /Users/lingzhang/Desktop/");
-	        	String savePath=reader.nextLine();
-				File file=MessageManager.createFile("feedback_"+req.getBody().getPhotoPayload().getName(),savePath);
-				MessageManager.writeByteStringToFile(data,file);
-				System.out.println("The file has been saved to your local file system");
-	        }
-		
-    	}
+		System.out.println("\nGot the feedback from Server-------");
+		MessageManager.handleResponse(req);
     	
 
     }
