@@ -62,7 +62,7 @@ public class DatabaseManagerTest {
     	img.setUuid("testuuidforpost");
     	Socket socket=null;    	
     	Request request=dm.downloadFromDB(socket,img);
-    	MessageManager.handleResponse(request);
+    	MessageManager.handleResponse(request,true);
 	}
 	
 	public static void testForWrite() throws Exception{
@@ -77,7 +77,7 @@ public class DatabaseManagerTest {
     	
     	Socket socket=null;    	
     	Request request=dm.uploadToDB(socket,img);
-    	MessageManager.handleResponse(request);
+    	MessageManager.handleResponse(request,true);
 	}
 
 	

@@ -131,9 +131,9 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		
 		//if choose to save to master local file system
 		if(saveToLocal){
-			File file=MessageManager.createFile(picname,desPath);
+			File file=MessageManager.createFileWithThread(picname,desPath);
 			MessageManager.writeByteStringToFile(data,file);
-			System.out.println("received file data was saved in master local file system at " + desPath);
+			System.out.println("received file data with uuid:<"+uuid+ ">was saved in master local file system at \n" + desPath);
 		}
 		//TODO after refactor DBManager, to handle the byteString in image object, no need file in image object
 		//we can choose to not save to local, now we need this for temperary transfer

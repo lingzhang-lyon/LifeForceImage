@@ -30,12 +30,12 @@ import com.google.protobuf.ByteString;
 
 public class ClientHandler extends SimpleChannelInboundHandler<Request> {
 
-
+	private static boolean enableSaveOption=true;
 
 	@Override
     public void channelRead0(ChannelHandlerContext ctx, Request req) throws Exception {
 		System.out.println("\nGot the feedback from Server-------");
-		MessageManager.handleResponse(req);
+		MessageManager.handleResponse(req,enableSaveOption);
     	
 
     }
@@ -45,4 +45,15 @@ public class ClientHandler extends SimpleChannelInboundHandler<Request> {
         cause.printStackTrace();
         ctx.close();
     }
+
+	public boolean isEnableSaveOption() {
+		return enableSaveOption;
+	}
+
+	public static void setEnableSaveOption(boolean enableSaveOption) {
+		ClientHandler.enableSaveOption = enableSaveOption;
+	}
+    
+    
+    
 }

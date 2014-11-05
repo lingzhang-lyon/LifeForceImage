@@ -50,7 +50,7 @@ import com.google.protobuf.ByteString;
  */
 public final class Client {
 
-	static final String filePath = System.getProperty("filePath", Configure.clientFilePath);
+	public static final String filePath = System.getProperty("filePath", Configure.clientFilePath);
 	public static final String HOST = "127.0.0.1";
 	public static final int PORT = 8080;
 
