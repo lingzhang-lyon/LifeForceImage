@@ -1,19 +1,23 @@
 package project1.cmpe275.sjsu.partionAndReplication;
 
 
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+
+import project1.cmpe275.sjsu.model.Image;
+import project1.cmpe275.sjsu.model.Socket;
+import project1pbversion.cmpe275.sjsu.database.DatabaseManager;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
+import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
-import project1.cmpe275.sjsu.model.Image;
-import project1.cmpe275.sjsu.model.Socket;
-import project1pbversion.cmpe275.sjsu.database.DatabaseManager;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 
 
 public class PartitionManager {
@@ -25,10 +29,23 @@ public class PartitionManager {
 		SlaveFinder sla = new SlaveFinder();
 		soc= sla.FindSlave();
 		
+		Image img= new Image();
+		ResponseFlag res =ResponseFlag.failure;
+		Request req = null;
+		try {
+			req = MessageManager.createResponseRequest(img, res, RequestType.write);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		ArrayList<Socket> socket=this.trans(soc);
 		DatabaseManager DB = new DatabaseManager();
+		
 		Request req1= DB.uploadToDB(socket.get(0),image);
 		Request req2= DB.uploadToDB(socket.get(1),image);
+		
 		if(req1.getHeader().getPhotoHeader().getResponseFlag() == ResponseFlag.success){
 			r1=true;
 		}
@@ -51,8 +68,8 @@ public class PartitionManager {
 			return this.upload(image);
 		}
 		//both fails. recall in some time, then timeout return false request;
-		return this.upload(image);	//
-		
+			//
+		return req;
 		
 	}
 	
@@ -75,6 +92,25 @@ public class PartitionManager {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	 private void removeFromMasterDB(Socket s, Image image){
+		 try {
+				Mongo mongo = new Mongo("localhost", 27017);
+				DB db = mongo.getDB("275db");  // Connect DB
+		        DBCollection collection = db.getCollection("Meta");  // Connect collectionClass
+		        
+		        BasicDBObject o = new BasicDBObject("socket", s)
+		        		              .append("uuid",image.getUuid())
+		        		              .append("name", image.getImageName());
+				collection.remove(o);
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  // Connect DB Server
+			
+		 
+		 
+	 }
 	
 	public Request download(Image image){
 		ArrayList<Socket> soc = new ArrayList<Socket>();
@@ -133,6 +169,16 @@ public class PartitionManager {
 		if(soc_str!= null)
 		soc = this.trans(soc_str);
 		
+		Image img= new Image();
+		ResponseFlag res =ResponseFlag.failure;
+		Request req = null;
+		try {
+			req = MessageManager.createResponseRequest(img, res, RequestType.delete);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	        DatabaseManager DB = new DatabaseManager();
 	        Request req1=DB.deleteInDB(soc.get(0), image);
 	        Request req2=DB.deleteInDB(soc.get(1), image);
@@ -143,6 +189,8 @@ public class PartitionManager {
 				r2=true;	
 			}
 			if(r1&&r2) {
+				this.removeFromMasterDB(soc.get(0), image);
+				this.removeFromMasterDB(soc.get(1), image);
 				return req1;
 			}
 			// if anyone fails, recall the upload process
@@ -155,7 +203,7 @@ public class PartitionManager {
 				return this.delete(image);
 			}
 			//both fails. recall in some time, then timeout return false request;
-			return this.delete(image);	//
+			return req;	//
 	        
 		
 	}
