@@ -55,19 +55,20 @@ public class DatabaseManagerTest {
 	}
 	
 	public static void testForRead() throws Exception{
-		DatabaseManager dm = new DatabaseManager();
-    	dm.connectDatabase();
+		//DatabaseManager dm = new DatabaseManager();
+		DatabaseManagerV2 dm = new DatabaseManagerV2();
+    	//dm.connectDatabase();
     	
     	Image img= new Image();
     	img.setUuid("testuuidforpost");
-    	Socket socket=null;    	
+    	Socket socket=new Socket("127.0.0.1", 27017);    	
     	Request request=dm.downloadFromDB(socket,img);
     	MessageManager.handleResponse(request,true);
 	}
 	
 	public static void testForWrite() throws Exception{
-		DatabaseManager dm = new DatabaseManager();
-    	dm.connectDatabase();
+		DatabaseManagerV2 dm = new DatabaseManagerV2();
+    	//dm.connectDatabase();
     	
     	Image img= new Image();
     	img.setUuid("testuuidforpost");
@@ -75,7 +76,7 @@ public class DatabaseManagerTest {
         ByteString filedata=MessageManager.convertFileToByteString(file);
         img.setData(filedata);
     	
-    	Socket socket=null;    	
+        Socket socket=new Socket("127.0.0.1", 27017);    	
     	Request request=dm.uploadToDB(socket,img);
     	MessageManager.handleResponse(request,true);
 	}
