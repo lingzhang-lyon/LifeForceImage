@@ -8,40 +8,34 @@ import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SeverHandler  extends ChannelDuplexHandler {
-	public static final Logger logger = LoggerFactory.getLogger(SeverHandler.class);
-   
+import project1pbversion.cmpe275.sjsu.database.DatabaseManagerV2;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat;
+
+import com.mongodb.DBCollection;
+
+public class HeartbeatSeverHandler  extends ChannelDuplexHandler {
+	public static final Logger logger = LoggerFactory.getLogger(HeartbeatSeverHandler.class);
+	public static DBCollection cl;
+	public static DatabaseManagerV2 dbv2;
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        String retMsg = (String) msg;
+       /* String retMsg = (String) msg;
         if (!"Pong".equals(retMsg)) {
         	logger.info("update slave status to dead not network!!!");
             ctx.close();
             
-        }
-       
-        	logger.info("write to database!!!");
-        	//insert("192.168.1.1",0.1,cl);
+        }*/
+    	Heartbeat hb = (Heartbeat) msg;
+        String ip = hb.getIp();
+        logger.info(ip);
+        Double loadfactor = hb.getLoadfactor();
+        logger.info("loadfactor " + loadfactor);
+        logger.info("write to database!!!");
+        dbv2.updateSlaveStatus(ip,loadfactor,cl);
         	
      }
  
-    /**
-	 *  Info Inserting Method
-	 
-    public void insert(String ip,int loadfactor, DBCollection collection)
-    {
-    	BasicDBObject o = new BasicDBObject();
-        
-        // prepare inserting statement
-        o.append("ipaddress", ip)
-         .append("loadfactor", loadfactor);
-         
-        
-        collection.insert(o);
-        
-        logger.info("Inserted record of " + ip + ", loadfactor = " + loadfactor);
-    }
-    */
+   
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {

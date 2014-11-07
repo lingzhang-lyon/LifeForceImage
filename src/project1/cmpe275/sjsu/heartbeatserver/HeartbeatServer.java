@@ -44,7 +44,7 @@ public class HeartbeatServer {
                     //     cp.addLast(new ChatMessageDispatchHandler());
                     //reader writer all idle time
                     cp.addLast("heartbeat", new IdleStateHandler(0, 0, 10));
-                    cp.addLast("chatHandler", new SeverHandler());
+                    cp.addLast("chatHandler", new HeartbeatSeverHandler());
                 }
             });
  

@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 import java.net.InetSocketAddress;
  
 
-public class HeartbeatClient {
-    public static final Logger logger= LoggerFactory.getLogger(HeartbeatClient.class);
+public class HeartbeatSlave {
+    public static final Logger logger= LoggerFactory.getLogger(HeartbeatSlave.class);
  
     public static void main(String[] args) {
         Bootstrap bootstrap = new Bootstrap();
@@ -37,7 +37,7 @@ public class HeartbeatClient {
                 ch.pipeline().addLast(new LineBasedFrameDecoder(8192));
                 ch.pipeline().addLast(new StringEncoder());
                 ch.pipeline().addLast(new StringDecoder());
-                ch.pipeline().addLast(new ClientHandler());
+                ch.pipeline().addLast(new HeatbeatSlaveHandler());
             }
         });
         try {

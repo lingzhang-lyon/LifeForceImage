@@ -241,6 +241,23 @@ public class DatabaseManagerV2 {
         System.out.println("Inserted record of " + uuid + ", file size = " + imageData.size());
     }
     
+    /**
+   	 *  Info Inserting Method
+   	 */
+       public void updateSlaveStatus(String ip,double d, DBCollection collection)
+       {
+       	BasicDBObject o = new BasicDBObject();
+           
+           // prepare inserting statement
+           o.append("ipaddress", ip)
+            .append("loadfactor", d);
+            
+           
+           collection.insert(o);
+           
+           System.out.println("Inserted record of " + ip + ", loadfactor = " + d);
+       }
+      
     
     /**
   	 *  Image Byte Data Retrieving Method
@@ -295,3 +312,6 @@ public class DatabaseManagerV2 {
 	    System.out.println("Image of " + uuid +" deleted with " + result.getN() + " records");
 	}
 }
+
+
+	
