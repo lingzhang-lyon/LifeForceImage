@@ -59,6 +59,23 @@ public class DatabaseManagerV2 {
             e.printStackTrace();
         } 
 	}
+	
+	/**
+	 *  Database Connecting Method
+	 */
+	public void connectDatabase(String mongoHost, int mongoPort, String collectionName)
+	{
+		try {
+			// DB connection
+        	mongo = new Mongo(mongoHost, mongoPort);  // Connect DB Server
+            db = mongo.getDB(DBName);  // Connect DB
+            collection = db.getCollection(collectionName);  // Connect collection
+		} catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (MongoException e) {
+            e.printStackTrace();
+        } 
+	}
     
 	
     /**
@@ -174,6 +191,58 @@ public class DatabaseManagerV2 {
 		return uploadResponseRequest;
 	}
 	
+	/**
+	 *  Image uploading Method
+	 *  only changed to insert2()
+	 */
+	public Request uploadToDB2(Socket socket, Image img) {
+		// return variable
+		Request uploadResponseRequest = null;
+		
+		// Connect to DB
+		String host=socket.getIp();
+    	int port=socket.getPort();
+		DatabaseManagerV2 dm = new DatabaseManagerV2();
+		dm.connectDatabase(host,port);
+		
+		// Parse the info of image
+		String 		uuid		= img.getUuid();
+    	String 		fileName	= img.getImageName();
+    	String 		client		= img.getUserName();
+    	String 		uploadTime	= img.getCreated();
+    	String 		storedName	= client + uploadTime + fileName;
+    	String 		category	= img.getCategory();
+    	ByteString	fileData	= img.getData();
+
+    	// Insert an image to DB
+    	//insert(uuid, fileName, client, uploadTime, storedName, category, fileData, collection);
+    	insert2(uuid, fileName, client, uploadTime, storedName, category, fileData, collection);
+
+		// Organize return info
+    	PhotoPayload pp = PhotoPayload.newBuilder()
+    								  .setUuid(uuid).setName(fileName)
+    								  .build();
+    	Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
+
+    	PhotoHeader ph = PhotoHeader.newBuilder()
+    								.setResponseFlag(ResponseFlag.success)
+   									.setRequestType(RequestType.write)
+   									.build();	         	      	       	    	 
+    	Header h = Header.newBuilder().setPhotoHeader(ph).build();
+
+    	uploadResponseRequest = Request.newBuilder()
+    								   .setHeader(h)
+    								   .setBody(p)
+    								   .build();
+
+    	System.out.println("UUID in response to upload: "
+	 			+ uploadResponseRequest.getBody().getPhotoPayload().getUuid());
+    	
+    	// Close DB
+		
+		return uploadResponseRequest;
+	}
+	
 	
     /**
 	 *  Image deleting Method
@@ -242,6 +311,40 @@ public class DatabaseManagerV2 {
     }
     
     /**
+	 *  Info Inserting Method
+	 */
+    //store byte[] to mongoDB
+    public void insert2(String uuid, String originalName, String client, 
+    				   String uploadTime, String storedName, String category, 
+    				   ByteString imageData, 
+    				   DBCollection collection)
+    {
+    	 //File imageFile = fileData;
+    	 //FileInputStream f = new FileInputStream(imageFile);
+    	 byte b[] = imageData.toByteArray();
+    	 //f.read(b);
+    	 // data of image
+    	 Binary binaryData = new Binary(b);
+    	
+    	BasicDBObject o = new BasicDBObject();
+        
+        // prepare inserting statement
+        o.append("Uuid", uuid)
+         .append("Image Name", storedName)
+         .append("Upload User", client)
+         .append("Upload Time", uploadTime)
+         .append("Category", category)
+         .append("Image Data",binaryData);
+        
+        collection.insert(o);
+        
+        System.out.println("Inserted record of " + uuid + ", file size = " + binaryData.length());
+    }
+    
+    
+    
+    
+    /**
    	 *  Info updateSlaveStatus Method
    	 */
        public void updateSlaveStatus(String ip,double d, DBCollection collection)
@@ -263,6 +366,21 @@ public class DatabaseManagerV2 {
   	 *  Image Byte Data Retrieving Method
   	 */
     public ByteString retrieveData(String uuid, DBCollection collection)
+    {
+    	ByteString retrievedImageData = null;
+    	DBObject obj = collection.findOne(new BasicDBObject("Uuid", uuid));
+    	
+    	retrievedImageData = ByteString.copyFrom((obj.get("Image Data").toString().getBytes()));
+		
+		System.out.println("Retrieved Byte String data of " + uuid +", data size = " + retrievedImageData.size());
+		
+		return retrievedImageData;
+    }
+    
+    /**
+  	 *  Image Byte Data Retrieving Method
+  	 */
+    public ByteString retrieveData2(String uuid, DBCollection collection)
     {
     	ByteString retrievedImageData = null;
     	DBObject obj = collection.findOne(new BasicDBObject("Uuid", uuid));

@@ -11,6 +11,7 @@ import org.bson.types.Binary;
 import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
+import project1pbversion.cmpe275.sjsu.client.Client;
 import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload;
@@ -47,39 +48,42 @@ public class DatabaseManagerTest {
 	//for test
 	public static void main(String[] args) throws Exception{
 		
-		testForRead() ;
-
-		testForWrite();
+		String uuid=Client.createUuid("testForFile", "ling");
+		testForWrite(uuid, "127.0.0.1");
+		
+		testForRead(uuid, "127.0.0.1") ;
     	
     		
 	}
 	
-	public static void testForRead() throws Exception{
+	public static void testForRead(String uuid, String mongohost) throws Exception{
 		//DatabaseManager dm = new DatabaseManager();
 		DatabaseManagerV2 dm = new DatabaseManagerV2();
     	//dm.connectDatabase();
     	
     	Image img= new Image();
-    	img.setUuid("testuuidforpost");
-    	Socket socket=new Socket("127.0.0.1", 27017);    	
+    	
+    	img.setUuid(uuid);
+    	Socket socket=new Socket(mongohost, 27017);    	
     	Request request=dm.downloadFromDB(socket,img);
     	MessageManager.handleResponse(request,true);
 	}
 	
-	public static void testForWrite() throws Exception{
+	public static void testForWrite(String uuid, String mongohost) throws Exception{
 		DatabaseManagerV2 dm = new DatabaseManagerV2();
     	//dm.connectDatabase();
     	
     	Image img= new Image();
-    	img.setUuid("testuuidforpost");
+    	img.setUuid(uuid);
     	File file= new File(System.getProperty("filePath", filePath));
         ByteString filedata=MessageManager.convertFileToByteString(file);
         img.setData(filedata);
     	
-        Socket socket=new Socket("127.0.0.1", 27017);    	
-    	Request request=dm.uploadToDB(socket,img);
+        Socket socket=new Socket(mongohost, 27017);    	
+    	Request request=dm.uploadToDB2(socket,img);
     	MessageManager.handleResponse(request,true);
 	}
 
+	
 	
 }
