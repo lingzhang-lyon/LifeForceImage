@@ -8,6 +8,720 @@ public final class ImagePB {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
+  public interface HeartbeatOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional int64 time_ref = 2;
+    /**
+     * <code>optional int64 time_ref = 2;</code>
+     */
+    boolean hasTimeRef();
+    /**
+     * <code>optional int64 time_ref = 2;</code>
+     */
+    long getTimeRef();
+
+    // optional string ip = 3;
+    /**
+     * <code>optional string ip = 3;</code>
+     */
+    boolean hasIp();
+    /**
+     * <code>optional string ip = 3;</code>
+     */
+    java.lang.String getIp();
+    /**
+     * <code>optional string ip = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getIpBytes();
+
+    // optional int32 port = 4;
+    /**
+     * <code>optional int32 port = 4;</code>
+     */
+    boolean hasPort();
+    /**
+     * <code>optional int32 port = 4;</code>
+     */
+    int getPort();
+
+    // optional double loadfactor = 5;
+    /**
+     * <code>optional double loadfactor = 5;</code>
+     */
+    boolean hasLoadfactor();
+    /**
+     * <code>optional double loadfactor = 5;</code>
+     */
+    double getLoadfactor();
+  }
+  /**
+   * Protobuf type {@code protobuf.Heartbeat}
+   */
+  public static final class Heartbeat extends
+      com.google.protobuf.GeneratedMessage
+      implements HeartbeatOrBuilder {
+    // Use Heartbeat.newBuilder() to construct.
+    private Heartbeat(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private Heartbeat(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final Heartbeat defaultInstance;
+    public static Heartbeat getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public Heartbeat getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Heartbeat(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000001;
+              timeRef_ = input.readInt64();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000002;
+              ip_ = input.readBytes();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000004;
+              port_ = input.readInt32();
+              break;
+            }
+            case 41: {
+              bitField0_ |= 0x00000008;
+              loadfactor_ = input.readDouble();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Heartbeat_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Heartbeat_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat.class, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<Heartbeat> PARSER =
+        new com.google.protobuf.AbstractParser<Heartbeat>() {
+      public Heartbeat parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Heartbeat(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Heartbeat> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional int64 time_ref = 2;
+    public static final int TIME_REF_FIELD_NUMBER = 2;
+    private long timeRef_;
+    /**
+     * <code>optional int64 time_ref = 2;</code>
+     */
+    public boolean hasTimeRef() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional int64 time_ref = 2;</code>
+     */
+    public long getTimeRef() {
+      return timeRef_;
+    }
+
+    // optional string ip = 3;
+    public static final int IP_FIELD_NUMBER = 3;
+    private java.lang.Object ip_;
+    /**
+     * <code>optional string ip = 3;</code>
+     */
+    public boolean hasIp() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string ip = 3;</code>
+     */
+    public java.lang.String getIp() {
+      java.lang.Object ref = ip_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          ip_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string ip = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIpBytes() {
+      java.lang.Object ref = ip_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        ip_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional int32 port = 4;
+    public static final int PORT_FIELD_NUMBER = 4;
+    private int port_;
+    /**
+     * <code>optional int32 port = 4;</code>
+     */
+    public boolean hasPort() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional int32 port = 4;</code>
+     */
+    public int getPort() {
+      return port_;
+    }
+
+    // optional double loadfactor = 5;
+    public static final int LOADFACTOR_FIELD_NUMBER = 5;
+    private double loadfactor_;
+    /**
+     * <code>optional double loadfactor = 5;</code>
+     */
+    public boolean hasLoadfactor() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional double loadfactor = 5;</code>
+     */
+    public double getLoadfactor() {
+      return loadfactor_;
+    }
+
+    private void initFields() {
+      timeRef_ = 0L;
+      ip_ = "";
+      port_ = 0;
+      loadfactor_ = 0D;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt64(2, timeRef_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(3, getIpBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(4, port_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeDouble(5, loadfactor_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(2, timeRef_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, getIpBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(4, port_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(5, loadfactor_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.Heartbeat}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements project1pbversion.cmpe275.sjsu.protobuf.ImagePB.HeartbeatOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Heartbeat_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Heartbeat_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat.class, project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat.Builder.class);
+      }
+
+      // Construct using project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        timeRef_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        ip_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        port_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        loadfactor_ = 0D;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.internal_static_protobuf_Heartbeat_descriptor;
+      }
+
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat getDefaultInstanceForType() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat.getDefaultInstance();
+      }
+
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat build() {
+        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat buildPartial() {
+        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat result = new project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.timeRef_ = timeRef_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.ip_ = ip_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.port_ = port_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.loadfactor_ = loadfactor_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat) {
+          return mergeFrom((project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat other) {
+        if (other == project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat.getDefaultInstance()) return this;
+        if (other.hasTimeRef()) {
+          setTimeRef(other.getTimeRef());
+        }
+        if (other.hasIp()) {
+          bitField0_ |= 0x00000002;
+          ip_ = other.ip_;
+          onChanged();
+        }
+        if (other.hasPort()) {
+          setPort(other.getPort());
+        }
+        if (other.hasLoadfactor()) {
+          setLoadfactor(other.getLoadfactor());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional int64 time_ref = 2;
+      private long timeRef_ ;
+      /**
+       * <code>optional int64 time_ref = 2;</code>
+       */
+      public boolean hasTimeRef() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional int64 time_ref = 2;</code>
+       */
+      public long getTimeRef() {
+        return timeRef_;
+      }
+      /**
+       * <code>optional int64 time_ref = 2;</code>
+       */
+      public Builder setTimeRef(long value) {
+        bitField0_ |= 0x00000001;
+        timeRef_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int64 time_ref = 2;</code>
+       */
+      public Builder clearTimeRef() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        timeRef_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      // optional string ip = 3;
+      private java.lang.Object ip_ = "";
+      /**
+       * <code>optional string ip = 3;</code>
+       */
+      public boolean hasIp() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string ip = 3;</code>
+       */
+      public java.lang.String getIp() {
+        java.lang.Object ref = ip_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          ip_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string ip = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIpBytes() {
+        java.lang.Object ref = ip_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          ip_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string ip = 3;</code>
+       */
+      public Builder setIp(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        ip_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string ip = 3;</code>
+       */
+      public Builder clearIp() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        ip_ = getDefaultInstance().getIp();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string ip = 3;</code>
+       */
+      public Builder setIpBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        ip_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional int32 port = 4;
+      private int port_ ;
+      /**
+       * <code>optional int32 port = 4;</code>
+       */
+      public boolean hasPort() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional int32 port = 4;</code>
+       */
+      public int getPort() {
+        return port_;
+      }
+      /**
+       * <code>optional int32 port = 4;</code>
+       */
+      public Builder setPort(int value) {
+        bitField0_ |= 0x00000004;
+        port_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 port = 4;</code>
+       */
+      public Builder clearPort() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        port_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional double loadfactor = 5;
+      private double loadfactor_ ;
+      /**
+       * <code>optional double loadfactor = 5;</code>
+       */
+      public boolean hasLoadfactor() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional double loadfactor = 5;</code>
+       */
+      public double getLoadfactor() {
+        return loadfactor_;
+      }
+      /**
+       * <code>optional double loadfactor = 5;</code>
+       */
+      public Builder setLoadfactor(double value) {
+        bitField0_ |= 0x00000008;
+        loadfactor_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional double loadfactor = 5;</code>
+       */
+      public Builder clearLoadfactor() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        loadfactor_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.Heartbeat)
+    }
+
+    static {
+      defaultInstance = new Heartbeat(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.Heartbeat)
+  }
+
   public interface RequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
@@ -3757,6 +4471,11 @@ public final class ImagePB {
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_Heartbeat_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_Heartbeat_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_Request_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -3790,55 +4509,63 @@ public final class ImagePB {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\013Image.proto\022\010protobuf\"L\n\007Request\022 \n\006he" +
-      "ader\030\001 \002(\0132\020.protobuf.Header\022\037\n\004body\030\002 \002" +
-      "(\0132\021.protobuf.Payload\"c\n\006Header\022\022\n\norigi" +
-      "nator\030\002 \001(\005\022\013\n\003tag\030\003 \001(\t\022\014\n\004time\030\004 \001(\003\022*" +
-      "\n\013photoHeader\030\n \001(\0132\025.protobuf.PhotoHead" +
-      "er\"7\n\007Payload\022,\n\014photoPayload\030\004 \001(\0132\026.pr" +
-      "otobuf.PhotoPayload\"\225\002\n\013PhotoHeader\022<\n\013r" +
-      "equestType\030\001 \001(\0162!.protobuf.PhotoHeader." +
-      "RequestType:\004read\022A\n\014responseFlag\030\002 \001(\0162" +
-      "\".protobuf.PhotoHeader.ResponseFlag:\007suc",
-      "cess\022\024\n\014lastModified\030\003 \001(\003\022\025\n\rcontentLen" +
-      "gth\030\004 \001(\005\".\n\013RequestType\022\010\n\004read\020\000\022\t\n\005wr" +
-      "ite\020\001\022\n\n\006delete\020\002\"(\n\014ResponseFlag\022\013\n\007suc" +
-      "cess\020\000\022\013\n\007failure\020\001\"8\n\014PhotoPayload\022\014\n\004u" +
-      "uid\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\014\n\004data\030\003 \001(\014B2\n" +
-      "\'project1pbversion.cmpe275.sjsu.protobuf" +
-      "B\007ImagePB"
+      "\n\013Image.proto\022\010protobuf\"K\n\tHeartbeat\022\020\n\010" +
+      "time_ref\030\002 \001(\003\022\n\n\002ip\030\003 \001(\t\022\014\n\004port\030\004 \001(\005" +
+      "\022\022\n\nloadfactor\030\005 \001(\001\"L\n\007Request\022 \n\006heade" +
+      "r\030\001 \002(\0132\020.protobuf.Header\022\037\n\004body\030\002 \002(\0132" +
+      "\021.protobuf.Payload\"c\n\006Header\022\022\n\noriginat" +
+      "or\030\002 \001(\005\022\013\n\003tag\030\003 \001(\t\022\014\n\004time\030\004 \001(\003\022*\n\013p" +
+      "hotoHeader\030\n \001(\0132\025.protobuf.PhotoHeader\"" +
+      "7\n\007Payload\022,\n\014photoPayload\030\004 \001(\0132\026.proto" +
+      "buf.PhotoPayload\"\225\002\n\013PhotoHeader\022<\n\013requ" +
+      "estType\030\001 \001(\0162!.protobuf.PhotoHeader.Req",
+      "uestType:\004read\022A\n\014responseFlag\030\002 \001(\0162\".p" +
+      "rotobuf.PhotoHeader.ResponseFlag:\007succes" +
+      "s\022\024\n\014lastModified\030\003 \001(\003\022\025\n\rcontentLength" +
+      "\030\004 \001(\005\".\n\013RequestType\022\010\n\004read\020\000\022\t\n\005write" +
+      "\020\001\022\n\n\006delete\020\002\"(\n\014ResponseFlag\022\013\n\007succes" +
+      "s\020\000\022\013\n\007failure\020\001\"8\n\014PhotoPayload\022\014\n\004uuid" +
+      "\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\014\n\004data\030\003 \001(\014B2\n\'pr" +
+      "oject1pbversion.cmpe275.sjsu.protobufB\007I" +
+      "magePB"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_protobuf_Request_descriptor =
+          internal_static_protobuf_Heartbeat_descriptor =
             getDescriptor().getMessageTypes().get(0);
+          internal_static_protobuf_Heartbeat_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_Heartbeat_descriptor,
+              new java.lang.String[] { "TimeRef", "Ip", "Port", "Loadfactor", });
+          internal_static_protobuf_Request_descriptor =
+            getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_Request_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_Request_descriptor,
               new java.lang.String[] { "Header", "Body", });
           internal_static_protobuf_Header_descriptor =
-            getDescriptor().getMessageTypes().get(1);
+            getDescriptor().getMessageTypes().get(2);
           internal_static_protobuf_Header_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_Header_descriptor,
               new java.lang.String[] { "Originator", "Tag", "Time", "PhotoHeader", });
           internal_static_protobuf_Payload_descriptor =
-            getDescriptor().getMessageTypes().get(2);
+            getDescriptor().getMessageTypes().get(3);
           internal_static_protobuf_Payload_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_Payload_descriptor,
               new java.lang.String[] { "PhotoPayload", });
           internal_static_protobuf_PhotoHeader_descriptor =
-            getDescriptor().getMessageTypes().get(3);
+            getDescriptor().getMessageTypes().get(4);
           internal_static_protobuf_PhotoHeader_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_PhotoHeader_descriptor,
               new java.lang.String[] { "RequestType", "ResponseFlag", "LastModified", "ContentLength", });
           internal_static_protobuf_PhotoPayload_descriptor =
-            getDescriptor().getMessageTypes().get(4);
+            getDescriptor().getMessageTypes().get(5);
           internal_static_protobuf_PhotoPayload_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_PhotoPayload_descriptor,

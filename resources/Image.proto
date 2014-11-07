@@ -2,6 +2,13 @@ package protobuf;
 option java_package = "project1pbversion.cmpe275.sjsu.protobuf";
 option java_outer_classname = "ImagePB";
 
+message Heartbeat {
+    optional int64 time_ref = 2;
+    optional string ip = 3;
+    optional int32 port = 4;
+    optional double loadfactor = 5;
+}
+
 message Request {
     required Header header = 1;
     required Payload body = 2;
