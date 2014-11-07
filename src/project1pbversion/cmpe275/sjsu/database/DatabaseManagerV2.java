@@ -242,12 +242,12 @@ public class DatabaseManagerV2 {
     }
     
     /**
-   	 *  Info Inserting Method
+   	 *  Info updateSlaveStatus Method
    	 */
        public void updateSlaveStatus(String ip,double d, DBCollection collection)
        {
        	BasicDBObject o = new BasicDBObject();
-           
+      
            // prepare inserting statement
            o.append("ipaddress", ip)
             .append("loadfactor", d);
