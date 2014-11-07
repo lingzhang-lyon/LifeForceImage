@@ -10,8 +10,7 @@ public class ClientTest {
 
 	@Test
 	public void testForRead() throws InterruptedException{
-		
-		//for read
+		System.out.println("\n***********Test For Read********");
     	//uuid for multiread same pic
     	String uuid= Client.createUuid("testPic", "ling");
 		long threadid=Thread.currentThread().getId();
@@ -25,12 +24,14 @@ public class ClientTest {
 	@Test
 	public void testForBoth() throws InterruptedException{
 		//for both
+		System.out.println("\n***********Test For Both Read and Write********");
 		multiThreadTest(1,null) ; 
 	}	
 	
 	@Test
 	public void testForWrite() throws InterruptedException{
 		//for write
+		System.out.println("\n***********Test For Write********");
 		multiThreadTest(3, null) ; 
 	}
 	
