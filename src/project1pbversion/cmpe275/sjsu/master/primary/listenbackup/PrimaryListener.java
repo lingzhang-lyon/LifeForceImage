@@ -44,7 +44,7 @@ public class PrimaryListener implements Runnable{
 		this.portForBackup=portForBackup;
 	}
 	
-	 public static void startPrimaryMasterServer(int portForBackup){
+	 public static void startPrimaryMasterListener(int portForBackup){
 
 
 		EventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -74,7 +74,7 @@ public class PrimaryListener implements Runnable{
 
 	@Override
 	public void run() {
-		startPrimaryMasterServer(this.portForBackup);
+		startPrimaryMasterListener(this.portForBackup);
 	}
 	
 	public static void main(String[] ags){
@@ -82,6 +82,6 @@ public class PrimaryListener implements Runnable{
 		Scanner reader0 = new Scanner(System.in);
     	System.out.println("input port for heartbeat:");
     	int port=reader0.nextInt();
-		startPrimaryMasterServer(port);
+		startPrimaryMasterListener(port);
 	}
 }
