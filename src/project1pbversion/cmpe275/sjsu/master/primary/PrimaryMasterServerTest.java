@@ -1,4 +1,4 @@
-package project1pbversion.cmpe275.sjsu.master;
+package project1pbversion.cmpe275.sjsu.master.primary;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import project1.cmpe275.sjsu.conf.Configure;
 
-public class MasterServerTest {
+public class PrimaryMasterServerTest {
 
 	@Test
 	public void test() { //use default configure to test
@@ -23,7 +23,7 @@ public class MasterServerTest {
 				+ "\ndummyTestForMasterHandler= "+dummyTestForMasterHandler 
 				);
     	
-    	MasterServer.startMasterServer(port,saveToLocal, usePartition, 
+    	PrimaryMasterServer.startMasterServer(port,saveToLocal, usePartition, 
     			passFailedRequestToOtherCluster,dummyTestForMasterHandler );
     	
 	}

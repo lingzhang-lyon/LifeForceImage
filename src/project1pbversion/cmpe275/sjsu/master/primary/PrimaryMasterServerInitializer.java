@@ -1,4 +1,4 @@
-package project1pbversion.cmpe275.sjsu.master;
+package project1pbversion.cmpe275.sjsu.master.primary;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -13,10 +13,10 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB;
 
-public class MasterServerInitializer extends ChannelInitializer<SocketChannel> {
+public class PrimaryMasterServerInitializer extends ChannelInitializer<SocketChannel> {
 	boolean compress = false;
 
-	public MasterServerInitializer(boolean enableCompression) {
+	public PrimaryMasterServerInitializer(boolean enableCompression) {
 		compress = enableCompression;
 	}
 
@@ -48,6 +48,6 @@ public class MasterServerInitializer extends ChannelInitializer<SocketChannel> {
 		pipeline.addLast("protobufEncoder", new ProtobufEncoder());
 
 		// our server processor (new instance for each connection)
-		pipeline.addLast("handler", new MasterServerHandler());
+		pipeline.addLast("handler", new PrimaryMasterServerHandler());
 	}
 }

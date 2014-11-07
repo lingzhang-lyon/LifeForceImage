@@ -1,4 +1,4 @@
-package project1pbversion.cmpe275.sjsu.master;
+package project1pbversion.cmpe275.sjsu.master.primary;
 
 import java.util.Scanner;
 
@@ -12,7 +12,7 @@ import io.netty.handler.logging.LoggingHandler;
 import project1.cmpe275.sjsu.conf.Configure;
 
 
-public class MasterServer {
+public class PrimaryMasterServer {
     static final int PortForClient = Configure.MasterPortForClient;
       
     @SuppressWarnings("resource")
@@ -90,10 +90,10 @@ public class MasterServer {
          EventLoopGroup workerGroup = new NioEventLoopGroup();
          try {
 
-        	 MasterServerHandler.setSaveToLocal(saveToLocal);
-        	 MasterServerHandler.setUsePartition(usePartition);
-        	 MasterServerHandler.setPassFailedRequestToOtherCluster(passFailedRequestToOtherCluster);
-        	 MasterServerHandler.setDummyTestForMasterHandle(dummyTestForMasterHandler);
+        	 PrimaryMasterServerHandler.setSaveToLocal(saveToLocal);
+        	 PrimaryMasterServerHandler.setUsePartition(usePartition);
+        	 PrimaryMasterServerHandler.setPassFailedRequestToOtherCluster(passFailedRequestToOtherCluster);
+        	 PrimaryMasterServerHandler.setDummyTestForMasterHandle(dummyTestForMasterHandler);
         	 
         	 
              ServerBootstrap b = new ServerBootstrap();
@@ -101,7 +101,7 @@ public class MasterServer {
              b.channel(NioServerSocketChannel.class);
              b.handler(new LoggingHandler(LogLevel.INFO));
              boolean compress=false;            
-             b.childHandler(new MasterServerInitializer(compress));  //false means no compression
+             b.childHandler(new PrimaryMasterServerInitializer(compress));  //false means no compression
 
              Channel ch = b.bind(portForClient).sync().channel();
 

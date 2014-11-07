@@ -23,6 +23,7 @@ public class Image {
 	//TODO determine more attributes that needed
 	public String NodeAdress="";
 	public String BackupNodeAdress="";
+	public Socket storeSocket=null;
 	
 	public String created=""; // time stamp
 	
@@ -42,6 +43,14 @@ public class Image {
 	}
 
 	
+	public Socket getStoreSocket() {
+		return storeSocket;
+	}
+
+	public void setStoreSocket(Socket storeSocket) {
+		this.storeSocket = storeSocket;
+	}
+
 	public ByteString getData() {
 		return data;
 	}

@@ -1,6 +1,4 @@
-package project1pbversion.cmpe275.sjsu.master.primary;
-
-import java.util.Scanner;
+package project1pbversion.cmpe275.sjsu.master.primary.listenbackup;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -9,19 +7,44 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import project1pbversion.cmpe275.sjsu.master.MasterServerHandler;
-import project1pbversion.cmpe275.sjsu.master.MasterServerInitializer;
 
-public class PrimaryMaster implements Runnable{
+import java.util.Scanner;
+
+import project1.cmpe275.sjsu.model.Socket;
+
+public class PrimaryListener implements Runnable{
 	
 	
 	private int portForBackup;
+	private static boolean backupMasterConnected=false;
+	private static Socket backupMasterSocket=null;
 	
-	public PrimaryMaster(int portForBackup){
+	public static Socket getBackupMasterSocket() {
+		return backupMasterSocket;
+	}
+
+
+	public static void setBackupMasterSocket(Socket backupMasterSocket) {
+		PrimaryListener.backupMasterSocket = backupMasterSocket;
+	}
+
+
+	public static boolean isBackupMasterConnected() {
+		return backupMasterConnected;
+	}
+
+
+	public static void setBackupMasterConnected(boolean backupMasterConnected) {
+		PrimaryListener.backupMasterConnected = backupMasterConnected;
+	}
+	
+	
+	
+	public PrimaryListener(int portForBackup){
 		this.portForBackup=portForBackup;
 	}
 	
-	 public static void startMasterServer(int portForBackup){
+	 public static void startPrimaryMasterServer(int portForBackup){
 
 
 		EventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -32,7 +55,7 @@ public class PrimaryMaster implements Runnable{
 			b.channel(NioServerSocketChannel.class);
 			b.handler(new LoggingHandler(LogLevel.INFO));
 			boolean compress=false;            
-			b.childHandler(new PrimaryMasterInitializer(compress));  //false means no compression
+			b.childHandler(new PrimaryListenerInitializer(compress));  //false means no compression
 			
 			Channel ch = b.bind(portForBackup).sync().channel();
 			
@@ -51,7 +74,7 @@ public class PrimaryMaster implements Runnable{
 
 	@Override
 	public void run() {
-		startMasterServer(this.portForBackup);
+		startPrimaryMasterServer(this.portForBackup);
 	}
 	
 	public static void main(String[] ags){
@@ -59,6 +82,6 @@ public class PrimaryMaster implements Runnable{
 		Scanner reader0 = new Scanner(System.in);
     	System.out.println("input port for heartbeat:");
     	int port=reader0.nextInt();
-		startMasterServer(port);
+		startPrimaryMasterServer(port);
 	}
 }

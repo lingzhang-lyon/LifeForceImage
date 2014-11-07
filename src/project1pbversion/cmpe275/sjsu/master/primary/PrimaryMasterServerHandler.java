@@ -1,4 +1,4 @@
-package project1pbversion.cmpe275.sjsu.master;
+package project1pbversion.cmpe275.sjsu.master.primary;
 
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -15,6 +15,7 @@ import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
 import project1.cmpe275.sjsu.partionAndReplication.PartitionManager;
 import project1pbversion.cmpe275.sjsu.database.DatabaseManager;
+import project1pbversion.cmpe275.sjsu.master.primary.listenbackup.PrimaryListener;
 import project1pbversion.cmpe275.sjsu.othercluster.OtherClusterManager;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
@@ -25,10 +26,10 @@ import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 import com.google.protobuf.ByteString;
 
 
-public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
+public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Request>{
 	
 	private static final String desPath=Configure.desPath;
-	private static final Logger logger = Logger.getLogger(MasterServerHandler.class.getName());
+	private static final Logger logger = Logger.getLogger(PrimaryMasterServerHandler.class.getName());
 	private static boolean saveToLocal=false;
 	private static boolean usePartition=false;
 	private static boolean passFailedRequestToOtherCluster=false;
@@ -40,7 +41,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 
 
 	public static void setSaveToLocal(boolean saveToLocal) {
-		MasterServerHandler.saveToLocal = saveToLocal;
+		PrimaryMasterServerHandler.saveToLocal = saveToLocal;
 	}
 
 
@@ -52,7 +53,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 
 
 	public static void setDummyTestForMasterHandle(boolean dummyTestForMasterHandle) {
-		MasterServerHandler.dummyTestForMasterHandler = dummyTestForMasterHandle;
+		PrimaryMasterServerHandler.dummyTestForMasterHandler = dummyTestForMasterHandle;
 	}
 
 
@@ -65,7 +66,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 
 	public static void setPassFailedRequestToOtherCluster(
 			boolean passFailedRequestToOtherCluster) {
-		MasterServerHandler.passFailedRequestToOtherCluster = passFailedRequestToOtherCluster;
+		PrimaryMasterServerHandler.passFailedRequestToOtherCluster = passFailedRequestToOtherCluster;
 	}
 
 	
@@ -77,7 +78,7 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 
 
 	public static void setUsePartition(boolean usePartition) {
-		MasterServerHandler.usePartition = usePartition;
+		PrimaryMasterServerHandler.usePartition = usePartition;
 	}
 
 
@@ -148,6 +149,9 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 				 responseRequest = dm.downloadFromDB(socket, img);
 				 System.out.println("UUID in response to read request: "
 				 + responseRequest.getBody().getPhotoPayload().getUuid());
+				 
+			
+				 
 			 }
 			 
 			 
@@ -224,6 +228,20 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 				responseRequest = dm.uploadToDB(socket, img);
 				System.out.println("UUID in response to write request: "
 			 			+ responseRequest.getBody().getPhotoPayload().getUuid()); 
+				
+				if (responseRequest.getHeader().getPhotoHeader().getResponseFlag().equals(ResponseFlag.success) ){
+									
+					 //write image metadata to local DB
+					Socket localMetaSocket =new Socket("127.0.0.1",27017);
+					storeImageMetaData(localMetaSocket, img);
+					
+					//send image meta data to backup master
+					if(PrimaryListener.isBackupMasterConnected()){
+						  Socket backupMetaSocket= PrimaryListener.getBackupMasterSocket();
+						  storeImageMetaData(backupMetaSocket, img);
+					}
+				}
+				
     	   }
     	   
 		  if(passFailedRequestToOtherCluster){
@@ -237,7 +255,9 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 						 System.out.println("timeout: didn't received feedback from other cluster ");
 					 }
 				 }
-		   }    	   
+		   }
+		  
+
     	   
     	   
        }
@@ -283,6 +303,18 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 						responseRequest = dm.deleteInDB(socket, img);
 						System.out.println("UUID in response to delete request: "
 					 			+ responseRequest.getBody().getPhotoPayload().getUuid()); 
+						
+						if (responseRequest.getHeader().getPhotoHeader().getResponseFlag().equals(ResponseFlag.success) ){
+						 // delete image metadata from local DB
+							Socket localMetaSocket =new Socket("127.0.0.1",27017);
+							deleteImageMetaData(localMetaSocket, img);
+							
+							//send image meta data to backup master
+							if(PrimaryListener.isBackupMasterConnected()){
+								  Socket backupMetaSocket= PrimaryListener.getBackupMasterSocket();
+								  deleteImageMetaData(backupMetaSocket, img);
+							}
+						}
 		   	   }
 			 
 			  if(passFailedRequestToOtherCluster){
@@ -324,6 +356,23 @@ public class MasterServerHandler extends SimpleChannelInboundHandler<Request>{
 		 
 	}
 	
+	private void storeImageMetaData(Socket metaSocket,Image img){
+		
+		Image imgMetaData =new Image();
+		imgMetaData.setUuid(img.getUuid());
+		imgMetaData.setImageName(img.getImageName());
+		imgMetaData.setStoreSocket(img.getStoreSocket());
+		DatabaseManager dm = new DatabaseManager();
+		dm.uploadToDB(metaSocket,img);  //will not store picture file data, just the metadata
+	}
+	
+	private void deleteImageMetaData(Socket metaSocket,Image img){
+		
+		Image imgMetaData =new Image();
+		imgMetaData.setUuid(img.getUuid());
+		DatabaseManager dm = new DatabaseManager();
+		dm.deleteInDB(metaSocket,img);  //will not store picture file data, just the metadata
+	}
 	
 
 	
