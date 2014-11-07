@@ -26,9 +26,9 @@ public class MessageManager {
 	 			.setUuid(img.getUuid())
 	 			.setName(img.getImageName());
 		
-		if(reqtype.equals(RequestType.write)){			
+		if(reqtype.equals(RequestType.write)&&img.getFile()!=null){			
 			//add image file data to photoPayload
-	        ByteString data=convertFileToByteString(img.getFile());
+			ByteString data=convertFileToByteString(img.getFile());
 			ppb.setData(data);
 			
 		}
