@@ -17,6 +17,11 @@ import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import project1pbversion.cmpe275.sjsu.database.BasicDBObject;
+import project1pbversion.cmpe275.sjsu.database.DBCollection;
+
+import com.google.protobuf.ByteString;
+
 import java.net.InetSocketAddress;
 import java.util.logging.Level;
  
@@ -60,7 +65,7 @@ public class HeartbeatServer {
  
 class HeartbeatHandler extends ChannelDuplexHandler {
 	public static final Logger logger = LoggerFactory.getLogger(HeartbeatHandler.class);
- 
+    private DBCollection cl;
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String retMsg = (String) msg;
@@ -69,11 +74,29 @@ class HeartbeatHandler extends ChannelDuplexHandler {
             ctx.close();
             
         }
-        else{logger.info("write to database!!!");}
+        else{
+        	logger.info("write to database!!!");
+        	insert("192.168.1.1",0.1,cl);
+        	}
+     }
+ 
+    /**
+	 *  Info Inserting Method
+	 */
+    public void insert(String ip,int loadfactor, DBCollection collection)
+    {
+    	BasicDBObject o = new BasicDBObject();
         
+        // prepare inserting statement
+        o.append("ipaddress", ip)
+         .append("loadfactor", loadfactor);
+         
+        
+        collection.insert(o);
+        
+        logger.info("Inserted record of " + ip + ", loadfactor = " + loadfactor);
     }
- 
- 
+    
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
@@ -91,7 +114,7 @@ class HeartbeatHandler extends ChannelDuplexHandler {
  
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-    	logger.info("update slave status to dead!!!");
+    
         ctx.close();
     }
 }

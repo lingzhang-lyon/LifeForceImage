@@ -59,7 +59,7 @@ class ClientHeartbeatHandler extends ChannelDuplexHandler {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String retMsg=(String)msg;
         if("Ping".equals(retMsg)){
-            ctx.writeAndFlush("Pong\n");
+            ctx.writeAndFlush("ipaddress,loadfactor");
         }
     }
  
