@@ -37,7 +37,7 @@ public class HeartbeatClient {
                 ch.pipeline().addLast(new LineBasedFrameDecoder(8192));
                 ch.pipeline().addLast(new StringEncoder());
                 ch.pipeline().addLast(new StringDecoder());
-                ch.pipeline().addLast(new ClientHeartbeatHandler());
+                ch.pipeline().addLast(new ClientHandler());
             }
         });
         try {
@@ -52,18 +52,3 @@ public class HeartbeatClient {
     }
 }
  
-class ClientHeartbeatHandler extends ChannelDuplexHandler {
- 
- 
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        String retMsg=(String)msg;
-        if("Ping".equals(retMsg)){
-            ctx.writeAndFlush("ipaddress,loadfactor");
-        }
-    }
- 
- 
- 
- 
-}
