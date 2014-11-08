@@ -11,6 +11,7 @@ import org.bson.types.Binary;
 import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
+import project1pbversion.cmpe275.sjsu.client.Client;
 import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload;
@@ -47,39 +48,58 @@ public class DatabaseManagerTest {
 	//for test
 	public static void main(String[] args) throws Exception{
 		
-		testForRead() ;
-
-		testForWrite();
+		String uuid=Client.createUuid("testForDBManger", "ling");
+		String imageName="testForDBManger.jpeg";
+		
+		testForWrite(uuid, imageName, "127.0.0.1");
+		
+		testForRead(uuid, "127.0.0.1") ;
+		
+		testForWriteRemoteMongoDB(uuid, imageName, "127.0.0.1", 27017, "db275", "Images_Collection_BSD");
     	
     		
 	}
 	
-	public static void testForRead() throws Exception{
-		//DatabaseManager dm = new DatabaseManager();
-		DatabaseManagerV2 dm = new DatabaseManagerV2();
-    	//dm.connectDatabase();
+	public static void testForRead(String uuid, String mongohost) throws Exception{
     	
     	Image img= new Image();
-    	img.setUuid("testuuidforpost");
-    	Socket socket=new Socket("127.0.0.1", 27017);    	
-    	Request request=dm.downloadFromDB(socket,img);
+    	
+    	img.setUuid(uuid);
+    	Socket socket=new Socket(mongohost, 27017);    	
+    	Request request=DatabaseManagerV2.downloadFromDB(socket,img);
     	MessageManager.handleResponse(request,true);
 	}
 	
-	public static void testForWrite() throws Exception{
-		DatabaseManagerV2 dm = new DatabaseManagerV2();
-    	//dm.connectDatabase();
+	public static void testForWrite(String uuid, String imageName,String mongohost) throws Exception{
     	
     	Image img= new Image();
-    	img.setUuid("testuuidforpost");
+    	img.setUuid(uuid);
+    	img.setImageName(imageName);
     	File file= new File(System.getProperty("filePath", filePath));
         ByteString filedata=MessageManager.convertFileToByteString(file);
         img.setData(filedata);
     	
-        Socket socket=new Socket("127.0.0.1", 27017);    	
-    	Request request=dm.uploadToDB(socket,img);
+        Socket socket=new Socket(mongohost, 27017);    	
+    	Request request=DatabaseManagerV2.uploadToDB(socket,img);
     	MessageManager.handleResponse(request,true);
 	}
 
+	public static void testForWriteRemoteMongoDB(String uuid, String fileName, String mongohost, int mongoport, 
+											String DBName, String collectionName) throws Exception{
+		
+		
+		System.out.println("\nTest for write to remote MongoDB");
+    	String 		client		= "dbtester";
+    	String 		uploadTime	= "dbtest_time";
+    	String 		storedName	= "dbtest_storeName";
+    	String 		category	= "dbtest_category";
+    	File file= new File(System.getProperty("filePath", filePath));
+        ByteString fileData=MessageManager.convertFileToByteString(file);
+    	
+		DatabaseManagerV2 dm= new DatabaseManagerV2(mongohost, mongoport, DBName, collectionName);
+		dm.insert(uuid, fileName, client, uploadTime, storedName, category, fileData, dm.getCollection());
+		
+		
+	}
 	
 }

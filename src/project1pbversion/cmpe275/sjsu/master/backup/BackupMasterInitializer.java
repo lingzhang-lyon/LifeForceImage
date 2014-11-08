@@ -36,8 +36,8 @@ public class BackupMasterInitializer extends ChannelInitializer<SocketChannel> {
 
         p.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
         //p.addLast(new ProtobufVarint32FrameDecoder());
-        p.addLast(new ProtobufDecoder(ImagePB.Request.getDefaultInstance()));
-
+      //  p.addLast(new ProtobufDecoder(ImagePB.Heartbeat.getDefaultInstance()));
+        p.addLast("protobufDecoder", new ProtobufDecoder(ImagePB.Heartbeat.getDefaultInstance()));
         p.addLast("frameEncoder", new LengthFieldPrepender(4));
         //p.addLast(new ProtobufVarint32LengthFieldPrepender());
         p.addLast(new ProtobufEncoder());

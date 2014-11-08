@@ -32,9 +32,9 @@ import com.mongodb.WriteResult;
  */
 public class DatabaseManagerV2 {
 	
-	public static Mongo mongo;
-	public static DB db;
-	public static DBCollection collection;
+	private Mongo mongo;
+	private DB db;
+	private DBCollection collection;
 	
 	static final String filePath = System.getProperty("file", Configure.clientFilePath);
 	static final String MongoHost = Configure.MongoHost;
@@ -43,28 +43,105 @@ public class DatabaseManagerV2 {
 	static final String CollectionName = Configure.CollectionName;
 	
 	
+
+	
+	public Mongo getMongo() {
+		return mongo;
+	}
+
+
+	public DB getDb() {
+		return db;
+	}
+
+
+	public DBCollection getCollection() {
+		return collection;
+	}
+
+
+	public void setMongo(Mongo mongo) {
+		this.mongo = mongo;
+	}
+
+
+	public void setDb(DB db) {
+		this.db = db;
+	}
+
+
+	public void setCollection(DBCollection collection) {
+		this.collection = collection;
+	}
+
+
 	/**
-	 *  Database Connecting Method
+	 * constructor, will set private collection
+	 * @param mongoHost
+	 * @param mongoPort
+	 * @param DBName
+	 * @param collectionName
 	 */
-	public void connectDatabase(String mongoHost, int mongoPort)
+	public DatabaseManagerV2(String mongoHost, int mongoPort, String DBName, String collectionName)
 	{
 		try {
 			// DB connection
-        	mongo = new Mongo(mongoHost, mongoPort);  // Connect DB Server
-            db = mongo.getDB(DBName);  // Connect DB
-            collection = db.getCollection(CollectionName);  // Connect collection
+        	this.mongo = new Mongo(mongoHost, mongoPort);  // Connect DB Server
+        	this.db = mongo.getDB(DBName);  // Connect DB
+            this.collection = db.getCollection(collectionName);  // Connect collection
 		} catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (MongoException e) {
             e.printStackTrace();
         } 
 	}
+	
+	
+	/**
+	 *  Database Connecting Method --static method
+	 *  will find collection with collectionName 
+	 *  then set  dbCollection to found collection 
+	 */
+	public static void connectDatabase(String mongoHost, int mongoPort, String DBName, String collectionName, DBCollection dbCollection)
+	{
+		try {
+			// DB connection
+        	Mongo mongo = new Mongo(mongoHost, mongoPort);  // Connect DB Server
+            DB db = mongo.getDB(DBName);  // Connect DB
+            dbCollection = db.getCollection(collectionName);  // Connect collection
+		} catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (MongoException e) {
+            e.printStackTrace();
+        } 
+	}
+	
+	/**
+	 *  Database Connecting Method
+	 *  will assign the attributes of DBManager
+	 *  
+	 */
+	public void connectDatabase(String mongoHost, int mongoPort, String DBName, String collectionName)
+	{
+		try {
+			// DB connection
+        	this.mongo = new Mongo(mongoHost, mongoPort);  // Connect DB Server
+        	this.db = mongo.getDB(DBName);  // Connect DB
+            this.collection = db.getCollection(collectionName);  // Connect collection
+		} catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (MongoException e) {
+            e.printStackTrace();
+        } 
+	}
+	
+	
     
 	
     /**
 	 *  Image downloading Method
 	 */
-    public Request downloadFromDB(Socket socket, Image img) 
+    public static Request downloadFromDB(Socket socket, Image img) 
     {
     	// return variable
     	Request downloadResponseRequest = null;
@@ -76,19 +153,19 @@ public class DatabaseManagerV2 {
     	// Connect to DB
     	String host=socket.getIp();
     	int port=socket.getPort();
-    	DatabaseManagerV2 dm = new DatabaseManagerV2();
-    	dm.connectDatabase(host, port);
+    	
+    	DatabaseManagerV2 dm= new DatabaseManagerV2(host, port,DBName, CollectionName); 
     			
     	// Parse the info of image
     	String uuid = img.getUuid();
     	
     	// Download an image from DB by UUID
-    	Image retrievedImage = retrieveProperties(uuid, collection);
+    	Image retrievedImage = dm.retrieveProperties(uuid, dm.collection);
 
     	if(retrievedImage.imageName != "") {  // Retrieve successfully
     		responseFlag = true;
     		fileName = retrievedImage.getImageName();
-    		imageData = retrieveData(uuid, collection);
+    		imageData = dm.retrieveData(uuid, dm.collection);
     		
     		pp = PhotoPayload.newBuilder()
 					  		 .setUuid(uuid)
@@ -124,18 +201,20 @@ public class DatabaseManagerV2 {
     }
 
     
-    /**
+
+	
+	/**
 	 *  Image uploading Method
+	 *  
 	 */
-	public Request uploadToDB(Socket socket, Image img) {
+	public static Request uploadToDB(Socket socket, Image img) {
 		// return variable
 		Request uploadResponseRequest = null;
 		
 		// Connect to DB
 		String host=socket.getIp();
     	int port=socket.getPort();
-		DatabaseManagerV2 dm = new DatabaseManagerV2();
-		dm.connectDatabase(host,port);
+    	DatabaseManagerV2 dm= new DatabaseManagerV2(host,port,DBName, CollectionName);
 		
 		// Parse the info of image
 		String 		uuid		= img.getUuid();
@@ -147,7 +226,7 @@ public class DatabaseManagerV2 {
     	ByteString	fileData	= img.getData();
 
     	// Insert an image to DB
-    	insert(uuid, fileName, client, uploadTime, storedName, category, fileData, collection);
+    	dm.insert(uuid, fileName, client, uploadTime, storedName, category, fileData, dm.collection);
 
 		// Organize return info
     	PhotoPayload pp = PhotoPayload.newBuilder()
@@ -178,19 +257,18 @@ public class DatabaseManagerV2 {
     /**
 	 *  Image deleting Method
 	 */
-	public Request deleteInDB(Socket socket, Image img) {
+	public static Request deleteInDB(Socket socket, Image img) {
 		// return variable
 		Request deleteResponseRequest = null;
 		String host=socket.getIp();
     	int port=socket.getPort();
-		DatabaseManagerV2 dm = new DatabaseManagerV2();
-		dm.connectDatabase(host,port);
+    	DatabaseManagerV2 dm= new DatabaseManagerV2(host,port,DBName, CollectionName);
 		
 		String uuid 	= img.getUuid();
 		String fileName = img.getImageName();
 		
 		// Delete an image in DB
-		delete(uuid, collection);
+		dm.delete(uuid, dm.collection);
 		
 		// Organize return info
     	PhotoPayload pp = PhotoPayload.newBuilder()
@@ -218,14 +296,20 @@ public class DatabaseManagerV2 {
 	}
 	
 	
+
+    
     /**
 	 *  Info Inserting Method
 	 */
+    //store Binary data to mongoDB
     public void insert(String uuid, String originalName, String client, 
     				   String uploadTime, String storedName, String category, 
     				   ByteString imageData, 
     				   DBCollection collection)
     {
+    	 byte b[] = imageData.toByteArray();
+    	 Binary binaryData = new Binary(b);
+    	
     	BasicDBObject o = new BasicDBObject();
         
         // prepare inserting statement
@@ -234,12 +318,15 @@ public class DatabaseManagerV2 {
          .append("Upload User", client)
          .append("Upload Time", uploadTime)
          .append("Category", category)
-         .append("Image Data",imageData);
+         .append("Image Data",binaryData);
         
         collection.insert(o);
         
-        System.out.println("Inserted record of " + uuid + ", file size = " + imageData.size());
+        System.out.println("Inserted record of " + uuid + ", file size = " + binaryData.length());
     }
+    
+    
+    
     
     /**
    	 *  Info updateSlaveStatus Method
@@ -259,6 +346,8 @@ public class DatabaseManagerV2 {
        }
       
     
+
+    
     /**
   	 *  Image Byte Data Retrieving Method
   	 */
@@ -266,8 +355,8 @@ public class DatabaseManagerV2 {
     {
     	ByteString retrievedImageData = null;
     	DBObject obj = collection.findOne(new BasicDBObject("Uuid", uuid));
-    	
-    	retrievedImageData = ByteString.copyFrom((obj.get("Image Data").toString().getBytes()));
+    	byte[] b= (byte[])obj.get("Image Data");
+    	retrievedImageData = ByteString.copyFrom(b);
 		
 		System.out.println("Retrieved Byte String data of " + uuid +", data size = " + retrievedImageData.size());
 		
