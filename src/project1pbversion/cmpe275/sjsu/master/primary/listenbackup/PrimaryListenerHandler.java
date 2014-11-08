@@ -4,6 +4,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import project1pbversion.cmpe275.sjsu.master.MasterController;
 import project1pbversion.cmpe275.sjsu.master.primary.PrimaryMasterServerHandler;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
@@ -31,6 +32,12 @@ public class PrimaryListenerHandler extends SimpleChannelInboundHandler<Heartbea
 		
 	}
 	
-	
+	 @Override
+	    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+	        cause.printStackTrace();
+//	        MasterController.setBackupMaster(false);
+//	        MasterController.setPrimaryMaster(true);
+	        ctx.close();
+	    }
 	
 }

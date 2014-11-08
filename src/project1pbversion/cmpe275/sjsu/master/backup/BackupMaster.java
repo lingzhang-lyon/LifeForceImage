@@ -55,7 +55,7 @@ public class BackupMaster {
 	        Bootstrap b = new Bootstrap();
 	        b.group(group)
 	         .channel(NioSocketChannel.class)
-	         .handler(new ClientInitializer());
+	         .handler(new BackupMasterInitializer());
 	
 	        // Make a new connection.
 	        Channel ch = b.connect(host, port).sync().channel();
