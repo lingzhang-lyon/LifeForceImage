@@ -7,6 +7,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.TimeoutException;
 
 import java.io.File;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,6 +25,11 @@ import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 
 import com.google.protobuf.ByteString;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.Mongo;
+import com.mongodb.WriteResult;
 
 
 public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Request>{
@@ -356,22 +362,50 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 		 
 	}
 	
-	private void storeImageMetaData(Socket metaSocket,Image img){
+	/**
+	 * @param metaSocket is the socket that will store the meta data
+	 * @param img
+	 * @throws UnknownHostException
+	 */
+	private void storeImageMetaData(Socket metaSocket,Image img) throws UnknownHostException{
 		
-		Image imgMetaData =new Image();
-		imgMetaData.setUuid(img.getUuid());
-		imgMetaData.setImageName(img.getImageName());
-		imgMetaData.setStoreSocket(img.getStoreSocket());
-		DatabaseManager dm = new DatabaseManager();
-		dm.uploadToDB(metaSocket,img);  //will not store picture file data, just the metadata
+		
+		System.out.println("Stored MetaData to MongoDB at "+ metaSocket.getIp() +":" +metaSocket.getPort());
+		
+		
+		String mongohost=metaSocket.getIp();
+		int mongoport=metaSocket.getPort();
+		Mongo mongo=new Mongo(mongohost, mongoport);
+		DB db=mongo.getDB("275db");
+		DBCollection collection=db.getCollection("Meta");
+		
+		String store=img.getStoreSocket().getIp() +":"+ img.getStoreSocket().getPort();
+		BasicDBObject o=new BasicDBObject("socket", store)
+						.append("uuid", img.getUuid())
+						.append("name",img.getImageName());
+		collection.insert(o);
+		
+		
+		
 	}
 	
-	private void deleteImageMetaData(Socket metaSocket,Image img){
+	/**
+	 * @param metaSocket is the socket that  stored the meta data
+	 * @param img
+	 * @throws UnknownHostException 
+	 */
+	private void deleteImageMetaData(Socket metaSocket,Image img) throws UnknownHostException{
+		//TODO
+
+		String mongohost=metaSocket.getIp();
+		int mongoport=metaSocket.getPort();
+		Mongo mongo=new Mongo(mongohost, mongoport);
+		DB db=mongo.getDB("275db");
+		DBCollection collection=db.getCollection("Meta");
 		
-		Image imgMetaData =new Image();
-		imgMetaData.setUuid(img.getUuid());
-		DatabaseManager dm = new DatabaseManager();
-		dm.deleteInDB(metaSocket,img);  //will not store picture file data, just the metadata
+		WriteResult result = collection.remove(new BasicDBObject("Uuid", img.getUuid() ));
+		
+	    System.out.println("Image of " + img.getUuid()+" deleted with " + result.getN() + " records");
 	}
 	
 
