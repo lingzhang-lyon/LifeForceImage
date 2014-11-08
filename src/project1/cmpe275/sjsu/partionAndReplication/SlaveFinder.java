@@ -51,7 +51,7 @@ public class SlaveFinder {
 					    temp.add((cursor.next().get("socket").toString()));					   
 				   }
 				cursor.close();
-				for(int i=0; i<10; i++){
+				for(int i=0; i<2; i++){
 					for(int j=0; j<temp.size(); j++)
 						cache.push(temp.get(j));
 				}

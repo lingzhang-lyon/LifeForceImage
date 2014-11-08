@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
-import project1pbversion.cmpe275.sjsu.database.DatabaseManager;
+import project1pbversion.cmpe275.sjsu.database.DatabaseManagerV2;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
@@ -26,6 +26,8 @@ public class PartitionManager {
 		boolean r1=false;
 		boolean r2= false;
 		ArrayList<String> soc = new ArrayList<String>();
+		//soc.add("127.0.0.1:27017");
+		//soc.add("127.0.0.1:27017");
 		SlaveFinder sla = new SlaveFinder();
 		soc= sla.FindSlave();
 		
@@ -41,14 +43,16 @@ public class PartitionManager {
 		
 		
 		ArrayList<Socket> socket=this.trans(soc);
-		DatabaseManager DB = new DatabaseManager();
-		
+		DatabaseManagerV2 DB = new DatabaseManagerV2();
+		System.out.println(socket.get(0).getIp());
+		System.out.println(socket.get(1).getIp());
 		Request req1= DB.uploadToDB(socket.get(0),image);
 		Request req2= DB.uploadToDB(socket.get(1),image);
 		
 		if(req1.getHeader().getPhotoHeader().getResponseFlag() == ResponseFlag.success){
 			r1=true;
 		}
+		
 		if(req2.getHeader().getPhotoHeader().getResponseFlag() == ResponseFlag.success){
 			r2=true;	
 		}
@@ -68,7 +72,7 @@ public class PartitionManager {
 			return this.upload(image);
 		}
 		//both fails. recall in some time, then timeout return false request;
-			//
+			//*/
 		return req;
 		
 	}
@@ -80,7 +84,8 @@ public class PartitionManager {
 			DB db = mongo.getDB("275db");  // Connect DB
 	        DBCollection collection = db.getCollection("Meta");  // Connect collectionClass
 	        
-	        BasicDBObject o = new BasicDBObject("socket", s)
+	        String sock= s.getIp()+":"+s.getPort();
+	        BasicDBObject o = new BasicDBObject("socket", sock)
 	        		              .append("uuid",image.getUuid())
 	        		              .append("name", image.getImageName());
 			collection.insert(o);
@@ -132,7 +137,7 @@ public class PartitionManager {
 			e.printStackTrace();
 		}  // Connect DB Server
 		soc = this.trans(soc_str);
-	        DatabaseManager DB = new DatabaseManager();
+	        DatabaseManagerV2 DB = new DatabaseManagerV2();
 	        Request req1=DB.downloadFromDB(soc.get(0), image);
 	        
 	        if(req1.getHeader().getPhotoHeader().getResponseFlag()== ResponseFlag.success){
@@ -179,7 +184,7 @@ public class PartitionManager {
 			e.printStackTrace();
 		}
 		
-	        DatabaseManager DB = new DatabaseManager();
+	        DatabaseManagerV2 DB = new DatabaseManagerV2();
 	        Request req1=DB.deleteInDB(soc.get(0), image);
 	        Request req2=DB.deleteInDB(soc.get(1), image);
 	        if(req1.getHeader().getPhotoHeader().getResponseFlag() == ResponseFlag.success){
@@ -209,16 +214,24 @@ public class PartitionManager {
 	}
 
 	private ArrayList<Socket> trans(ArrayList<String> soc){
-		Socket s= new Socket();
+		Socket s1= new Socket();
+		Socket s2= new Socket();
 		ArrayList<Socket> socket = new ArrayList<Socket>();
-		s.setIp(soc.get(0).split(":")[0]);
-		s.setPort(Integer.parseInt(soc.get(0).split(":")[1]));
-		socket.add(s);
-		s.setIp(soc.get(1).split(":")[0]);
-		s.setPort(Integer.parseInt(soc.get(1).split(":")[1]));
-		socket.add(s);
+		s1.setIp(soc.get(0).split(":")[0]);
+		s1.setPort(Integer.parseInt(soc.get(0).split(":")[1]));
+		socket.add(s1);
+		s2.setIp(soc.get(1).split(":")[0]);
+		s2.setPort(Integer.parseInt(soc.get(1).split(":")[1]));
+		socket.add(s2);
 		
 		return socket;
 	}
+	/*
+	public static void main(String[] args){
+		PartitionManager pm1= new PartitionManager();
+	
+		pm1.upload(im);
+		
+	}*/
 
 }
