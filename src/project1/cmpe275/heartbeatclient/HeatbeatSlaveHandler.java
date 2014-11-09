@@ -13,10 +13,12 @@ public class HeatbeatSlaveHandler extends ChannelDuplexHandler {
 						.build();
 	    @Override
 	    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-	        String retMsg=(String)msg;
-	        if("Ping".equals(retMsg)){
+	        Heartbeat hbc = (Heartbeat)msg;
+	    	int retMsg=hbc.getPort();
+	    	 System.out.println(retMsg);
+	        //if(retMsg==9090){
 	            ctx.writeAndFlush(hb);
-	        }
+	        //}
 	    }
 	 
 }

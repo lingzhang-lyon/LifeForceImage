@@ -25,6 +25,7 @@ public class HeartbeatSeverHandler  extends ChannelDuplexHandler {
             ctx.close();
             
         }*/
+    	
     	String mongoHost = "127.0.0.1";
     	int mongoPort =  27017;
     	String dbname = "heartbeat";
@@ -32,10 +33,10 @@ public class HeartbeatSeverHandler  extends ChannelDuplexHandler {
     	dbv2.connectDatabase(mongoHost, mongoPort,dbname,collectionName);
     	Heartbeat hb = (Heartbeat) msg;
         String ip = hb.getIp();
-        logger.info(ip);
+        System.out.println("ip "+ ip);
         Double loadfactor = hb.getLoadfactor();
-        logger.info("loadfactor " + loadfactor);
-        logger.info("write to database!!!");
+        System.out.println("loadfactor " + loadfactor);
+        System.out.println("write to database!!!");
         dbv2.updateSlaveStatus(ip,loadfactor,cl);
         	
      }
@@ -43,12 +44,15 @@ public class HeartbeatSeverHandler  extends ChannelDuplexHandler {
    
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        if (evt instanceof IdleStateEvent) {
+    	Heartbeat hb = Heartbeat.newBuilder()
+		.setPort(9090)
+		.build();
+    	if (evt instanceof IdleStateEvent) {
             IdleStateEvent event = (IdleStateEvent) evt;
             //if (event.isFirst()) { //如果是第一次出现Idle，则发送心跳包进行检测，否则直接关闭连接
                if (event.state() == IdleState.ALL_IDLE) {
                     System.out.println("no active event for 10 seconds");
-                    ctx.writeAndFlush("Ping\n");
+                    ctx.writeAndFlush(hb);
                     } 
             //} 
            // else ctx.close();
@@ -58,7 +62,7 @@ public class HeartbeatSeverHandler  extends ChannelDuplexHandler {
  
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-    
+    	 System.out.println("errors!!!");
         ctx.close();
     }
 }

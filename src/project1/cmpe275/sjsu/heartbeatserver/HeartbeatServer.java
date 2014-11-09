@@ -5,7 +5,13 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LogLevel;
@@ -17,6 +23,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB;
 
 import com.google.protobuf.ByteString;
 
@@ -38,11 +45,13 @@ public class HeartbeatServer {
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline cp = ch.pipeline();
                     cp.addLast(new LoggingHandler(LogLevel.INFO));
-                    cp.addLast(new LineBasedFrameDecoder(8192));
-                    cp.addLast(new StringDecoder());
-                    cp.addLast(new StringEncoder());
-                    //     cp.addLast(new ChatMessageDispatchHandler());
-                    //reader writer all idle time
+                    cp.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
+                    cp.addLast(new ProtobufVarint32FrameDecoder());
+                    cp.addLast(new ProtobufDecoder(ImagePB.Heartbeat.getDefaultInstance()));
+
+                    cp.addLast("frameEncoder", new LengthFieldPrepender(4));
+                    cp.addLast(new ProtobufVarint32LengthFieldPrepender());
+                    cp.addLast(new ProtobufEncoder());
                     cp.addLast("heartbeat", new IdleStateHandler(0, 0, 10));
                     cp.addLast("chatHandler", new HeartbeatSeverHandler());
                 }

@@ -8,16 +8,23 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
- 
+
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB;
+
 import java.net.InetSocketAddress;
  
 
@@ -33,10 +40,13 @@ public class HeartbeatSlave {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
-                //  ch.pipeline().addLast(new OutboundHandlerT());
-                ch.pipeline().addLast(new LineBasedFrameDecoder(8192));
-                ch.pipeline().addLast(new StringEncoder());
-                ch.pipeline().addLast(new StringDecoder());
+                ch.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
+                //p.addLast(new ProtobufVarint32FrameDecoder());
+                ch.pipeline().addLast(new ProtobufDecoder(ImagePB.Heartbeat.getDefaultInstance()));
+
+                ch.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));
+                //p.addLast(new ProtobufVarint32LengthFieldPrepender());
+                ch.pipeline().addLast(new ProtobufEncoder());
                 ch.pipeline().addLast(new HeatbeatSlaveHandler());
             }
         });
