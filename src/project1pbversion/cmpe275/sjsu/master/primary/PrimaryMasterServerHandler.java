@@ -40,6 +40,7 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 	private static boolean usePartition=false;
 	private static boolean passFailedRequestToOtherCluster=false;
 	private static boolean dummyTestForMasterHandler=false;
+	private static Socket backupMongoSocket=new Socket("127.0.0.1", 27017);
 	
 	public static boolean isSaveToLocal() {
 		return saveToLocal;
@@ -243,7 +244,7 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 					
 					//send image meta data to backup master
 					if(PrimaryListener.isBackupMasterConnected()){
-						  Socket backupMetaSocket= PrimaryListener.getBackupMasterSocket();
+						  Socket backupMetaSocket= backupMongoSocket;
 						  storeImageMetaData(backupMetaSocket, img);
 					}
 				}
@@ -406,6 +407,16 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 		WriteResult result = collection.remove(new BasicDBObject("Uuid", img.getUuid() ));
 		
 	    System.out.println("Image of " + img.getUuid()+" deleted with " + result.getN() + " records");
+	}
+
+
+	public static Socket getBackupMongoSocket() {
+		return backupMongoSocket;
+	}
+
+
+	public static void setBackupMongoSocket(Socket backupMongoSocket) {
+		PrimaryMasterServerHandler.backupMongoSocket = backupMongoSocket;
 	}
 	
 

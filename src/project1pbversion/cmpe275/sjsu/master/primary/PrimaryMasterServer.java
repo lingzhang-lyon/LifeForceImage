@@ -1,7 +1,5 @@
 package project1pbversion.cmpe275.sjsu.master.primary;
 
-import java.util.Scanner;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -9,7 +7,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+
+import java.util.Scanner;
+
 import project1.cmpe275.sjsu.conf.Configure;
+import project1.cmpe275.sjsu.model.Socket;
 
 
 public class PrimaryMasterServer {
@@ -26,6 +28,7 @@ public class PrimaryMasterServer {
     	int port=PortForClient;
     	boolean saveToLocal=true;
     	boolean usePartition=false;
+    	boolean useBackupMaster=false;
 		boolean passFailedRequestToOtherCluster=false;
 		boolean dummyTestForMasterHandler=false;
 		
@@ -37,8 +40,8 @@ public class PrimaryMasterServer {
 	    	
 	    	
 	    	System.out.println("Do you want to just dummy Test For MasterHandler? (Y/N) ");
-	    	String res4=reader.nextLine();
-	    	if(res4.equals("Y")||res4.equals("y")){
+	    	String res0=reader.nextLine();
+	    	if(res0.equals("Y")||res0.equals("y")){
 	    		dummyTestForMasterHandler=true;
 	    	}else{
 	    		dummyTestForMasterHandler=false;
@@ -58,9 +61,26 @@ public class PrimaryMasterServer {
 		    	}else{
 		    		usePartition=false;
 		    	}
-		    	System.out.println("Do you want to pass Failed Request To Other Cluster? (Y/N) ");
+		    	
+		    	System.out.println("Do you want to use Backup Master? (Y/N) ");
 		    	String res3=reader.nextLine();
 		    	if(res3.equals("Y")||res3.equals("y")){
+		    		useBackupMaster=true;
+		    		Scanner reader1 = new Scanner(System.in);
+		    		System.out.println("Input mongohost of backup master: like 127.0.0.1");
+		    		String backupmongohost=reader1.nextLine();
+		    		System.out.println("Input mongoport of backup master: like 27017");
+		    		int backupmongoport=reader1.nextInt();
+		    		Socket backupMongoSocket=new Socket(backupmongohost, backupmongoport);
+		    		PrimaryMasterServerHandler.setBackupMongoSocket(backupMongoSocket);
+		    	}else{
+		    		useBackupMaster=false;
+		    	}
+		    	
+		    	
+		    	System.out.println("Do you want to pass Failed Request To Other Cluster? (Y/N) ");
+		    	String res4=reader.nextLine();
+		    	if(res4.equals("Y")||res4.equals("y")){
 		    		passFailedRequestToOtherCluster=true;
 		    	}else{
 		    		passFailedRequestToOtherCluster=false;
@@ -73,16 +93,17 @@ public class PrimaryMasterServer {
 				+ "\nport= "+port
 				+ "\nsaveToLocal= "+ saveToLocal
 				+ "\nusePartition= "+ usePartition
+				+ "\nusebackupMaster =" + useBackupMaster
 				+ "\npassFailedRequestToOtherCluster= "+ passFailedRequestToOtherCluster
 				+ "\ndummyTestForMasterHandler= "+dummyTestForMasterHandler 
 				);
     	
-    	startMasterServer(port,saveToLocal, usePartition, 
+    	startMasterServer(port,saveToLocal, usePartition, useBackupMaster,
     			passFailedRequestToOtherCluster,dummyTestForMasterHandler );
 				
     }
     
-    public static void startMasterServer(int portForClient, boolean saveToLocal, boolean usePartition,
+    public static void startMasterServer(int portForClient, boolean saveToLocal, boolean usePartition, boolean useBackupMaster, 
     						boolean passFailedRequestToOtherCluster, boolean dummyTestForMasterHandler){
     	 
     	

@@ -13,17 +13,20 @@ public class PrimaryMasterServerTest {
 		int port=Configure.MasterPortForClient;
     	boolean saveToLocal=true;
     	boolean usePartition=false;
+    	boolean useBackupMaster=false;
 		boolean passFailedRequestToOtherCluster=false;
 		boolean dummyTestForMasterHandler=false;
+		
 		System.out.println("Your configure: "
 				+ "\nport= "+port
 				+ "\nsaveToLocal= "+ saveToLocal
 				+ "\nusePartition= "+ usePartition
+				+ "\nusebackupMaster =" + useBackupMaster
 				+ "\npassFailedRequestToOtherCluster= "+ passFailedRequestToOtherCluster
 				+ "\ndummyTestForMasterHandler= "+dummyTestForMasterHandler 
 				);
     	
-    	PrimaryMasterServer.startMasterServer(port,saveToLocal, usePartition, 
+    	PrimaryMasterServer.startMasterServer(port,saveToLocal, usePartition, useBackupMaster,
     			passFailedRequestToOtherCluster,dummyTestForMasterHandler );
     	
 	}

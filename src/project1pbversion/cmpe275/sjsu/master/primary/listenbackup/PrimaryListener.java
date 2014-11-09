@@ -80,8 +80,9 @@ public class PrimaryListener implements Runnable{
 	public static void main(String[] ags){
 		@SuppressWarnings("resource")
 		Scanner reader0 = new Scanner(System.in);
-    	System.out.println("input port for heartbeat:");
+    	System.out.println("Input port for listen heartbeat from backup master:");
     	int port=reader0.nextInt();
+    	
 		startPrimaryMasterListener(port);
 	}
 }
