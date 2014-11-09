@@ -27,7 +27,9 @@ public class HeartbeatSeverHandler  extends ChannelDuplexHandler {
         }*/
     	String mongoHost = "127.0.0.1";
     	int mongoPort =  27017;
-    	dbv2.connectDatabase(mongoHost, mongoPort);
+    	String dbname = "heartbeat";
+    	String collectionName = "slavestats";
+    	dbv2.connectDatabase(mongoHost, mongoPort,dbname,collectionName);
     	Heartbeat hb = (Heartbeat) msg;
         String ip = hb.getIp();
         logger.info(ip);
