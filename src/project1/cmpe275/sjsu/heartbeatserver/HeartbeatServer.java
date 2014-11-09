@@ -46,11 +46,9 @@ public class HeartbeatServer {
                     ChannelPipeline cp = ch.pipeline();
                     cp.addLast(new LoggingHandler(LogLevel.INFO));
                     cp.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
-                    cp.addLast(new ProtobufVarint32FrameDecoder());
                     cp.addLast(new ProtobufDecoder(ImagePB.Heartbeat.getDefaultInstance()));
 
                     cp.addLast("frameEncoder", new LengthFieldPrepender(4));
-                    cp.addLast(new ProtobufVarint32LengthFieldPrepender());
                     cp.addLast(new ProtobufEncoder());
                     cp.addLast("heartbeat", new IdleStateHandler(0, 0, 10));
                     cp.addLast("chatHandler", new HeartbeatSeverHandler());

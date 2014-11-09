@@ -41,11 +41,9 @@ public class HeartbeatSlave {
             protected void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
                 ch.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
-                //p.addLast(new ProtobufVarint32FrameDecoder());
                 ch.pipeline().addLast(new ProtobufDecoder(ImagePB.Heartbeat.getDefaultInstance()));
 
                 ch.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));
-                //p.addLast(new ProtobufVarint32LengthFieldPrepender());
                 ch.pipeline().addLast(new ProtobufEncoder());
                 ch.pipeline().addLast(new HeatbeatSlaveHandler());
             }
