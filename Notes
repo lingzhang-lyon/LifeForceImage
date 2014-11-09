@@ -5,7 +5,7 @@ MongoDB Version:
   2.6.5
   
 MongoDB Startup Command:
-  mongod --dbpath /opt/mongodb/data/db --logpath /opt/mongodb/data/log/mongodb.log --logappend &
+  sudo mongod --dbpath /opt/mongodb/data/db --logpath /opt/mongodb/data/log/mongodb.log --logappend &
   	If "Unclean shutdown detected." warning exists, remove this file: /opt/mongodb/data/db/mongod.lock
 
 MonjaDB (MongoDB GUI client tool in Eclipse): 
