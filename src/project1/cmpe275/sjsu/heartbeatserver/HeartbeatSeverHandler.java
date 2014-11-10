@@ -99,7 +99,11 @@ public class HeartbeatSeverHandler extends ChannelDuplexHandler {
         //ctx.close();
     }
     
-    
+    /**
+	 * @param metaSocket is the socket that will store the meta data
+	 * @param img
+	 * @throws UnknownHostException
+	 */
 	private void storeSlaveHeartbeatMetaData(String mongohost, int mongoport,String dbname,String collectionName,
 								String slaveSocketString, double loadfactor,int status) throws UnknownHostException{
 		
