@@ -73,6 +73,7 @@ public class PrimaryMasterServer {
 		    		int backupmongoport=reader1.nextInt();
 		    		Socket backupMongoSocket=new Socket(backupmongohost, backupmongoport);
 		    		PrimaryMasterServerHandler.setBackupMongoSocket(backupMongoSocket);
+		    		PrimaryMasterServerHandler.setUseBackupMaster(true);
 		    	}else{
 		    		useBackupMaster=false;
 		    	}

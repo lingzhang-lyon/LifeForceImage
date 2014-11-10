@@ -21,6 +21,7 @@ public class PrimaryListenerHandler extends SimpleChannelInboundHandler<Heartbea
 		PrimaryListener.setBackupMasterConnected(true);
 		System.out.println("Received heartbeat call from backup");
 		System.out.println("backup ip is: "+hb.getIp());
+		System.out.println("set PrimaryListener.backupMasterConnected=true ");
 		
 		//then sent heatbeat back to backup master
 		// Write the response.

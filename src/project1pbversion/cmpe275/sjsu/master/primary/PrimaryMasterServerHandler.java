@@ -41,6 +41,7 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 	private static boolean usePartition=false;
 	private static boolean passFailedRequestToOtherCluster=false;
 	private static boolean dummyTestForMasterHandler=false;
+	private static boolean useBackupMaster=false;
 	private static Socket backupMongoSocket=new Socket("127.0.0.1", 27017);
 	
 	public static boolean isSaveToLocal() {
@@ -89,6 +90,16 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 		PrimaryMasterServerHandler.usePartition = usePartition;
 	}
 
+
+
+	public static boolean isUseBackupMaster() {
+		return useBackupMaster;
+	}
+
+
+	public static void setUseBackupMaster(boolean useBackupMaster) {
+		PrimaryMasterServerHandler.useBackupMaster = useBackupMaster;
+	}
 
 
 	public static Socket getBackupMongoSocket() {
@@ -256,9 +267,13 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 					storeImageMetaData(localMetaSocket, img);
 					
 					//send image meta data to backup master
-					if(PrimaryListener.isBackupMasterConnected()){
+					if(useBackupMaster && PrimaryListener.isBackupMasterConnected()){
+						System.out.println("also store image meata data to backup");
 						  Socket backupMetaSocket= backupMongoSocket;
 						  storeImageMetaData(backupMetaSocket, img);
+					}
+					else{
+						System.out.println("No backup meta data");
 					}
 				}
 				
