@@ -43,11 +43,10 @@ public class PartitionManager {
 		
 		
 		ArrayList<Socket> socket=this.trans(soc);
-		DatabaseManagerV2 DB = new DatabaseManagerV2();
 		System.out.println(socket.get(0).getIp());
 		System.out.println(socket.get(1).getIp());
-		Request req1= DB.uploadToDB(socket.get(0),image);
-		Request req2= DB.uploadToDB(socket.get(1),image);
+		Request req1= DatabaseManagerV2.uploadToDB(socket.get(0),image);
+		Request req2= DatabaseManagerV2.uploadToDB(socket.get(1),image);
 		
 		if(req1.getHeader().getPhotoHeader().getResponseFlag() == ResponseFlag.success){
 			r1=true;
@@ -64,11 +63,11 @@ public class PartitionManager {
 		}
 		// if anyone fails, recall the upload process
 		else if(r1&&(!r2)){
-		    DB.deleteInDB(socket.get(0), image);
+			DatabaseManagerV2.deleteInDB(socket.get(0), image);
 			return this.upload(image);
 		}
 		else if(r2&&(!r1)){
-			DB.deleteInDB(socket.get(1), image);
+			DatabaseManagerV2.deleteInDB(socket.get(1), image);
 			return this.upload(image);
 		}
 		//both fails. recall in some time, then timeout return false request;
@@ -137,14 +136,13 @@ public class PartitionManager {
 			e.printStackTrace();
 		}  // Connect DB Server
 		soc = this.trans(soc_str);
-	        DatabaseManagerV2 DB = new DatabaseManagerV2();
-	        Request req1=DB.downloadFromDB(soc.get(0), image);
+	        Request req1=DatabaseManagerV2.downloadFromDB(soc.get(0), image);
 	        
 	        if(req1.getHeader().getPhotoHeader().getResponseFlag()== ResponseFlag.success){
 	        	return req1;
 	        }
 	        else {
-	        	Request req2=DB.downloadFromDB(soc.get(0), image);
+	        	Request req2=DatabaseManagerV2.downloadFromDB(soc.get(0), image);
 	        	return	req2;
 	        }
 		// TODO Auto-generated method stub
@@ -184,9 +182,8 @@ public class PartitionManager {
 			e.printStackTrace();
 		}
 		
-	        DatabaseManagerV2 DB = new DatabaseManagerV2();
-	        Request req1=DB.deleteInDB(soc.get(0), image);
-	        Request req2=DB.deleteInDB(soc.get(1), image);
+	        Request req1=DatabaseManagerV2.deleteInDB(soc.get(0), image);
+	        Request req2=DatabaseManagerV2.deleteInDB(soc.get(1), image);
 	        if(req1.getHeader().getPhotoHeader().getResponseFlag() == ResponseFlag.success){
 				r1=true;
 			}
@@ -200,11 +197,11 @@ public class PartitionManager {
 			}
 			// if anyone fails, recall the upload process
 			else if(r1&&(!r2)){
-			    DB.uploadToDB(soc.get(0), image);
+				DatabaseManagerV2.uploadToDB(soc.get(0), image);
 				return this.delete(image);
 			}
 			else if(r2&&(!r1)){
-				DB.uploadToDB(soc.get(1), image);
+				DatabaseManagerV2.uploadToDB(soc.get(1), image);
 				return this.delete(image);
 			}
 			//both fails. recall in some time, then timeout return false request;
