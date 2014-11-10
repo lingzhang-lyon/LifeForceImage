@@ -1,9 +1,11 @@
 package project1.cmpe275.sjsu.heartbeatserver;
 
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 
@@ -14,16 +16,25 @@ import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
 import project1pbversion.cmpe275.sjsu.database.DatabaseManagerV2;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
 
-public class HeartbeatSeverHandler  extends ChannelDuplexHandler {
+public class HeartbeatSeverHandler extends ChannelDuplexHandler {
 	public static final Logger logger = LoggerFactory.getLogger(HeartbeatSeverHandler.class);
 	public static DBCollection cl;
 	public static DatabaseManagerV2 dbv2;
+	private String mongoHost= "127.0.0.1";
+	private int mongoPort =  27017;
+	private String dbname = "heartbeat";
+	private String collectionName = "slavestats";
+	private String slaveSocketString="";
+	private Double loadfactor=0.0;
+	private int status =1;
+	
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
        /* String retMsg = (String) msg;
@@ -32,30 +43,38 @@ public class HeartbeatSeverHandler  extends ChannelDuplexHandler {
             ctx.close();
             
         }*/
-    	
-    	String mongoHost = "127.0.0.1";
-    	int mongoPort =  27017;
-    	String dbname = "heartbeat";
-    	String collectionName = "slavestats";
     	Heartbeat hb = (Heartbeat) msg;
         String ip = hb.getIp();
         System.out.println("ip "+ ip);
         int port = hb.getPort();
         System.out.println("port "+ port);
-        String slaveSocketString =ip +":"+port;
-        
-        Double loadfactor = hb.getLoadfactor();
+        slaveSocketString =ip +":"+port;
+        loadfactor = hb.getLoadfactor();
         System.out.println("loadfactor " + loadfactor);       
-        
-        System.out.println("write to database!!!");
-        
-        storeSlaveHeartbeatMetaData( mongoHost, mongoPort,dbname,collectionName,
-				slaveSocketString,  loadfactor);
+        System.out.println("update database!!!");
+        storeSlaveHeartbeatMetaData( mongoHost, mongoPort,dbname,collectionName,slaveSocketString,loadfactor,status);
         
         	
      }
- 
-   
+    
+    @Override
+    public void channelActive(ChannelHandlerContext ctx)throws Exception{
+    	logger.info("monitor channel active");
+    	// TODO to db
+    	System.out.println("write to database!!!");
+        storeSlaveHeartbeatMetaData( mongoHost, mongoPort,dbname,collectionName,
+				slaveSocketString,  loadfactor, status);
+    	
+    }
+    
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		logger.error("monitor channel inactive");
+        status = 0;
+        storeSlaveHeartbeatMetaData( mongoHost, mongoPort,dbname,collectionName,
+				slaveSocketString,  loadfactor, status);
+		// TODO try to reconnect
+	}
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
     	Heartbeat hb = Heartbeat.newBuilder()
@@ -82,7 +101,7 @@ public class HeartbeatSeverHandler  extends ChannelDuplexHandler {
     
     
 	private void storeSlaveHeartbeatMetaData(String mongohost, int mongoport,String dbname,String collectionName,
-								String slaveSocketString, double loadfactor) throws UnknownHostException{
+								String slaveSocketString, double loadfactor,int status) throws UnknownHostException{
 		
 		
 		System.out.println("Stored MetaData to MongoDB at "+ mongohost +":" + mongoport);
@@ -95,7 +114,7 @@ public class HeartbeatSeverHandler  extends ChannelDuplexHandler {
 		
 		BasicDBObject o=new BasicDBObject("socketstring", slaveSocketString)
 						.append("loadfactor", loadfactor)
-						.append("status", 1);//slave status 1 is active. 0 is inactive
+						.append("status", status);//slave status 1 is active. 0 is inactive
 		collection.insert(o);
 		
 		
