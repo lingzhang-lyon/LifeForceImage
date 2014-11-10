@@ -16,6 +16,7 @@ import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
 import project1.cmpe275.sjsu.partionAndReplication.PartitionManager;
 import project1pbversion.cmpe275.sjsu.database.DatabaseManager;
+import project1pbversion.cmpe275.sjsu.database.DatabaseManagerV2;
 import project1pbversion.cmpe275.sjsu.master.primary.listenbackup.PrimaryListener;
 import project1pbversion.cmpe275.sjsu.othercluster.OtherClusterManager;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
@@ -151,9 +152,8 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 				 //return a responseRequest, which contain all the image infomation 
 			 }
 			 else{ //don't use partition manager         
-				 Socket socket = null; //TODO use default socket
-				 DatabaseManager dm = new DatabaseManager();
-				 responseRequest = dm.downloadFromDB(socket, img);
+				 Socket socket = new Socket("127.0.0.1", 27017);
+				 responseRequest = DatabaseManagerV2.downloadFromDB(socket, img);
 				 System.out.println("UUID in response to read request: "
 				 + responseRequest.getBody().getPhotoPayload().getUuid());
 				 
@@ -230,9 +230,8 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 			 //return a responseRequest, which contain success or failure information
     	   }
     	   else{ //don't use partition manager 
-				Socket socket = null;
-				DatabaseManager dm = new DatabaseManager();
-				responseRequest = dm.uploadToDB(socket, img);
+    		   	Socket socket = new Socket("127.0.0.1", 27017);
+				responseRequest = DatabaseManagerV2.uploadToDB(socket, img);
 				System.out.println("UUID in response to write request: "
 			 			+ responseRequest.getBody().getPhotoPayload().getUuid()); 
 				
@@ -279,7 +278,6 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 	}
 
 	private void handleDeleteRequest(ChannelHandlerContext ctx, Request req) throws Exception {
-		// TODO Auto-generated method stub
 		String uuid=req.getBody().getPhotoPayload().getUuid();		
 		System.out.println("received delete request for picture with UUID:"+uuid);
 		
@@ -305,9 +303,8 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 				 //return a responseRequest, which contain success or failure information
 		   	   }
 		   	   else{ //don't use partition manager 
-						Socket socket = null;
-						DatabaseManager dm = new DatabaseManager();
-						responseRequest = dm.deleteInDB(socket, img);
+						Socket socket = new Socket("127.0.0.1", 27017);
+						responseRequest = DatabaseManagerV2.deleteInDB(socket, img);
 						System.out.println("UUID in response to delete request: "
 					 			+ responseRequest.getBody().getPhotoPayload().getUuid()); 
 						
@@ -396,7 +393,6 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 	 * @throws UnknownHostException 
 	 */
 	private void deleteImageMetaData(Socket metaSocket,Image img) throws UnknownHostException{
-		//TODO
 
 		String mongohost=metaSocket.getIp();
 		int mongoport=metaSocket.getPort();
