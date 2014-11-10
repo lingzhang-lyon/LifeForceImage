@@ -7,6 +7,7 @@ public class Configure {
 	static final boolean 		SSL = System.getProperty("ssl") != null;
 	public static final int 	MasterPortForClient = Integer.parseInt(System.getProperty("port", SSL? "8443" : "8080"));
 	public static final int 	MasterPortForSlave= 9090;
+	public static final int 	MasterPortForBackup= 7070;
 	
 	public static final String 	clientFilePath= FileCachePath + "test1.jpeg";
 	public static final String 	ClientSavePath = FileCachePath;

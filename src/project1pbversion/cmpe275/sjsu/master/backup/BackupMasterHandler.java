@@ -3,7 +3,7 @@ package project1pbversion.cmpe275.sjsu.master.backup;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import project1pbversion.cmpe275.sjsu.master.MasterController;
+import project1pbversion.cmpe275.sjsu.master.MasterControllerV2;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat;
 
 public class BackupMasterHandler extends SimpleChannelInboundHandler<Heartbeat> {
@@ -35,8 +35,8 @@ public class BackupMasterHandler extends SimpleChannelInboundHandler<Heartbeat> 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         //cause.printStackTrace();
     	System.out.println("!!! exception got by backupMasterHandler");
-        MasterController.setBackupMaster(false);
-        MasterController.setPrimaryMaster(true);
+        MasterControllerV2.setBackupMaster(false);
+        MasterControllerV2.setPrimaryMaster(true);
         ctx.close();
     }
     
