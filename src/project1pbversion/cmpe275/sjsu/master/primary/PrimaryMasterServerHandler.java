@@ -91,6 +91,16 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 
 
 
+	public static Socket getBackupMongoSocket() {
+		return backupMongoSocket;
+	}
+
+
+	public static void setBackupMongoSocket(Socket backupMongoSocket) {
+		PrimaryMasterServerHandler.backupMongoSocket = backupMongoSocket;
+	}
+
+
 	@Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
     }
@@ -236,8 +246,12 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 			 			+ responseRequest.getBody().getPhotoPayload().getUuid()); 
 				
 				if (responseRequest.getHeader().getPhotoHeader().getResponseFlag().equals(ResponseFlag.success) ){
-									
+					
+					//TODO just for test, need to put into PartitionManager
 					 //write image metadata to local DB
+					Socket storeImageSocket =new Socket("127.0.0.1",27017);
+					img.setStoreSocket(storeImageSocket);
+					
 					Socket localMetaSocket =new Socket("127.0.0.1",27017);
 					storeImageMetaData(localMetaSocket, img);
 					
@@ -309,11 +323,12 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 					 			+ responseRequest.getBody().getPhotoPayload().getUuid()); 
 						
 						if (responseRequest.getHeader().getPhotoHeader().getResponseFlag().equals(ResponseFlag.success) ){
-						 // delete image metadata from local DB
+							//TODO just for test, need to put into PartitionManager
+							// delete image metadata from local DB
 							Socket localMetaSocket =new Socket("127.0.0.1",27017);
 							deleteImageMetaData(localMetaSocket, img);
 							
-							//send image meta data to backup master
+							//delete image meta data to backup master
 							if(PrimaryListener.isBackupMasterConnected()){
 								  Socket backupMetaSocket= PrimaryListener.getBackupMasterSocket();
 								  deleteImageMetaData(backupMetaSocket, img);
@@ -403,16 +418,6 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 		WriteResult result = collection.remove(new BasicDBObject("Uuid", img.getUuid() ));
 		
 	    System.out.println("Image of " + img.getUuid()+" deleted with " + result.getN() + " records");
-	}
-
-
-	public static Socket getBackupMongoSocket() {
-		return backupMongoSocket;
-	}
-
-
-	public static void setBackupMongoSocket(Socket backupMongoSocket) {
-		PrimaryMasterServerHandler.backupMongoSocket = backupMongoSocket;
 	}
 	
 

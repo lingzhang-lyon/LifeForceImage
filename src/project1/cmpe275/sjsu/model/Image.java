@@ -23,7 +23,7 @@ public class Image {
 	//TODO determine more attributes that needed
 	public String NodeAdress="";
 	public String BackupNodeAdress="";
-	public Socket storeSocket=null;
+	public Socket storeSocket=new Socket("",0);
 	
 	public String created=""; // time stamp
 	
