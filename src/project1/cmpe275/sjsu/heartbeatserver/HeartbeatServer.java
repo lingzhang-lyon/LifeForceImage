@@ -35,11 +35,17 @@ public class HeartbeatServer {
     public static final Logger logger = LoggerFactory.getLogger(HeartbeatServer.class);
  
     public static void main(String[] args) {
+    	int portForSlave=9090;
+    	startHeartbeatServer(portForSlave);
+
+    }
+    
+    public static void startHeartbeatServer(int portForSlave){
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap server = new ServerBootstrap();
-            server.group(bossGroup, workerGroup).localAddress(new InetSocketAddress(9090)).channel(NioServerSocketChannel.class).childHandler(new ChannelInitializer<SocketChannel>() {
+            server.group(bossGroup, workerGroup).localAddress(new InetSocketAddress(portForSlave)).channel(NioServerSocketChannel.class).childHandler(new ChannelInitializer<SocketChannel>() {
  
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {

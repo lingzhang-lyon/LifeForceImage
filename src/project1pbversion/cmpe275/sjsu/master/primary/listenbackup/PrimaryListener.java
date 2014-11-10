@@ -10,10 +10,15 @@ import io.netty.handler.logging.LoggingHandler;
 
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import project1.cmpe275.sjsu.heartbeatserver.HeartbeatServer;
 import project1.cmpe275.sjsu.model.Socket;
 
 public class PrimaryListener implements Runnable{
 	
+	public static final Logger logger = LoggerFactory.getLogger(HeartbeatServer.class);
 	
 	private int portForBackup;
 	private static boolean backupMasterConnected=false;
@@ -58,9 +63,10 @@ public class PrimaryListener implements Runnable{
 			b.childHandler(new PrimaryListenerInitializer(compress));  //false means no compression
 			
 			Channel ch = b.bind(portForBackup).sync().channel();
-			
+			logger.info("===========Primary Listener for listening Backup heatbeat call started===========");
 			
 			ch.closeFuture().sync();
+			logger.info("===========Primary Listener for listening Backup heatbeat call closed===========");
 		
 		} catch (Exception ex) {
 			System.err.println("Failed to setup channel to listen primary master");
