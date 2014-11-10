@@ -98,7 +98,8 @@ public class HeartbeatSeverHandler  extends ChannelDuplexHandler {
 		DBCollection collection=db.getCollection(collectionName);
 		
 		BasicDBObject o=new BasicDBObject("socketstring", slaveSocketString)
-						.append("loadfactor", loadfactor);
+						.append("loadfactor", loadfactor)
+						.append("status", 1);//slave status 1 is active. 0 is inactive
 		collection.insert(o);
 		
 		
