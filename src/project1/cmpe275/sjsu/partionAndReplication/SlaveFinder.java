@@ -46,9 +46,9 @@ public class SlaveFinder {
 	        DBCollection collection = db.getCollection("Slave");  // Connect collectionClass
 	        ArrayList<String> temp = new ArrayList<String>();
 	        
-	        DBCursor cursor = collection.find(new BasicDBObject(),new BasicDBObject("socket", 1)).sort(new BasicDBObject("balancefactor", -1)).limit(10);
+	        DBCursor cursor = collection.find(new BasicDBObject(),new BasicDBObject("socketstring", 1)).sort(new BasicDBObject("loadfactor", -1)).limit(10);
 				 while(cursor.hasNext()){
-					    temp.add((cursor.next().get("socket").toString()));					   
+					    temp.add((cursor.next().get("socketstring").toString()));					   
 				   }
 				cursor.close();
 				for(int i=0; i<2; i++){
