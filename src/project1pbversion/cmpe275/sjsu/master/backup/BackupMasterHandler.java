@@ -34,6 +34,7 @@ public class BackupMasterHandler extends SimpleChannelInboundHandler<Heartbeat> 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         //cause.printStackTrace();
+    	System.out.println("!!! exception got by backupMasterHandler");
         MasterController.setBackupMaster(false);
         MasterController.setPrimaryMaster(true);
         ctx.close();

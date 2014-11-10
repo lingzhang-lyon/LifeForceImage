@@ -1,5 +1,8 @@
 package project1pbversion.cmpe275.sjsu.master;
 
+import java.util.Scanner;
+
+import project1pbversion.cmpe275.sjsu.master.backup.BackupMaster;
 import project1pbversion.cmpe275.sjsu.master.backup.BackupMasterTest;
 import project1pbversion.cmpe275.sjsu.master.primary.PrimaryMasterServer;
 import project1pbversion.cmpe275.sjsu.master.primary.PrimaryMasterServerTest;
@@ -32,24 +35,31 @@ public class MasterController {
 	
 	@Test
 	public void test() throws Exception{
-		backupMaster=true;
+		
+		Scanner reader0 = new Scanner(System.in);
+    	System.out.println("Please choose this is a. Primary Master | b. Backup Master");
+    	String backupOrPrimary=reader0.nextLine();
+    	if(backupOrPrimary.equals("b")||backupOrPrimary.equals("B")){
+    		backupMaster=true;
+    	}
 		boolean serverStarted=false;
 		while (backupMaster){
 			//dummy test do nothing
 			if(!serverStarted){
 				serverStarted=true;
 				try{
+					BackupMaster.main(null);
 					//BackupMasterTest.testBackupMaster();
 					//BackupMasterTest.dummyWorkingTest();
-					BackupMasterTest.dummyFailTest();
+					//BackupMasterTest.dummyFailTest();
 				}catch(Exception e){
-					System.out.println("there is something wrong with send/ receive heartbeat to primary master");
+					System.out.println("\nThere is something wrong with send/ receive heartbeat to primary master");
 					break;
 				}
 			}
 			
 		}
-		System.out.println("It is not a backup master now, promoted to primary already, PrimaryMaster= " + primaryMaster);		
+		System.out.println("\nIt is not a backup master now, Set to primary already, PrimaryMaster= " + primaryMaster);		
 		int portForBackup=7070;
 		int portForClient=8080;
 		startPrimaryMasterAndPrimaryListener(portForBackup, portForClient);
