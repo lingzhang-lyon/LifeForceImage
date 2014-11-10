@@ -19,12 +19,15 @@ public class PrimaryListenerHandler extends SimpleChannelInboundHandler<Heartbea
 		
 		//TODO  notify primary master keep sending data to backup master
 		PrimaryListener.setBackupMasterConnected(true);
+		System.out.println("Received heartbeat call from backup");
+		System.out.println("backup ip is: "+hb.getIp());
 		
 		//then sent heatbeat back to backup master
 		// Write the response.
     	 ChannelFuture future=ctx.channel().writeAndFlush(hb);
-    	// Close the connection after the write operation is done.
-    	 future.addListener(ChannelFutureListener.CLOSE);
+    	
+    	 // Close the connection after the write operation is done.
+    	// future.addListener(ChannelFutureListener.CLOSE);
 		
 		//if not get heatbeat from primary master
 
