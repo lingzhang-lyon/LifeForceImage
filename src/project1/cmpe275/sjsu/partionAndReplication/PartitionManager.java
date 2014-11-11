@@ -17,7 +17,6 @@ import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 
-import com.google.protobuf.ByteString;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -26,7 +25,7 @@ import com.mongodb.Mongo;
 
 
 public class PartitionManager {
-	public static SlaveFinder sla= new SlaveFinder();
+    public static SlaveFinder sla = new SlaveFinder();
 	public Request upload(Image image){
 		boolean r1=false;
 		boolean r2= false;
@@ -35,15 +34,6 @@ public class PartitionManager {
 		//soc.add("127.0.0.1:27017");
 		soc= sla.FindSlave();
 		
-		Image img= new Image();
-		ResponseFlag res =ResponseFlag.failure;
-		Request req = null;
-		try {
-			req = MessageManager.createResponseRequest(img, res, RequestType.write);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		
 		ArrayList<Socket> socket=this.trans(soc);
@@ -74,8 +64,25 @@ public class PartitionManager {
 			DatabaseManagerV2.deleteInDB(socket.get(1), image);
 			return this.upload(image);
 		}
-		//both fails. recall in some time, then timeout return false request;
-			//*/
+		//both fails. Create a failure request and return.
+		
+		
+		PhotoPayload pp = PhotoPayload.newBuilder()
+		  		 .setUuid(image.getUuid())
+		  		 .build();
+		Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
+
+    	PhotoHeader ph = PhotoHeader.newBuilder()
+    								.setResponseFlag(ResponseFlag.failure)
+   									.setRequestType(RequestType.write)
+   									.build();	         	      	       	    	 
+    	Header h = Header.newBuilder().setPhotoHeader(ph).build();
+
+    	Request req = Request.newBuilder()
+    								   .setHeader(h)
+    								   .setBody(p)
+    								   .build();
+
 		return req;
 		
 	}
@@ -140,6 +147,7 @@ public class PartitionManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}  // Connect DB Server
+		if(soc_str.size()!=0){
 		soc = this.trans(soc_str);
 	        Request req1=DatabaseManagerV2.downloadFromDB(soc.get(0), image);
 	        
@@ -150,11 +158,33 @@ public class PartitionManager {
 	        	Request req2=DatabaseManagerV2.downloadFromDB(soc.get(0), image);
 	        	return	req2;
 	        }
+		}
+		
+		// both fails return failure request
+		PhotoPayload pp = PhotoPayload.newBuilder()
+		  		 .setUuid(image.getUuid())
+		  		 .build();
+		Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
+
+  	PhotoHeader ph = PhotoHeader.newBuilder()
+  								.setResponseFlag(ResponseFlag.failure)
+ 									.setRequestType(RequestType.read)
+ 									.build();	         	      	       	    	 
+  	Header h = Header.newBuilder().setPhotoHeader(ph).build();
+
+  	Request req = Request.newBuilder()
+  								   .setHeader(h)
+  								   .setBody(p)
+  								   .build();
+
+		return req;
+		
+		
 		// TODO Auto-generated method stub
 		
 	}
 	
-	public Request delete(Image image) throws Exception{
+	public Request delete(Image image){
 		ArrayList<Socket> soc = new ArrayList<Socket>();
 		ArrayList<String> soc_str = new ArrayList<String>();
 		boolean r1=false, r2= false;	
@@ -175,12 +205,8 @@ public class PartitionManager {
 			e.printStackTrace();
 		}  // Connect DB Server
 		
-		
-		
-		System.out.println(soc_str.size());
 		if(soc_str.size()!= 0){
 		soc = this.trans(soc_str);
-		
 	        Request req1=DatabaseManagerV2.deleteInDB(soc.get(0), image);
 	        Request req2=DatabaseManagerV2.deleteInDB(soc.get(1), image);
 	        if(req1.getHeader().getPhotoHeader().getResponseFlag() == ResponseFlag.success){
@@ -195,41 +221,38 @@ public class PartitionManager {
 				return req1;
 			}
 			// if anyone fails, recall the upload process
-			/*else if(r1&&(!r2)){
+			else if(r1&&(!r2)){
 				DatabaseManagerV2.uploadToDB(soc.get(0), image);
 				return this.delete(image);
 			}
 			else if(r2&&(!r1)){
 				DatabaseManagerV2.uploadToDB(soc.get(1), image);
 				return this.delete(image);
-			}*/
+			}
+			
 		}
-			//both fails. recall in some time, then timeout return false request;
-//			Image img= new Image();
-			Request req = null;
-			
-			PhotoPayload.Builder ppb = PhotoPayload.newBuilder()
-		 			.setUuid(image.getUuid())
-		 			.setName(image.getImageName());
-			
-			PhotoPayload pp=ppb.build();
-			Payload p=Payload.newBuilder().setPhotoPayload(pp).build();
-			
-			
-			PhotoHeader ph= PhotoHeader.newBuilder()
-							.setResponseFlag(ResponseFlag.failure)
-					 		.setRequestType(RequestType.delete)
-					 		.build();	         	      	       	    	 
-			Header h=Header.newBuilder().setPhotoHeader(ph).build();
-			
-			
-			req=Request.newBuilder()
-					 				.setHeader(h)
-					 				.setBody(p)
-					 				.build();
+			//both fails. return failure request
 		
-	        
+		
+		PhotoPayload pp = PhotoPayload.newBuilder()
+		  		 .setUuid(image.getUuid())
+		  		 .build();
+		Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
+
+  	PhotoHeader ph = PhotoHeader.newBuilder()
+  								.setResponseFlag(ResponseFlag.failure)
+ 									.setRequestType(RequestType.delete)
+ 									.build();	         	      	       	    	 
+  	Header h = Header.newBuilder().setPhotoHeader(ph).build();
+
+  	Request req = Request.newBuilder()
+  								   .setHeader(h)
+  								   .setBody(p)
+  								   .build();
+
 		return req;
+	        
+		
 	}
 
 	private ArrayList<Socket> trans(ArrayList<String> soc){
