@@ -14,10 +14,19 @@ message Request {
     required Payload body = 2;
 }
 message Header {
+    optional Routing routing_id = 1;
     optional int32 originator = 2;
     optional string tag = 3;
     optional int64 time = 4;
     optional PhotoHeader photoHeader = 10;
+
+    enum Routing {
+        PING = 2;
+        NAMESPACES = 3;
+        JOBS = 4;
+        REPORTS = 10;
+        MANAGE = 100;
+ }
 }
 
 message Payload {
@@ -29,6 +38,7 @@ message PhotoHeader {
     optional ResponseFlag responseFlag = 2 [default = success];
     optional int64 lastModified = 3;                     // Unix timestamp
     optional int32 contentLength = 4;
+    optional int32 entryNode = 5;
    
     enum RequestType {
         read = 0;
@@ -47,3 +57,4 @@ message PhotoPayload {
     optional string name = 2;                            // Required for type 1
     optional bytes data = 3;                             // Required for type 1
 }
+

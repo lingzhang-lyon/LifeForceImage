@@ -16,6 +16,7 @@ import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
 import project1.cmpe275.sjsu.partionAndReplication.PartitionManager;
 import project1.cmpe275.sjsu.partionAndReplication.PartitionManagerV2;
+import project1pbversion.cmpe275.sjsu.client.Client;
 import project1pbversion.cmpe275.sjsu.database.DatabaseManagerV2;
 import project1pbversion.cmpe275.sjsu.master.primary.listenbackup.PrimaryListener;
 import project1pbversion.cmpe275.sjsu.othercluster.OtherClusterManager;
@@ -223,8 +224,13 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 			File file=MessageManager.createFileWithThread(picname,desPath);
 			MessageManager.writeByteStringToFile(data,file);
 			System.out.println("received file data with uuid:<"+uuid+ ">was saved in master local file system at \n" + desPath);
+			
 		}
-
+		//if(uuid==null){
+			uuid="testuuid";
+			//uuid=Client.createUuid(picname, "test");
+			System.out.println("uuid is now: "+ uuid);
+		//}
 
 		Image img=new Image();
 		img.setUuid(uuid);

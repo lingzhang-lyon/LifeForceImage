@@ -29,6 +29,7 @@ import java.util.Scanner;
 import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.model.Image;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
+import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
@@ -264,8 +265,12 @@ public final class Client {
 		
 		PhotoHeader ph= PhotoHeader.newBuilder()
 				 		.setRequestType(reqtype)
+				 		//.setEntryNode(0)  //just for test
 				 		.build();	         	      	       	    	 
-		Header h=Header.newBuilder().setPhotoHeader(ph).build();
+		Header h=Header.newBuilder().setPhotoHeader(ph)
+				.setRoutingId(Routing.JOBS) //just for test
+				.setOriginator(1)  //just for test
+				.build();
 		
 		
 		Request request=Request.newBuilder()

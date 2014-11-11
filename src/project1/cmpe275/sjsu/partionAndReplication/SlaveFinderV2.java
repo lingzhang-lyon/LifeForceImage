@@ -25,7 +25,7 @@ public class SlaveFinderV2 {
 		ArrayList<String> slaves = new ArrayList<String>();
 		
 		slaves.add("192.168.1.3:27017");
-		slaves.add("192.168.1.15:27017");
+		slaves.add("192.168.1.5:27017");
 		return slaves;
 		
 		

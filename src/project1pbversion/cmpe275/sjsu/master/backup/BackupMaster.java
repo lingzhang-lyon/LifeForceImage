@@ -106,7 +106,7 @@ public class BackupMaster {
     	System.out.println("Input mili seconds for heartbeatInterval: like 5000");
     	int heartbeatInterval=reader1.nextInt();
 		
-		String backupMasterHost="127.0.0.1";
+		String backupMasterHost="192.168.1.2";
 		int backupMasterPort =7070;
 		
 		BackupMasterHandler.setHeartbeatInterval(heartbeatInterval);

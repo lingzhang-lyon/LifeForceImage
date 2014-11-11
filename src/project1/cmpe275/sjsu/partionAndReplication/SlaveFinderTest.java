@@ -40,14 +40,29 @@ public class SlaveFinderTest {
 
 	public void updateCache(){
 		try{
-			Mongo mongo = new Mongo("localhost", 27017);  // Connect DB Server
+			Mongo mongo = new Mongo("127.0.0.1", 27017);  // Connect DB Server
 	        DB db = mongo.getDB("275db");  // Connect DB
 	        DBCollection collection = db.getCollection("Slave");  // Connect collectionClass
 	        ArrayList<String> temp = new ArrayList<String>();
 	        
-	        DBCursor cursor = collection.find(new BasicDBObject(),new BasicDBObject("socketstring", 1)).sort(new BasicDBObject("loadfactor", -1)).limit(10);
-				 while(cursor.hasNext()){
-					    temp.add((cursor.next().get("socketstring").toString()));					   
+
+	        
+	        //DBCursor cursor = collection.find(new BasicDBObject("socketstring", 1)).sort(new BasicDBObject("loadfactor", -1)).limit(10);
+	        DBCursor cursor = collection.find();
+	        
+	        while(cursor.hasNext()){
+					    //temp.add((cursor.next().get("socketstring").toString()));
+	        			System.out.println(cursor.next().toString());
+	        			//temp.add("127.0.0.1:27017"); 
+					    try{
+					    	System.out.println(cursor.next().toString());
+					    	temp.add((cursor.next().get("socketstring").toString()));
+					    }catch (NullPointerException e){
+					    	System.out.println("could not find socketstring for this record");
+					    	System.out.println(cursor.next().toString());
+					    }
+					    //System.out.println(cursor.next().toString());
+
 				   }
 				cursor.close();
 				for(int i=0; i<10; i++){
