@@ -5,14 +5,25 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Stack;
 
+
+
+
+
+//import com.mongodb.MongoException;
+import project1.cmpe275.sjsu.conf.Configure;
+import project1.cmpe275.sjsu.model.Socket;
+//import com.mongodb.DBObject;
+
+
+
+
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-//import com.mongodb.DBObject;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-//import com.mongodb.MongoException;
-import project1.cmpe275.sjsu.conf.Configure;;
 
 public class SlaveFinderV2 {
     
@@ -32,17 +43,28 @@ public class SlaveFinderV2 {
 		
 	}
 	
-	public ArrayList<String> FindSlave2(){
-		//ramdom number
-		ArrayList<String> slaves = new ArrayList<String>();
-		
-		slaves.add("127.0.0.1:27017");
-		slaves.add("127.0.0.1:27017");
-		return slaves;
+	public Socket FindSlave2(){
+		//TODO need to make sure everytime will return different slave
+		return (new Socket("127.0.0.1",27017) );
 		
 		
 		
 	}
+
+	public Socket searchImageStoreSocket(String uuid) throws UnknownHostException {
+	   //search in Meta Collection
+		Mongo mongo = new Mongo("localhost", 27017);
+		DB db = mongo.getDB("275db");  // Connect DB
+        DBCollection collection = db.getCollection("Meta");  // Connect collectionClass
+        
+        DBObject obj = collection.findOne(new BasicDBObject("uuid", uuid));
+        String storeip=(String) obj.get("storeip"); 
+        int storeport=(Integer) obj.get("storeport");
+        return new Socket(storeip, storeport);
+	}
+        
+	
+	
 
 	
 }
