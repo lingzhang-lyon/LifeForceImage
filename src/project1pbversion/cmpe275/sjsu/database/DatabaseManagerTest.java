@@ -51,13 +51,20 @@ public class DatabaseManagerTest {
 		String uuid=Client.createUuid("testForDBManger", "ling");
 		String imageName="testForDBManger.jpeg";
 		
-		testForWrite(uuid, imageName, "127.0.0.1");
+		//testForWrite(uuid, imageName, "127.0.0.1");
+		testForWrite(uuid, imageName, "192.168.1.3");
 		
-		testForRead(uuid, "127.0.0.1") ;
+		//testForRead(uuid, "127.0.0.1") ;
 		
+
 		testForWriteRemoteMongoDB(uuid, imageName, "192.168.1.2", 27017, "db275", "Images_Collection_BSD");
     	
     		
+
+		//testForWriteRemoteMongoDB(uuid, imageName, "192.168.1.3", 27017, "db275", "Images_Collection_BSD");
+		//testForWriteRemoteMongoDB(uuid, imageName, "127.0.0.1", 27017, "db275", "Images_Collection_BSD");
+    	//not work!!!!!!!!!!	
+
 	}
 	
 	public static void testForRead(String uuid, String mongohost) throws Exception{
@@ -83,6 +90,8 @@ public class DatabaseManagerTest {
     	Request request=DatabaseManagerV2.uploadToDB(socket,img);
     	MessageManager.handleResponse(request,true);
 	}
+	
+	
 
 	public static void testForWriteRemoteMongoDB(String uuid, String fileName, String mongohost, int mongoport, 
 											String DBName, String collectionName) throws Exception{

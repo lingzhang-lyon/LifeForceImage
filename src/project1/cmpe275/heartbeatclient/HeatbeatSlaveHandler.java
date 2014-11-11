@@ -9,7 +9,9 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public class HeatbeatSlaveHandler extends ChannelDuplexHandler {	
 	    
 		Heartbeat hb = Heartbeat.newBuilder()
-						.setIp("192.168.1.1")  //ip of slave to store image
+						.setIp("192.168.1.2")  //ip of slave to store image
+
+
 						.setPort(27017)  //port for slave mongoDB to store image
 						.setLoadfactor(0.1)
 						.build();

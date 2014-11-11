@@ -465,6 +465,57 @@ public class DatabaseManagerV2 {
 		
 	    System.out.println("Image of " + uuid +" deleted with " + result.getN() + " records");
 	}
+	
+	
+	
+	
+	/**
+	 * @param metaSocket is the socket that will store the meta data
+	 * @param img
+	 * @throws UnknownHostException
+	 */
+	public static void storeImageMetaData(Socket metaSocket,Image img) throws UnknownHostException{
+		
+		
+		System.out.println("Stored MetaData to MongoDB at "+ metaSocket.getIp() +":" +metaSocket.getPort());
+		
+		
+		String mongohost=metaSocket.getIp();
+		int mongoport=metaSocket.getPort();
+		Mongo mongo=new Mongo(mongohost, mongoport);
+		DB db=mongo.getDB("275db");
+		DBCollection collection=db.getCollection("Meta");
+		
+		String storeip=img.getStoreSocket().getIp();
+		int storeport= img.getStoreSocket().getPort();
+		BasicDBObject o=new BasicDBObject("storeip", storeip)
+						.append("storeport", storeport)
+						.append("uuid", img.getUuid())
+						.append("name",img.getImageName());
+		collection.insert(o);
+		
+		
+		
+	}
+	
+	/**
+	 * @param metaSocket is the socket that  stored the meta data
+	 * @param img
+	 * @throws UnknownHostException 
+	 */
+	public static void deleteImageMetaData(Socket metaSocket,Image img) throws UnknownHostException{
+
+		String mongohost=metaSocket.getIp();
+		int mongoport=metaSocket.getPort();
+		Mongo mongo=new Mongo(mongohost, mongoport);
+		DB db=mongo.getDB("275db");
+		DBCollection collection=db.getCollection("Meta");
+		
+		WriteResult result = collection.remove(new BasicDBObject("Uuid", img.getUuid() ));
+		
+	    System.out.println("Image of " + img.getUuid()+" deleted with " + result.getN() + " records");
+	}
+	
 }
 
 

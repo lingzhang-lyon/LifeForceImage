@@ -1440,6 +1440,16 @@ public final class ImagePB {
   public interface HeaderOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
+    // optional .protobuf.Header.Routing routing_id = 1;
+    /**
+     * <code>optional .protobuf.Header.Routing routing_id = 1;</code>
+     */
+    boolean hasRoutingId();
+    /**
+     * <code>optional .protobuf.Header.Routing routing_id = 1;</code>
+     */
+    project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing getRoutingId();
+
     // optional int32 originator = 2;
     /**
      * <code>optional int32 originator = 2;</code>
@@ -1540,24 +1550,35 @@ public final class ImagePB {
               }
               break;
             }
+            case 8: {
+              int rawValue = input.readEnum();
+              project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing value = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                routingId_ = value;
+              }
+              break;
+            }
             case 16: {
-              bitField0_ |= 0x00000001;
+              bitField0_ |= 0x00000002;
               originator_ = input.readInt32();
               break;
             }
             case 26: {
-              bitField0_ |= 0x00000002;
+              bitField0_ |= 0x00000004;
               tag_ = input.readBytes();
               break;
             }
             case 32: {
-              bitField0_ |= 0x00000004;
+              bitField0_ |= 0x00000008;
               time_ = input.readInt64();
               break;
             }
             case 82: {
               project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000008) == 0x00000008)) {
+              if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 subBuilder = photoHeader_.toBuilder();
               }
               photoHeader_ = input.readMessage(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.PARSER, extensionRegistry);
@@ -1565,7 +1586,7 @@ public final class ImagePB {
                 subBuilder.mergeFrom(photoHeader_);
                 photoHeader_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000008;
+              bitField0_ |= 0x00000010;
               break;
             }
           }
@@ -1607,7 +1628,132 @@ public final class ImagePB {
       return PARSER;
     }
 
+    /**
+     * Protobuf enum {@code protobuf.Header.Routing}
+     */
+    public enum Routing
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>PING = 2;</code>
+       */
+      PING(0, 2),
+      /**
+       * <code>NAMESPACES = 3;</code>
+       */
+      NAMESPACES(1, 3),
+      /**
+       * <code>JOBS = 4;</code>
+       */
+      JOBS(2, 4),
+      /**
+       * <code>REPORTS = 10;</code>
+       */
+      REPORTS(3, 10),
+      /**
+       * <code>MANAGE = 100;</code>
+       */
+      MANAGE(4, 100),
+      ;
+
+      /**
+       * <code>PING = 2;</code>
+       */
+      public static final int PING_VALUE = 2;
+      /**
+       * <code>NAMESPACES = 3;</code>
+       */
+      public static final int NAMESPACES_VALUE = 3;
+      /**
+       * <code>JOBS = 4;</code>
+       */
+      public static final int JOBS_VALUE = 4;
+      /**
+       * <code>REPORTS = 10;</code>
+       */
+      public static final int REPORTS_VALUE = 10;
+      /**
+       * <code>MANAGE = 100;</code>
+       */
+      public static final int MANAGE_VALUE = 100;
+
+
+      public final int getNumber() { return value; }
+
+      public static Routing valueOf(int value) {
+        switch (value) {
+          case 2: return PING;
+          case 3: return NAMESPACES;
+          case 4: return JOBS;
+          case 10: return REPORTS;
+          case 100: return MANAGE;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<Routing>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<Routing>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<Routing>() {
+              public Routing findValueByNumber(int number) {
+                return Routing.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final Routing[] VALUES = values();
+
+      public static Routing valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private Routing(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:protobuf.Header.Routing)
+    }
+
     private int bitField0_;
+    // optional .protobuf.Header.Routing routing_id = 1;
+    public static final int ROUTING_ID_FIELD_NUMBER = 1;
+    private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing routingId_;
+    /**
+     * <code>optional .protobuf.Header.Routing routing_id = 1;</code>
+     */
+    public boolean hasRoutingId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional .protobuf.Header.Routing routing_id = 1;</code>
+     */
+    public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing getRoutingId() {
+      return routingId_;
+    }
+
     // optional int32 originator = 2;
     public static final int ORIGINATOR_FIELD_NUMBER = 2;
     private int originator_;
@@ -1615,7 +1761,7 @@ public final class ImagePB {
      * <code>optional int32 originator = 2;</code>
      */
     public boolean hasOriginator() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
      * <code>optional int32 originator = 2;</code>
@@ -1631,7 +1777,7 @@ public final class ImagePB {
      * <code>optional string tag = 3;</code>
      */
     public boolean hasTag() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
      * <code>optional string tag = 3;</code>
@@ -1674,7 +1820,7 @@ public final class ImagePB {
      * <code>optional int64 time = 4;</code>
      */
     public boolean hasTime() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
      * <code>optional int64 time = 4;</code>
@@ -1690,7 +1836,7 @@ public final class ImagePB {
      * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
      */
     public boolean hasPhotoHeader() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
      * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
@@ -1706,6 +1852,7 @@ public final class ImagePB {
     }
 
     private void initFields() {
+      routingId_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing.PING;
       originator_ = 0;
       tag_ = "";
       time_ = 0L;
@@ -1724,15 +1871,18 @@ public final class ImagePB {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeInt32(2, originator_);
+        output.writeEnum(1, routingId_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(3, getTagBytes());
+        output.writeInt32(2, originator_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeInt64(4, time_);
+        output.writeBytes(3, getTagBytes());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeInt64(4, time_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeMessage(10, photoHeader_);
       }
       getUnknownFields().writeTo(output);
@@ -1746,17 +1896,21 @@ public final class ImagePB {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, originator_);
+          .computeEnumSize(1, routingId_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getTagBytes());
+          .computeInt32Size(2, originator_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(4, time_);
+          .computeBytesSize(3, getTagBytes());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(4, time_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(10, photoHeader_);
       }
@@ -1877,18 +2031,20 @@ public final class ImagePB {
 
       public Builder clear() {
         super.clear();
-        originator_ = 0;
+        routingId_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing.PING;
         bitField0_ = (bitField0_ & ~0x00000001);
-        tag_ = "";
+        originator_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
-        time_ = 0L;
+        tag_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
+        time_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000008);
         if (photoHeaderBuilder_ == null) {
           photoHeader_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance();
         } else {
           photoHeaderBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -1920,17 +2076,21 @@ public final class ImagePB {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.originator_ = originator_;
+        result.routingId_ = routingId_;
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.tag_ = tag_;
+        result.originator_ = originator_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.time_ = time_;
+        result.tag_ = tag_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
+        }
+        result.time_ = time_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
         }
         if (photoHeaderBuilder_ == null) {
           result.photoHeader_ = photoHeader_;
@@ -1953,11 +2113,14 @@ public final class ImagePB {
 
       public Builder mergeFrom(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header other) {
         if (other == project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.getDefaultInstance()) return this;
+        if (other.hasRoutingId()) {
+          setRoutingId(other.getRoutingId());
+        }
         if (other.hasOriginator()) {
           setOriginator(other.getOriginator());
         }
         if (other.hasTag()) {
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000004;
           tag_ = other.tag_;
           onChanged();
         }
@@ -1994,13 +2157,49 @@ public final class ImagePB {
       }
       private int bitField0_;
 
+      // optional .protobuf.Header.Routing routing_id = 1;
+      private project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing routingId_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing.PING;
+      /**
+       * <code>optional .protobuf.Header.Routing routing_id = 1;</code>
+       */
+      public boolean hasRoutingId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional .protobuf.Header.Routing routing_id = 1;</code>
+       */
+      public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing getRoutingId() {
+        return routingId_;
+      }
+      /**
+       * <code>optional .protobuf.Header.Routing routing_id = 1;</code>
+       */
+      public Builder setRoutingId(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        routingId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.Header.Routing routing_id = 1;</code>
+       */
+      public Builder clearRoutingId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        routingId_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing.PING;
+        onChanged();
+        return this;
+      }
+
       // optional int32 originator = 2;
       private int originator_ ;
       /**
        * <code>optional int32 originator = 2;</code>
        */
       public boolean hasOriginator() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>optional int32 originator = 2;</code>
@@ -2012,7 +2211,7 @@ public final class ImagePB {
        * <code>optional int32 originator = 2;</code>
        */
       public Builder setOriginator(int value) {
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000002;
         originator_ = value;
         onChanged();
         return this;
@@ -2021,7 +2220,7 @@ public final class ImagePB {
        * <code>optional int32 originator = 2;</code>
        */
       public Builder clearOriginator() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000002);
         originator_ = 0;
         onChanged();
         return this;
@@ -2033,7 +2232,7 @@ public final class ImagePB {
        * <code>optional string tag = 3;</code>
        */
       public boolean hasTag() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
        * <code>optional string tag = 3;</code>
@@ -2073,7 +2272,7 @@ public final class ImagePB {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000002;
+  bitField0_ |= 0x00000004;
         tag_ = value;
         onChanged();
         return this;
@@ -2082,7 +2281,7 @@ public final class ImagePB {
        * <code>optional string tag = 3;</code>
        */
       public Builder clearTag() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         tag_ = getDefaultInstance().getTag();
         onChanged();
         return this;
@@ -2095,7 +2294,7 @@ public final class ImagePB {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000002;
+  bitField0_ |= 0x00000004;
         tag_ = value;
         onChanged();
         return this;
@@ -2107,7 +2306,7 @@ public final class ImagePB {
        * <code>optional int64 time = 4;</code>
        */
       public boolean hasTime() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
        * <code>optional int64 time = 4;</code>
@@ -2119,7 +2318,7 @@ public final class ImagePB {
        * <code>optional int64 time = 4;</code>
        */
       public Builder setTime(long value) {
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000008;
         time_ = value;
         onChanged();
         return this;
@@ -2128,7 +2327,7 @@ public final class ImagePB {
        * <code>optional int64 time = 4;</code>
        */
       public Builder clearTime() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         time_ = 0L;
         onChanged();
         return this;
@@ -2142,7 +2341,7 @@ public final class ImagePB {
        * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
        */
       public boolean hasPhotoHeader() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
        * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
@@ -2167,7 +2366,7 @@ public final class ImagePB {
         } else {
           photoHeaderBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         return this;
       }
       /**
@@ -2181,7 +2380,7 @@ public final class ImagePB {
         } else {
           photoHeaderBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         return this;
       }
       /**
@@ -2189,7 +2388,7 @@ public final class ImagePB {
        */
       public Builder mergePhotoHeader(project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader value) {
         if (photoHeaderBuilder_ == null) {
-          if (((bitField0_ & 0x00000008) == 0x00000008) &&
+          if (((bitField0_ & 0x00000010) == 0x00000010) &&
               photoHeader_ != project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.getDefaultInstance()) {
             photoHeader_ =
               project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.newBuilder(photoHeader_).mergeFrom(value).buildPartial();
@@ -2200,7 +2399,7 @@ public final class ImagePB {
         } else {
           photoHeaderBuilder_.mergeFrom(value);
         }
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         return this;
       }
       /**
@@ -2213,14 +2412,14 @@ public final class ImagePB {
         } else {
           photoHeaderBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
       /**
        * <code>optional .protobuf.PhotoHeader photoHeader = 10;</code>
        */
       public project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.Builder getPhotoHeaderBuilder() {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         onChanged();
         return getPhotoHeaderFieldBuilder().getBuilder();
       }
@@ -2819,6 +3018,16 @@ public final class ImagePB {
      * <code>optional int32 contentLength = 4;</code>
      */
     int getContentLength();
+
+    // optional int32 entryNode = 5;
+    /**
+     * <code>optional int32 entryNode = 5;</code>
+     */
+    boolean hasEntryNode();
+    /**
+     * <code>optional int32 entryNode = 5;</code>
+     */
+    int getEntryNode();
   }
   /**
    * Protobuf type {@code protobuf.PhotoHeader}
@@ -2901,6 +3110,11 @@ public final class ImagePB {
             case 32: {
               bitField0_ |= 0x00000008;
               contentLength_ = input.readInt32();
+              break;
+            }
+            case 40: {
+              bitField0_ |= 0x00000010;
+              entryNode_ = input.readInt32();
               break;
             }
           }
@@ -3188,11 +3402,28 @@ public final class ImagePB {
       return contentLength_;
     }
 
+    // optional int32 entryNode = 5;
+    public static final int ENTRYNODE_FIELD_NUMBER = 5;
+    private int entryNode_;
+    /**
+     * <code>optional int32 entryNode = 5;</code>
+     */
+    public boolean hasEntryNode() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional int32 entryNode = 5;</code>
+     */
+    public int getEntryNode() {
+      return entryNode_;
+    }
+
     private void initFields() {
       requestType_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType.read;
       responseFlag_ = project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag.success;
       lastModified_ = 0L;
       contentLength_ = 0;
+      entryNode_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3218,6 +3449,9 @@ public final class ImagePB {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeInt32(4, contentLength_);
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeInt32(5, entryNode_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -3242,6 +3476,10 @@ public final class ImagePB {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(4, contentLength_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(5, entryNode_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3367,6 +3605,8 @@ public final class ImagePB {
         bitField0_ = (bitField0_ & ~0x00000004);
         contentLength_ = 0;
         bitField0_ = (bitField0_ & ~0x00000008);
+        entryNode_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -3411,6 +3651,10 @@ public final class ImagePB {
           to_bitField0_ |= 0x00000008;
         }
         result.contentLength_ = contentLength_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.entryNode_ = entryNode_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3438,6 +3682,9 @@ public final class ImagePB {
         }
         if (other.hasContentLength()) {
           setContentLength(other.getContentLength());
+        }
+        if (other.hasEntryNode()) {
+          setEntryNode(other.getEntryNode());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -3616,6 +3863,39 @@ public final class ImagePB {
       public Builder clearContentLength() {
         bitField0_ = (bitField0_ & ~0x00000008);
         contentLength_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional int32 entryNode = 5;
+      private int entryNode_ ;
+      /**
+       * <code>optional int32 entryNode = 5;</code>
+       */
+      public boolean hasEntryNode() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional int32 entryNode = 5;</code>
+       */
+      public int getEntryNode() {
+        return entryNode_;
+      }
+      /**
+       * <code>optional int32 entryNode = 5;</code>
+       */
+      public Builder setEntryNode(int value) {
+        bitField0_ |= 0x00000010;
+        entryNode_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 entryNode = 5;</code>
+       */
+      public Builder clearEntryNode() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        entryNode_ = 0;
         onChanged();
         return this;
       }
@@ -4513,21 +4793,24 @@ public final class ImagePB {
       "time_ref\030\002 \001(\003\022\n\n\002ip\030\003 \001(\t\022\014\n\004port\030\004 \001(\005" +
       "\022\022\n\nloadfactor\030\005 \001(\001\"L\n\007Request\022 \n\006heade" +
       "r\030\001 \002(\0132\020.protobuf.Header\022\037\n\004body\030\002 \002(\0132" +
-      "\021.protobuf.Payload\"c\n\006Header\022\022\n\noriginat" +
-      "or\030\002 \001(\005\022\013\n\003tag\030\003 \001(\t\022\014\n\004time\030\004 \001(\003\022*\n\013p" +
-      "hotoHeader\030\n \001(\0132\025.protobuf.PhotoHeader\"" +
-      "7\n\007Payload\022,\n\014photoPayload\030\004 \001(\0132\026.proto" +
-      "buf.PhotoPayload\"\225\002\n\013PhotoHeader\022<\n\013requ" +
-      "estType\030\001 \001(\0162!.protobuf.PhotoHeader.Req",
-      "uestType:\004read\022A\n\014responseFlag\030\002 \001(\0162\".p" +
-      "rotobuf.PhotoHeader.ResponseFlag:\007succes" +
-      "s\022\024\n\014lastModified\030\003 \001(\003\022\025\n\rcontentLength" +
-      "\030\004 \001(\005\".\n\013RequestType\022\010\n\004read\020\000\022\t\n\005write" +
-      "\020\001\022\n\n\006delete\020\002\"(\n\014ResponseFlag\022\013\n\007succes" +
-      "s\020\000\022\013\n\007failure\020\001\"8\n\014PhotoPayload\022\014\n\004uuid" +
-      "\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\014\n\004data\030\003 \001(\014B2\n\'pr" +
-      "oject1pbversion.cmpe275.sjsu.protobufB\007I" +
-      "magePB"
+      "\021.protobuf.Payload\"\331\001\n\006Header\022,\n\nrouting" +
+      "_id\030\001 \001(\0162\030.protobuf.Header.Routing\022\022\n\no" +
+      "riginator\030\002 \001(\005\022\013\n\003tag\030\003 \001(\t\022\014\n\004time\030\004 \001" +
+      "(\003\022*\n\013photoHeader\030\n \001(\0132\025.protobuf.Photo" +
+      "Header\"F\n\007Routing\022\010\n\004PING\020\002\022\016\n\nNAMESPACE" +
+      "S\020\003\022\010\n\004JOBS\020\004\022\013\n\007REPORTS\020\n\022\n\n\006MANAGE\020d\"7",
+      "\n\007Payload\022,\n\014photoPayload\030\004 \001(\0132\026.protob" +
+      "uf.PhotoPayload\"\250\002\n\013PhotoHeader\022<\n\013reque" +
+      "stType\030\001 \001(\0162!.protobuf.PhotoHeader.Requ" +
+      "estType:\004read\022A\n\014responseFlag\030\002 \001(\0162\".pr" +
+      "otobuf.PhotoHeader.ResponseFlag:\007success" +
+      "\022\024\n\014lastModified\030\003 \001(\003\022\025\n\rcontentLength\030" +
+      "\004 \001(\005\022\021\n\tentryNode\030\005 \001(\005\".\n\013RequestType\022" +
+      "\010\n\004read\020\000\022\t\n\005write\020\001\022\n\n\006delete\020\002\"(\n\014Resp" +
+      "onseFlag\022\013\n\007success\020\000\022\013\n\007failure\020\001\"8\n\014Ph" +
+      "otoPayload\022\014\n\004uuid\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\014",
+      "\n\004data\030\003 \001(\014B2\n\'project1pbversion.cmpe27" +
+      "5.sjsu.protobufB\007ImagePB"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -4551,7 +4834,7 @@ public final class ImagePB {
           internal_static_protobuf_Header_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_Header_descriptor,
-              new java.lang.String[] { "Originator", "Tag", "Time", "PhotoHeader", });
+              new java.lang.String[] { "RoutingId", "Originator", "Tag", "Time", "PhotoHeader", });
           internal_static_protobuf_Payload_descriptor =
             getDescriptor().getMessageTypes().get(3);
           internal_static_protobuf_Payload_fieldAccessorTable = new
@@ -4563,7 +4846,7 @@ public final class ImagePB {
           internal_static_protobuf_PhotoHeader_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_PhotoHeader_descriptor,
-              new java.lang.String[] { "RequestType", "ResponseFlag", "LastModified", "ContentLength", });
+              new java.lang.String[] { "RequestType", "ResponseFlag", "LastModified", "ContentLength", "EntryNode", });
           internal_static_protobuf_PhotoPayload_descriptor =
             getDescriptor().getMessageTypes().get(5);
           internal_static_protobuf_PhotoPayload_fieldAccessorTable = new

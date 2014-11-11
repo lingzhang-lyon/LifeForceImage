@@ -15,7 +15,8 @@ import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
 import project1.cmpe275.sjsu.partionAndReplication.PartitionManager;
-import project1pbversion.cmpe275.sjsu.database.DatabaseManager;
+import project1.cmpe275.sjsu.partionAndReplication.PartitionManagerV2;
+import project1pbversion.cmpe275.sjsu.client.Client;
 import project1pbversion.cmpe275.sjsu.database.DatabaseManagerV2;
 import project1pbversion.cmpe275.sjsu.master.primary.listenbackup.PrimaryListener;
 import project1pbversion.cmpe275.sjsu.othercluster.OtherClusterManager;
@@ -165,7 +166,7 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
         else{
 		 
 			 if(usePartition){//use partition manager
-				   PartitionManager pm=new PartitionManager();		 		 
+				   PartitionManagerV2 pm=new PartitionManagerV2();		 		 
 				  responseRequest = pm.download(img);
 		    
 				 //pm.download(img) should be able to find where the image is, 
@@ -223,8 +224,15 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 			File file=MessageManager.createFileWithThread(picname,desPath);
 			MessageManager.writeByteStringToFile(data,file);
 			System.out.println("received file data with uuid:<"+uuid+ ">was saved in master local file system at \n" + desPath);
+			
 		}
-
+		
+		
+		if(uuid.equals("")){
+			uuid=Client.createUuid(picname, "");
+			
+		}
+		System.out.println("uuid is now: "+ uuid);
 
 		Image img=new Image();
 		img.setUuid(uuid);
@@ -244,7 +252,7 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
        else{ 
 		
     	   if(usePartition){//use partition manager 
-			  PartitionManager pm=new PartitionManager();		 		 
+			  PartitionManagerV2 pm=new PartitionManagerV2();		 		 
 			  responseRequest= pm.upload(img);
 			//TODO pm.upload(img) should be able to find proper socket, 
 			 //and upload to slave DB
@@ -264,13 +272,13 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 					img.setStoreSocket(storeImageSocket);
 					
 					Socket localMetaSocket =new Socket("127.0.0.1",27017);
-					storeImageMetaData(localMetaSocket, img);
+					DatabaseManagerV2.storeImageMetaData(localMetaSocket, img);
 					
 					//send image meta data to backup master
 					if(useBackupMaster && PrimaryListener.isBackupMasterConnected()){
 						System.out.println("also store image meata data to backup");
 						  Socket backupMetaSocket= backupMongoSocket;
-						  storeImageMetaData(backupMetaSocket, img);
+						  DatabaseManagerV2.storeImageMetaData(backupMetaSocket, img);
 					}
 					else{
 						System.out.println("No backup meta data");
@@ -325,7 +333,7 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 		}
 		else{
 			 if(usePartition){//use partition manager 
-				  PartitionManager pm=new PartitionManager();		 		 
+				  PartitionManagerV2 pm=new PartitionManagerV2();		 		 
 				  responseRequest= pm.delete(img);
 				//TODO pm.upload(img) should be able to find proper socket, 
 				 //and upload to slave DB
@@ -341,12 +349,12 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 							//TODO just for test, need to put into PartitionManager
 							// delete image metadata from local DB
 							Socket localMetaSocket =new Socket("127.0.0.1",27017);
-							deleteImageMetaData(localMetaSocket, img);
+							DatabaseManagerV2.deleteImageMetaData(localMetaSocket, img);
 							
 							//delete image meta data to backup master
 							if(PrimaryListener.isBackupMasterConnected()){
 								  Socket backupMetaSocket= PrimaryListener.getBackupMasterSocket();
-								  deleteImageMetaData(backupMetaSocket, img);
+								  DatabaseManagerV2.deleteImageMetaData(backupMetaSocket, img);
 							}
 						}
 		   	   }
@@ -390,50 +398,7 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 		 
 	}
 	
-	/**
-	 * @param metaSocket is the socket that will store the meta data
-	 * @param img
-	 * @throws UnknownHostException
-	 */
-	private void storeImageMetaData(Socket metaSocket,Image img) throws UnknownHostException{
-		
-		
-		System.out.println("Stored MetaData to MongoDB at "+ metaSocket.getIp() +":" +metaSocket.getPort());
-		
-		
-		String mongohost=metaSocket.getIp();
-		int mongoport=metaSocket.getPort();
-		Mongo mongo=new Mongo(mongohost, mongoport);
-		DB db=mongo.getDB("275db");
-		DBCollection collection=db.getCollection("Meta");
-		
-		String store=img.getStoreSocket().getIp() +":"+ img.getStoreSocket().getPort();
-		BasicDBObject o=new BasicDBObject("socket", store)
-						.append("uuid", img.getUuid())
-						.append("name",img.getImageName());
-		collection.insert(o);
-		
-		
-		
-	}
 	
-	/**
-	 * @param metaSocket is the socket that  stored the meta data
-	 * @param img
-	 * @throws UnknownHostException 
-	 */
-	private void deleteImageMetaData(Socket metaSocket,Image img) throws UnknownHostException{
-
-		String mongohost=metaSocket.getIp();
-		int mongoport=metaSocket.getPort();
-		Mongo mongo=new Mongo(mongohost, mongoport);
-		DB db=mongo.getDB("275db");
-		DBCollection collection=db.getCollection("Meta");
-		
-		WriteResult result = collection.remove(new BasicDBObject("Uuid", img.getUuid() ));
-		
-	    System.out.println("Image of " + img.getUuid()+" deleted with " + result.getN() + " records");
-	}
 	
 
 	
