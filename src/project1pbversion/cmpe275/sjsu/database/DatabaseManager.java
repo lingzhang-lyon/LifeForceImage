@@ -178,38 +178,70 @@ public class DatabaseManager {
 		// return variable
 		Request deleteResponseRequest = null;
 		
-		DatabaseManager dm = new DatabaseManager();
-		dm.connectDatabase();
-		
-		String uuid 	= img.getUuid();
-		String fileName = img.getImageName();
-		
-		// Delete an image in DB
-		delete(uuid, collection);
-		
-		// Organize return info
-    	PhotoPayload pp = PhotoPayload.newBuilder()
-    								  .setUuid(uuid).setName(fileName)
-    								  .build();
-    	Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
+		try {
+			DatabaseManager dm = new DatabaseManager();
+			dm.connectDatabase();
+			
+			String uuid 	= img.getUuid();
+			String fileName = img.getImageName();
+			
+			// Delete an image in DB
+			delete(uuid, collection);
+			
+			// Organize return info
+	    	PhotoPayload pp = PhotoPayload.newBuilder()
+	    								  .setUuid(uuid).setName(fileName)
+	    								  .build();
+	    	Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
 
-    	PhotoHeader ph = PhotoHeader.newBuilder()
-    								.setResponseFlag(ResponseFlag.success)
-   									.setRequestType(RequestType.delete)
-   									.build();	         	      	       	    	 
-    	Header h = Header.newBuilder().setPhotoHeader(ph).build();
+	    	PhotoHeader ph = PhotoHeader.newBuilder()
+	    								.setResponseFlag(ResponseFlag.success)
+	   									.setRequestType(RequestType.delete)
+	   									.build();	         	      	       	    	 
+	    	Header h = Header.newBuilder().setPhotoHeader(ph).build();
 
-    	deleteResponseRequest = Request.newBuilder()
-    								   .setHeader(h)
-    								   .setBody(p)
-    								   .build();
+	    	deleteResponseRequest = Request.newBuilder()
+	    								   .setHeader(h)
+	    								   .setBody(p)
+	    								   .build();
 
-    	System.out.println("UUID in response to delete: "
-	 			+ deleteResponseRequest.getBody().getPhotoPayload().getUuid());
-    	
-    	// Close DB
+	    	System.out.println("UUID in response to delete: "
+		 			+ deleteResponseRequest.getBody().getPhotoPayload().getUuid());
+	    	
+	    	// Close DB
+			
+			return deleteResponseRequest;
+		} catch (Exception e) {
+			
+			String uuid 	= img.getUuid();
+			String fileName = img.getImageName();
+
+			// Organize return info
+	    	PhotoPayload pp = PhotoPayload.newBuilder()
+	    								  .setUuid(uuid).setName(fileName)
+	    								  .build();
+	    	Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
+
+	    	PhotoHeader ph = PhotoHeader.newBuilder()
+	    								.setResponseFlag(ResponseFlag.failure)
+	   									.setRequestType(RequestType.delete)
+	   									.build();	         	      	       	    	 
+	    	Header h = Header.newBuilder().setPhotoHeader(ph).build();
+
+	    	deleteResponseRequest = Request.newBuilder()
+	    								   .setHeader(h)
+	    								   .setBody(p)
+	    								   .build();
+
+	    	System.out.println("UUID in response to delete: "
+		 			+ deleteResponseRequest.getBody().getPhotoPayload().getUuid());
+	    	
+	    	// Close DB
+			
+			return deleteResponseRequest;
+
+		}
 		
-		return deleteResponseRequest;
 	}
 	
 	

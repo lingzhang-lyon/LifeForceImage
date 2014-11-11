@@ -10,14 +10,9 @@ import project1.cmpe275.sjsu.model.Socket;
 import project1pbversion.cmpe275.sjsu.database.DatabaseManagerV2;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader;
-import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoPayload;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;
 
-import com.google.protobuf.ByteString;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -25,14 +20,15 @@ import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
 
 
-public class PartitionManager {
-	public static SlaveFinder sla= new SlaveFinder();
+public class PM_Test2 {
+
 	public Request upload(Image image){
 		boolean r1=false;
 		boolean r2= false;
 		ArrayList<String> soc = new ArrayList<String>();
 		//soc.add("127.0.0.1:27017");
 		//soc.add("127.0.0.1:27017");
+		SlaveFinder sla = new SlaveFinder();
 		soc= sla.FindSlave();
 		
 		Image img= new Image();
@@ -107,8 +103,7 @@ public class PartitionManager {
 				DB db = mongo.getDB("275db");  // Connect DB
 		        DBCollection collection = db.getCollection("Meta");  // Connect collectionClass
 		        
-		        String sock= s.getIp()+":"+s.getPort();
-		        BasicDBObject o = new BasicDBObject("socket", sock)
+		        BasicDBObject o = new BasicDBObject("socket", s)
 		        		              .append("uuid",image.getUuid())
 		        		              .append("name", image.getImageName());
 				collection.remove(o);
@@ -154,7 +149,7 @@ public class PartitionManager {
 		
 	}
 	
-	public Request delete(Image image) throws Exception{
+	public Request delete(Image image){
 		ArrayList<Socket> soc = new ArrayList<Socket>();
 		ArrayList<String> soc_str = new ArrayList<String>();
 		boolean r1=false, r2= false;	
@@ -174,12 +169,18 @@ public class PartitionManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}  // Connect DB Server
-		
-		
-		
-		System.out.println(soc_str.size());
-		if(soc_str.size()!= 0){
+		if(soc_str!= null)
 		soc = this.trans(soc_str);
+		
+		Image img= new Image();
+		ResponseFlag res =ResponseFlag.failure;
+		Request req = null;
+		try {
+			req = MessageManager.createResponseRequest(img, res, RequestType.delete);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	        Request req1=DatabaseManagerV2.deleteInDB(soc.get(0), image);
 	        Request req2=DatabaseManagerV2.deleteInDB(soc.get(1), image);
@@ -195,41 +196,18 @@ public class PartitionManager {
 				return req1;
 			}
 			// if anyone fails, recall the upload process
-			/*else if(r1&&(!r2)){
+			else if(r1&&(!r2)){
 				DatabaseManagerV2.uploadToDB(soc.get(0), image);
 				return this.delete(image);
 			}
 			else if(r2&&(!r1)){
 				DatabaseManagerV2.uploadToDB(soc.get(1), image);
 				return this.delete(image);
-			}*/
-		}
+			}
 			//both fails. recall in some time, then timeout return false request;
-//			Image img= new Image();
-			Request req = null;
-			
-			PhotoPayload.Builder ppb = PhotoPayload.newBuilder()
-		 			.setUuid(image.getUuid())
-		 			.setName(image.getImageName());
-			
-			PhotoPayload pp=ppb.build();
-			Payload p=Payload.newBuilder().setPhotoPayload(pp).build();
-			
-			
-			PhotoHeader ph= PhotoHeader.newBuilder()
-							.setResponseFlag(ResponseFlag.failure)
-					 		.setRequestType(RequestType.delete)
-					 		.build();	         	      	       	    	 
-			Header h=Header.newBuilder().setPhotoHeader(ph).build();
-			
-			
-			req=Request.newBuilder()
-					 				.setHeader(h)
-					 				.setBody(p)
-					 				.build();
-		
+			return req;	//
 	        
-		return req;
+		
 	}
 
 	private ArrayList<Socket> trans(ArrayList<String> soc){
@@ -245,12 +223,20 @@ public class PartitionManager {
 		
 		return socket;
 	}
-	/*
+
 	public static void main(String[] args){
-		PartitionManager pm1= new PartitionManager();
-	
-		pm1.upload(im);
+		PM_Test2 pm1= new PM_Test2();
+	    ArrayList<Socket> soc = new ArrayList<Socket>();
+	    ArrayList<String>  result = new ArrayList<String>();
+	    result.add("192.168.1.1:80");
+	    result.add("192.168.1.2:80");
+	    soc= pm1.trans(result);
+	    System.out.println(soc.get(0).getIp());
+	    System.out.println(soc.get(0).getPort());
+	    System.out.println(soc.get(1).getIp());
+	    System.out.println(soc.get(1).getPort());
 		
-	}*/
+		
+	}
 
 }
