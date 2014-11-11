@@ -50,11 +50,11 @@ public class HeartbeatSeverHandler extends ChannelDuplexHandler {
         logger.info("ip "+ ip);
         int port = hb.getPort();
         System.out.println("port "+ port);
-        slaveSocketString =ip +":"+port;
+        //slaveSocketString =ip +":"+port;
         loadfactor = hb.getLoadfactor();
         logger.info("loadfactor " + loadfactor);       
         //logger.info("update database!!!");   
-        storeSlaveHeartbeatMetaData( mongoHost, mongoPort,dbname,collectionName,slaveSocketString,loadfactor,status);
+        storeSlaveHeartbeatMetaData( mongoHost, mongoPort,dbname,collectionName,ip,port,loadfactor,status);
      }
     
     /*@Override
@@ -105,13 +105,14 @@ public class HeartbeatSeverHandler extends ChannelDuplexHandler {
 	 * @throws UnknownHostException
 	 */
 	private void storeSlaveHeartbeatMetaData(String mongohost, int mongoport,String dbname,String collectionName,
-								String slaveSocketString, double loadfactor,int status) throws UnknownHostException{
+								String ip,int port, double loadfactor,int status) throws UnknownHostException{
 		
 		 Mongo mongo=new Mongo(mongoHost, mongoPort);//connect to MongoDB server
 	    	DB db=mongo.getDB(dbname);// connect to DB
 	    	DBCollection collection=db.getCollection(collectionName);//connect to colloction
 	        DBCursor cursor = collection.find(new BasicDBObject(),new BasicDBObject("socketstring", slaveSocketString));
-	        BasicDBObject o=new BasicDBObject("socketstring", slaveSocketString)
+	        BasicDBObject o=new BasicDBObject("storeip", ip)
+	        		.append("storeport", port)
 		    		.append("loadfactor", loadfactor)
 		    		.append("status", status);//slave status 1 is active. 0 is inactive
 	        
@@ -121,12 +122,13 @@ public class HeartbeatSeverHandler extends ChannelDuplexHandler {
 	        }
 	        else{
 	        	System.out.println("update slave status");
-	        	BasicDBObject query = new BasicDBObject("socketstring", slaveSocketString);
+	        	BasicDBObject query = new BasicDBObject("storeip", ip);
 	        	o.append("loadfactor", 0.5);
 	        	collection.update(query, o, true, false);
 	        	
 	        }
-		
+	       // cursor.close();
+	     
 		
 		
 		
