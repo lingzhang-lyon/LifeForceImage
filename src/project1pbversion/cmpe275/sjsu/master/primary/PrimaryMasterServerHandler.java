@@ -165,7 +165,7 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
         else{
 		 
 			 if(usePartition){//use partition manager
-				   PartitionManager pm=new PartitionManager();		 		 
+				   PartitionManagerV2 pm=new PartitionManagerV2();		 		 
 				  responseRequest = pm.download(img);
 		    
 				 //pm.download(img) should be able to find where the image is, 
@@ -390,50 +390,7 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 		 
 	}
 	
-	/**
-	 * @param metaSocket is the socket that will store the meta data
-	 * @param img
-	 * @throws UnknownHostException
-	 */
-	private void storeImageMetaData(Socket metaSocket,Image img) throws UnknownHostException{
-		
-		
-		System.out.println("Stored MetaData to MongoDB at "+ metaSocket.getIp() +":" +metaSocket.getPort());
-		
-		
-		String mongohost=metaSocket.getIp();
-		int mongoport=metaSocket.getPort();
-		Mongo mongo=new Mongo(mongohost, mongoport);
-		DB db=mongo.getDB("275db");
-		DBCollection collection=db.getCollection("Meta");
-		
-		String store=img.getStoreSocket().getIp() +":"+ img.getStoreSocket().getPort();
-		BasicDBObject o=new BasicDBObject("socket", store)
-						.append("uuid", img.getUuid())
-						.append("name",img.getImageName());
-		collection.insert(o);
-		
-		
-		
-	}
 	
-	/**
-	 * @param metaSocket is the socket that  stored the meta data
-	 * @param img
-	 * @throws UnknownHostException 
-	 */
-	private void deleteImageMetaData(Socket metaSocket,Image img) throws UnknownHostException{
-
-		String mongohost=metaSocket.getIp();
-		int mongoport=metaSocket.getPort();
-		Mongo mongo=new Mongo(mongohost, mongoport);
-		DB db=mongo.getDB("275db");
-		DBCollection collection=db.getCollection("Meta");
-		
-		WriteResult result = collection.remove(new BasicDBObject("Uuid", img.getUuid() ));
-		
-	    System.out.println("Image of " + img.getUuid()+" deleted with " + result.getN() + " records");
-	}
 	
 
 	
