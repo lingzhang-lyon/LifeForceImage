@@ -27,7 +27,7 @@ public class PartitionManagerV2 {
 	public Request upload(Image image) throws UnknownHostException{
 
 		SlaveFinderV2 sla = new SlaveFinderV2();
-		Socket storeImageSocket= sla.FindSlave2();
+		Socket storeImageSocket= sla.findSlave2();
 					
 		System.out.println("used partition, will store to: " +storeImageSocket.getIp());
 		

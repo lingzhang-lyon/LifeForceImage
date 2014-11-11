@@ -3,53 +3,44 @@ package project1.cmpe275.sjsu.partionAndReplication;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Stack;
 
-
-
-
-
-//import com.mongodb.MongoException;
-import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.model.Socket;
-//import com.mongodb.DBObject;
-
-
-
-
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
 public class SlaveFinderV2 {
+	
+	public ArrayList<Socket> slaveList=new ArrayList<Socket>();
+	
+	public SlaveFinderV2(){
+		//predefined slaveList
+		ArrayList<Socket> slaveList =new ArrayList<Socket>();
+		
+		slaveList.add(new Socket("127.0.0.1",27017) );
+		slaveList.add(new Socket("127.0.0.1",27017) );
+		slaveList.add(new Socket("127.0.0.1",27017) );
+		slaveList.add(new Socket("127.0.0.1",27017) );
+		
+		this.slaveList=slaveList;
+	}
     
-    private int numberOfRep = Configure.NumberOfReplication;
-    //store the cached result. Avoid sorting every time
-    private Stack<String> cache= new Stack<String>();
-    
-	public ArrayList<String> FindSlave(){
+	
+	public Socket findSlave2(){
+		//TODO need to make sure will return different slave each time
+		//get a random number between 0 and slaveList size
+		int listSize=slaveList.size();
+		int randomNumber = (int) Math.random() * listSize ;
 		
-		ArrayList<String> slaves = new ArrayList<String>();
-		
-		slaves.add("192.168.1.3:27017");
-		slaves.add("192.168.1.5:27017");
-		return slaves;
-		
-		
-		
+		return this.slaveList.get(randomNumber) ;
+	
 	}
 	
-	public Socket FindSlave2(){
-		//TODO need to make sure everytime will return different slave
-		return (new Socket("127.0.0.1",27017) );
-		
-		
-		
-	}
+	
+	
 
 	public Socket searchImageStoreSocket(String uuid) throws UnknownHostException {
 	   //search in Meta Collection
