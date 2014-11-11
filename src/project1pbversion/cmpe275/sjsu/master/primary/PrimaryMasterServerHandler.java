@@ -15,7 +15,7 @@ import project1.cmpe275.sjsu.conf.Configure;
 import project1.cmpe275.sjsu.model.Image;
 import project1.cmpe275.sjsu.model.Socket;
 import project1.cmpe275.sjsu.partionAndReplication.PartitionManager;
-import project1pbversion.cmpe275.sjsu.database.DatabaseManager;
+import project1.cmpe275.sjsu.partionAndReplication.PartitionManagerV2;
 import project1pbversion.cmpe275.sjsu.database.DatabaseManagerV2;
 import project1pbversion.cmpe275.sjsu.master.primary.listenbackup.PrimaryListener;
 import project1pbversion.cmpe275.sjsu.othercluster.OtherClusterManager;
@@ -244,7 +244,7 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
        else{ 
 		
     	   if(usePartition){//use partition manager 
-			  PartitionManager pm=new PartitionManager();		 		 
+			  PartitionManagerV2 pm=new PartitionManagerV2();		 		 
 			  responseRequest= pm.upload(img);
 			//TODO pm.upload(img) should be able to find proper socket, 
 			 //and upload to slave DB
@@ -264,13 +264,13 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 					img.setStoreSocket(storeImageSocket);
 					
 					Socket localMetaSocket =new Socket("127.0.0.1",27017);
-					storeImageMetaData(localMetaSocket, img);
+					DatabaseManagerV2.storeImageMetaData(localMetaSocket, img);
 					
 					//send image meta data to backup master
 					if(useBackupMaster && PrimaryListener.isBackupMasterConnected()){
 						System.out.println("also store image meata data to backup");
 						  Socket backupMetaSocket= backupMongoSocket;
-						  storeImageMetaData(backupMetaSocket, img);
+						  DatabaseManagerV2.storeImageMetaData(backupMetaSocket, img);
 					}
 					else{
 						System.out.println("No backup meta data");
@@ -325,7 +325,7 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 		}
 		else{
 			 if(usePartition){//use partition manager 
-				  PartitionManager pm=new PartitionManager();		 		 
+				  PartitionManagerV2 pm=new PartitionManagerV2();		 		 
 				  responseRequest= pm.delete(img);
 				//TODO pm.upload(img) should be able to find proper socket, 
 				 //and upload to slave DB
@@ -341,12 +341,12 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 							//TODO just for test, need to put into PartitionManager
 							// delete image metadata from local DB
 							Socket localMetaSocket =new Socket("127.0.0.1",27017);
-							deleteImageMetaData(localMetaSocket, img);
+							DatabaseManagerV2.deleteImageMetaData(localMetaSocket, img);
 							
 							//delete image meta data to backup master
 							if(PrimaryListener.isBackupMasterConnected()){
 								  Socket backupMetaSocket= PrimaryListener.getBackupMasterSocket();
-								  deleteImageMetaData(backupMetaSocket, img);
+								  DatabaseManagerV2.deleteImageMetaData(backupMetaSocket, img);
 							}
 						}
 		   	   }
