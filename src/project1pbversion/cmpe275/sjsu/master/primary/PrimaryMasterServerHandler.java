@@ -226,11 +226,13 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 			System.out.println("received file data with uuid:<"+uuid+ ">was saved in master local file system at \n" + desPath);
 			
 		}
-		//if(uuid==null){
-			uuid="testuuid";
-			//uuid=Client.createUuid(picname, "test");
-			System.out.println("uuid is now: "+ uuid);
-		//}
+		
+		
+		if(uuid.equals("")){
+			uuid=Client.createUuid(picname, "");
+			
+		}
+		System.out.println("uuid is now: "+ uuid);
 
 		Image img=new Image();
 		img.setUuid(uuid);
