@@ -8,25 +8,25 @@ import org.junit.Test;
 
 public class ClientTest {
 
-	@Test
-	public void testForRead() throws InterruptedException{
-		System.out.println("\n***********Test For Read********");
-    	//uuid for multiread same pic
-    	String uuid= Client.createUuid("testPic", "ling");
-		long threadid=Thread.currentThread().getId();
-		uuid=uuid+threadid;
-		uuid="20141105_015423_ling_testPic11";
-		ClientHandler.setEnableSaveOption(false);
-		multiThreadTest(2,uuid) ; 
-		
-	}
+//	@Test
+//	public void testForRead() throws InterruptedException{
+//		System.out.println("\n***********Test For Read********");
+//    	//uuid for multiread same pic
+//    	String uuid= Client.createUuid("testPic", "ling");
+//		long threadid=Thread.currentThread().getId();
+//		uuid=uuid+threadid;
+//		uuid="20141105_015423_ling_testPic11";
+//		ClientHandler.setEnableSaveOption(false);
+//		multiThreadTest(2,uuid) ; 
+//		
+//	}
 	
-	@Test
-	public void testForBoth() throws InterruptedException{
-		//for both
-		System.out.println("\n***********Test For Both Read and Write********");
-		multiThreadTest(1,null) ; 
-	}	
+//	@Test
+//	public void testForBoth() throws InterruptedException{
+//		//for both
+//		System.out.println("\n***********Test For Both Read and Write********");
+//		multiThreadTest(1,null) ; 
+//	}	
 	
 	@Test
 	public void testForWrite() throws InterruptedException{

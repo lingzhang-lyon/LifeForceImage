@@ -187,7 +187,9 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 			 if(passFailedRequestToOtherCluster){
 			 //if could not find in our cluster, pass the request to other cluster!!!!!!!!!!!!
 			 //need to set timeout, if after long time still don't get success, will return failure to client!!!!!
-				 if(responseRequest.getHeader().getPhotoHeader().equals(ResponseFlag.failure)){
+				 System.out.println("pass failure request to Other Cluster is on");
+				 if(responseRequest.getHeader().getPhotoHeader().getResponseFlag().equals(ResponseFlag.failure)){
+					 System.out.println("could not handle the request in our cluster, pass to other cluster============");
 					 try{
 						 responseRequest=passRequestToOtherCluster(req);
 					 }catch(TimeoutException e){
@@ -290,7 +292,8 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 		  if(passFailedRequestToOtherCluster){
 			 //if could not find in our cluster, pass the request to other cluster!!!!!!!!!!!!
 			 //need to set timeout, if after long time still don't get success, will return failure to client!!!!!
-				 if(responseRequest.getHeader().getPhotoHeader().equals(ResponseFlag.failure)){
+				 if(responseRequest.getHeader().getPhotoHeader().getResponseFlag().equals(ResponseFlag.failure)){
+					 System.out.println("could not handle the request in our cluster, pass to other cluster============");
 					 try{
 						 responseRequest=passRequestToOtherCluster(req);
 					 }catch(TimeoutException e){
@@ -362,7 +365,9 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 			  if(passFailedRequestToOtherCluster){
 				 //if could not find in our cluster, pass the request to other cluster!!!!!!!!!!!!
 				 //need to set timeout, if after long time still don't get success, will return failure to client!!!!!
-					 if(responseRequest.getHeader().getPhotoHeader().equals(ResponseFlag.failure)){
+				  
+					 if(responseRequest.getHeader().getPhotoHeader().getResponseFlag().equals(ResponseFlag.failure)){
+						 System.out.println("could not handle the request in our cluster, pass to other cluster============");
 						 try{
 							 responseRequest=passRequestToOtherCluster(req);
 						 }catch(TimeoutException e){
@@ -386,7 +391,7 @@ public class PrimaryMasterServerHandler extends SimpleChannelInboundHandler<Requ
 
 
 	private Request passRequestToOtherCluster( Request req) throws Exception{
-		Socket otherClusterSocket=new Socket("127.0.0.1", 8080); //need to find other socket!!!!
+		Socket otherClusterSocket=new Socket("127.0.0.1", 10010); //need to find other socket!!!!
 		 
 		 //create a new Request for passing, add originator information in the request
 		 Request.Builder builder=Request.newBuilder(req);

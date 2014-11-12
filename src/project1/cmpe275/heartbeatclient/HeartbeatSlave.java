@@ -34,7 +34,7 @@ public class HeartbeatSlave {
     public static void main(String[] args) {
         Bootstrap bootstrap = new Bootstrap();
         NioEventLoopGroup group = new NioEventLoopGroup();
-        bootstrap.group(group).channel(NioSocketChannel.class).remoteAddress(new InetSocketAddress("192.168.1.3", 9090));
+        bootstrap.group(group).channel(NioSocketChannel.class).remoteAddress(new InetSocketAddress("127.0.0.1", 9090));
         bootstrap.handler(new ChannelInitializer<SocketChannel>() {
  
             @Override
