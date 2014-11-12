@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu.heartbeatserver;
+package project1pbversion.cmpe275.sjsu.heartbeatserver;
 
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
@@ -12,9 +12,9 @@ import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import project1.cmpe275.sjsu.model.Image;
-import project1.cmpe275.sjsu.model.Socket;
 import project1pbversion.cmpe275.sjsu.database.DatabaseManagerV2;
+import project1pbversion.cmpe275.sjsu.model.Image;
+import project1pbversion.cmpe275.sjsu.model.Socket;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 

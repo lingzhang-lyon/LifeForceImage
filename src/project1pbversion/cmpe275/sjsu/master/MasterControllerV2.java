@@ -4,13 +4,13 @@ import java.util.Scanner;
 
 import org.junit.Test;
 
-import project1.cmpe275.sjsu.conf.Configure;
-import project1.cmpe275.sjsu.heartbeatserver.HeartbeatServer;
-import project1.cmpe275.sjsu.model.Socket;
+import project1pbversion.cmpe275.sjsu.conf.Configure;
+import project1pbversion.cmpe275.sjsu.heartbeatserver.HeartbeatServer;
 import project1pbversion.cmpe275.sjsu.master.backup.BackupMaster;
 import project1pbversion.cmpe275.sjsu.master.primary.PrimaryMasterServer;
 import project1pbversion.cmpe275.sjsu.master.primary.PrimaryMasterServerHandler;
 import project1pbversion.cmpe275.sjsu.master.primary.listenbackup.PrimaryListener;
+import project1pbversion.cmpe275.sjsu.model.Socket;
 
 
 public class MasterControllerV2 {

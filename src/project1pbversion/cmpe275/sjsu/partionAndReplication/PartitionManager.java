@@ -1,13 +1,13 @@
-package project1.cmpe275.sjsu.partionAndReplication;
+package project1pbversion.cmpe275.sjsu.partionAndReplication;
 
 
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import project1.cmpe275.sjsu.model.Image;
-import project1.cmpe275.sjsu.model.Socket;
 import project1pbversion.cmpe275.sjsu.database.DatabaseManagerV2;
+import project1pbversion.cmpe275.sjsu.model.Image;
+import project1pbversion.cmpe275.sjsu.model.Socket;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.ResponseFlag;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;

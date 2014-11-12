@@ -7,9 +7,9 @@ import java.net.UnknownHostException;
 
 import org.bson.types.Binary;
 
-import project1.cmpe275.sjsu.conf.Configure;
-import project1.cmpe275.sjsu.model.Image;
-import project1.cmpe275.sjsu.model.Socket;
+import project1pbversion.cmpe275.sjsu.conf.Configure;
+import project1pbversion.cmpe275.sjsu.model.Image;
+import project1pbversion.cmpe275.sjsu.model.Socket;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader;

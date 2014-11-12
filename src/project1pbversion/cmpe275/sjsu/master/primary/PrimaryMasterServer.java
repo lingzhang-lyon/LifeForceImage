@@ -10,8 +10,8 @@ import io.netty.handler.logging.LoggingHandler;
 
 import java.util.Scanner;
 
-import project1.cmpe275.sjsu.conf.Configure;
-import project1.cmpe275.sjsu.model.Socket;
+import project1pbversion.cmpe275.sjsu.conf.Configure;
+import project1pbversion.cmpe275.sjsu.model.Socket;
 
 
 public class PrimaryMasterServer {

@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu.conf;
+package project1pbversion.cmpe275.sjsu.conf;
 
 public class Configure {
 	

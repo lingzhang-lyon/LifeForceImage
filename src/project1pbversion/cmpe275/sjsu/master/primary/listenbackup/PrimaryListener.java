@@ -13,8 +13,8 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import project1.cmpe275.sjsu.heartbeatserver.HeartbeatServer;
-import project1.cmpe275.sjsu.model.Socket;
+import project1pbversion.cmpe275.sjsu.heartbeatserver.HeartbeatServer;
+import project1pbversion.cmpe275.sjsu.model.Socket;
 
 public class PrimaryListener implements Runnable{
 	

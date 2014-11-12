@@ -1,4 +1,4 @@
-package project1.cmpe275.heartbeatclient;
+package project1pbversion.cmpe275.sjsu.heartbeatclient;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelFuture;

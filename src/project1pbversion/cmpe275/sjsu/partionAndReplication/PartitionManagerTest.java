@@ -1,10 +1,10 @@
-package project1.cmpe275.sjsu.partionAndReplication;
+package project1pbversion.cmpe275.sjsu.partionAndReplication;
 
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import project1.cmpe275.sjsu.model.Image;
+import project1pbversion.cmpe275.sjsu.model.Image;
 
 public class PartitionManagerTest {
 

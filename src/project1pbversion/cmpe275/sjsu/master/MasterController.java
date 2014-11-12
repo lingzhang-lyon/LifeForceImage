@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import org.junit.Test;
 
-import project1.cmpe275.sjsu.heartbeatserver.HeartbeatServer;
+import project1pbversion.cmpe275.sjsu.heartbeatserver.HeartbeatServer;
 import project1pbversion.cmpe275.sjsu.master.backup.BackupMaster;
 import project1pbversion.cmpe275.sjsu.master.primary.PrimaryMasterServer;
 import project1pbversion.cmpe275.sjsu.master.primary.listenbackup.PrimaryListener;

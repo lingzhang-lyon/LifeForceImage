@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu.heartbeatserver;
+package project1pbversion.cmpe275.sjsu.heartbeatserver;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

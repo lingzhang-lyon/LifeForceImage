@@ -1,10 +1,10 @@
-package project1.cmpe275.sjsu.partionAndReplication;
+package project1pbversion.cmpe275.sjsu.partionAndReplication;
 
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import project1.cmpe275.sjsu.model.Socket;
+import project1pbversion.cmpe275.sjsu.model.Socket;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;

@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu.partionAndReplication;
+package project1pbversion.cmpe275.sjsu.partionAndReplication;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;

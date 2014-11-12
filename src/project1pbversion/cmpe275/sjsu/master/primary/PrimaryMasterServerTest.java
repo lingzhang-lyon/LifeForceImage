@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import project1.cmpe275.sjsu.conf.Configure;
+import project1pbversion.cmpe275.sjsu.conf.Configure;
 
 public class PrimaryMasterServerTest {
 

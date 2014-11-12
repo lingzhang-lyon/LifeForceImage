@@ -1,4 +1,4 @@
-package project1.cmpe275.sjsu.partionAndReplication;
+package project1pbversion.cmpe275.sjsu.partionAndReplication;
 
 
 import java.net.UnknownHostException;
@@ -12,7 +12,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
 //import com.mongodb.MongoException;
-import project1.cmpe275.sjsu.conf.Configure;;
+
+import project1pbversion.cmpe275.sjsu.conf.Configure;
 
 public class SlaveFinder {
     

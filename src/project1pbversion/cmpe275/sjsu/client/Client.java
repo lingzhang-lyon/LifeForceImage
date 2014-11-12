@@ -26,8 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Scanner;
 
-import project1.cmpe275.sjsu.conf.Configure;
-import project1.cmpe275.sjsu.model.Image;
+import project1pbversion.cmpe275.sjsu.conf.Configure;
+import project1pbversion.cmpe275.sjsu.model.Image;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Header.Routing;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Payload;

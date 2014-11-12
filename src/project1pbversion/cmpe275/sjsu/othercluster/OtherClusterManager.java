@@ -5,7 +5,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import project1.cmpe275.sjsu.model.Socket;
+import project1pbversion.cmpe275.sjsu.model.Socket;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.PhotoHeader.RequestType;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
 import project1pbversion.cmpe275.sjsu.protobuf.MessageManager;

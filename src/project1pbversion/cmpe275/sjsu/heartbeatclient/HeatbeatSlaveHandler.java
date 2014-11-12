@@ -1,4 +1,4 @@
-package project1.cmpe275.heartbeatclient;
+package project1pbversion.cmpe275.sjsu.heartbeatclient;
 
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Heartbeat;
 import project1pbversion.cmpe275.sjsu.protobuf.ImagePB.Request;
