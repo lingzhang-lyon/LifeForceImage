@@ -225,28 +225,53 @@ public class DatabaseManagerV2 {
     	String 		category	= img.getCategory();
     	ByteString	fileData	= img.getData();
 
-    	// Insert an image to DB
-    	dm.insert(uuid, fileName, client, uploadTime, storedName, category, fileData, dm.collection);
+	try {
+    		// Insert an image to DB
+        	dm.insert(uuid, fileName, client, uploadTime, storedName, category, fileData, dm.collection);
 
-		// Organize return info
-    	PhotoPayload pp = PhotoPayload.newBuilder()
-    								  .setUuid(uuid).setName(fileName)
-    								  .build();
-    	Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
+    		// Organize return info as success
+        	PhotoPayload pp = PhotoPayload.newBuilder()
+        								  .setUuid(uuid).setName(fileName)
+        								  .build();
+        	Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
 
-    	PhotoHeader ph = PhotoHeader.newBuilder()
-    								.setResponseFlag(ResponseFlag.success)
-   									.setRequestType(RequestType.write)
-   									.build();	         	      	       	    	 
-    	Header h = Header.newBuilder().setPhotoHeader(ph).build();
+        	PhotoHeader ph = PhotoHeader.newBuilder()
+        								.setResponseFlag(ResponseFlag.success)
+       									.setRequestType(RequestType.write)
+       									.build();	         	      	       	    	 
+        	Header h = Header.newBuilder().setPhotoHeader(ph).build();
 
-    	uploadResponseRequest = Request.newBuilder()
-    								   .setHeader(h)
-    								   .setBody(p)
-    								   .build();
+        	uploadResponseRequest = Request.newBuilder()
+        								   .setHeader(h)
+        								   .setBody(p)
+        								   .build();
 
-    	System.out.println("UUID in response to upload: "
-	 			+ uploadResponseRequest.getBody().getPhotoPayload().getUuid());
+        	System.out.println("SUCCESS: UUID in response to upload: "
+    	 			+ uploadResponseRequest.getBody().getPhotoPayload().getUuid());
+        	
+    	} catch (MongoException e) {
+    		// Organize return info as failure
+        	PhotoPayload pp = PhotoPayload.newBuilder()
+        								  .setUuid(uuid).setName(fileName)
+        								  .build();
+        	Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
+
+        	PhotoHeader ph = PhotoHeader.newBuilder()
+        								.setResponseFlag(ResponseFlag.failure)
+       									.setRequestType(RequestType.write)
+       									.build();	         	      	       	    	 
+        	Header h = Header.newBuilder().setPhotoHeader(ph).build();
+
+        	uploadResponseRequest = Request.newBuilder()
+        								   .setHeader(h)
+        								   .setBody(p)
+        								   .build();
+
+        	System.out.println("FAILURE: UUID in response to upload: "
+    	 			+ uploadResponseRequest.getBody().getPhotoPayload().getUuid());
+        	
+        	e.printStackTrace();
+    	}
     	
     	// Close DB
 		
@@ -261,35 +286,61 @@ public class DatabaseManagerV2 {
 		// return variable
 		Request deleteResponseRequest = null;
 		String host=socket.getIp();
-    	int port=socket.getPort();
-    	DatabaseManagerV2 dm= new DatabaseManagerV2(host,port,DBName, CollectionName);
+    		int port=socket.getPort();
+    		DatabaseManagerV2 dm= new DatabaseManagerV2(host,port,DBName, CollectionName);
 		
 		String uuid 	= img.getUuid();
 		String fileName = img.getImageName();
 		
-		// Delete an image in DB
-		dm.delete(uuid, dm.collection);
-		
-		// Organize return info
-    	PhotoPayload pp = PhotoPayload.newBuilder()
-    								  .setUuid(uuid).setName(fileName)
-    								  .build();
-    	Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
+		try {
+			// Delete an image in DB
+			dm.delete(uuid, dm.collection);
+			
+			// Organize return info as success
+	    		PhotoPayload pp = PhotoPayload.newBuilder()
+	    								  .setUuid(uuid).setName(fileName)
+	    								  .build();
+	    		Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
 
-    	PhotoHeader ph = PhotoHeader.newBuilder()
-    								.setResponseFlag(ResponseFlag.success)
-   									.setRequestType(RequestType.delete)
-   									.build();	         	      	       	    	 
-    	Header h = Header.newBuilder().setPhotoHeader(ph).build();
+	    		PhotoHeader ph = PhotoHeader.newBuilder()
+	    								.setResponseFlag(ResponseFlag.success)
+	   									.setRequestType(RequestType.delete)
+	   									.build();	         	      	       	    	 
+	    		Header h = Header.newBuilder().setPhotoHeader(ph).build();
 
-    	deleteResponseRequest = Request.newBuilder()
-    								   .setHeader(h)
-    								   .setBody(p)
-    								   .build();
+	    		deleteResponseRequest = Request.newBuilder()
+	    								   .setHeader(h)
+	    								   .setBody(p)
+	    								   .build();
 
-    	System.out.println("UUID in response to delete: "
-	 			+ deleteResponseRequest.getBody().getPhotoPayload().getUuid());
-    	
+	    		System.out.println("SUCCESS: UUID in response to delete: "
+		 			+ deleteResponseRequest.getBody().getPhotoPayload().getUuid());
+	    	
+		} catch (MongoException e) {
+			// Organize return info as failure
+			PhotoPayload pp = PhotoPayload.newBuilder()
+										  .setUuid(uuid)
+										  .setName(fileName)
+										  .build();
+			Payload p = Payload.newBuilder().setPhotoPayload(pp).build();
+			
+			PhotoHeader ph = PhotoHeader.newBuilder()
+										.setResponseFlag(ResponseFlag.failure)
+										.setRequestType(RequestType.delete)
+										.build();	         	      	       	    	 
+			Header h = Header.newBuilder().setPhotoHeader(ph).build();
+			
+			deleteResponseRequest = Request.newBuilder()
+								   .setHeader(h)
+								   .setBody(p)
+								   .build();
+			
+			System.out.println("FAILURE: UUID in response to delete: "
+			+ deleteResponseRequest.getBody().getPhotoPayload().getUuid());
+
+			e.printStackTrace();
+		}
+				
     	// Close DB
 		
 		return deleteResponseRequest;
@@ -396,9 +447,14 @@ public class DatabaseManagerV2 {
   	 */
 	public void delete(String uuid, DBCollection collection)
 	{	
-		WriteResult result = collection.remove(new BasicDBObject("Uuid", uuid));
-		
-	    System.out.println("Image of " + uuid +" deleted with " + result.getN() + " records");
+		try {
+			WriteResult result = collection.remove(new BasicDBObject("Uuid", uuid));
+			
+			System.out.println("Image of " + uuid +" deleted with " + result.getN() + " records");
+			
+		} catch (MongoException e) {
+			e.printStackTrace();
+		} 
 	}
 	
 	
